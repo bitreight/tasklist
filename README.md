@@ -5,11 +5,11 @@
 
 * To deploy on the running instance of Tomcat:
   ```
-  mvn clean package tomcat7:deploy -Dmaven.tomcat.url=http://localhost:tomcat_port/manager/text -Dtomcat.username=username -Dtomcat.password=password
+  mvn clean package tomcat7:deploy -Dmaven.tomcat.url=http://<tomcat_ip_and_port>/manager/text -Dtomcat.username=<username> -Dtomcat.password=<password>
   ```
-  And visit http://localhost:tomcat_port/tasklist
+  And visit http://<tomcat_ip_and_port>/tasklist
 
 * To undeploy:
   ```
-  mvn tomcat7:undeploy -Dmaven.tomcat.url=http://localhost:tomcat_port/manager/text -Dtomcat.username=username -Dtomcat.password=password
+  mvn tomcat7:undeploy -Dmaven.tomcat.url=http://<tomcat_ip_and_port>/manager/text -Dtomcat.username=<username> -Dtomcat.password=<password>
   ```
