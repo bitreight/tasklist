@@ -19,6 +19,8 @@
         <junit.version>4.12</junit.version>
         <spring.version>4.3.3.RELEASE</spring.version>
         <hibernate.version>5.2.3.Final</hibernate.version>
+        <jcl.slf4j.version>1.7.21</jcl.slf4j.version>
+        <logback.version>1.1.7</logback.version>
 
         <tomcat.plugin.version>2.2</tomcat.plugin.version>
 
@@ -35,6 +37,12 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
@@ -50,6 +58,12 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
                 <version>${spring.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -82,6 +96,13 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
                 <version>${hibernate.version}</version>
+            </dependency>
+
+            <!-- Bridge logging from JCL to SLF4j -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${jcl.slf4j.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
