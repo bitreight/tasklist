@@ -1,3 +1,15 @@
+# Description
+Tasklist is a web application for managing your tasks and to-dos, organizing collaborative projects.
+
+# Usecases
+Usecases of the first development iteration are:
+* create tasks
+* set deadline and priority of the task
+* organize your tasks in projects (non-shared)
+* sort your tasks by criteria (name, deadline, priority, etc.)
+
+Full information about development iterations see in docs.
+
 # Deploy
 ## Embedded server
 To run at tomcat7-maven-plugin embedded server:
