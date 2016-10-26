@@ -21,7 +21,7 @@ To run at tomcat7-maven-plugin embedded server:
   ```
   mvn clean package tomcat7:deploy -Dmaven.tomcat.url=http://<tomcat_ip_and_port>/manager/text -Dtomcat.username=<username> -Dtomcat.password=<password>
   ```
-  And visit http://<tomcat_ip_and_port>/tasklist
+  And visit http://tomcat_ip_and_port/tasklist
 
 * To undeploy:
   ```
