@@ -1,0 +1,41 @@
+html,
+body {
+    height: 100%;
+    background-color: #424B55;
+}
+
+#content {
+    display: flex;    
+    height: 98.5%;
+    padding: 10px 10px 0px 10px;
+}
+
+#left-menu-col {    
+    width: 200px;
+    min-width: 200px;    
+    background-color: #4B5866;
+}
+
+#tasks-content {
+    display: flex;
+    flex-basis: 100%;
+    margin-left: 10px;    
+}
+
+#task-list, #task-details {
+    flex-grow: 1;
+    flex-basis: 50%;
+    background-color: white;
+}
+
+#task-list {
+    margin-right: 10px;
+}
+
+#task-list>div {
+    border-radius: 0;
+}
+
+#task-list li:hover {
+    background-color: #F5F8FC;
+}
