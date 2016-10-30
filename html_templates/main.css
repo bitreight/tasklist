@@ -4,6 +4,10 @@ body {
     background-color: #424B55;
 }
 
+.form-group {
+    margin-bottom: 0px;
+}
+
 #content {
     display: flex;    
     height: 98.5%;
@@ -13,7 +17,35 @@ body {
 #left-menu-col {    
     width: 200px;
     min-width: 200px;    
-    background-color: #4B5866;
+    background-color: #52606E;
+}
+
+#left-menu-col .list-group-item:hover {    
+    background-color: #44515F;
+}
+
+#left-menu-col .list-group-item {    
+    border-style: none;
+    border-radius: 0;
+    background-color: transparent;
+    font-family: "Open sans","Segoe UI","lucida grande",arial,verdana,"lucida sans unicode",tahoma,sans-serif;
+    letter-spacing: .5px;
+    font-size: 13px;
+    color: white;
+}
+
+#add-project {
+    margin-left: 3px;
+    font-size: 12px;
+}
+
+#project-list a.list-group-item {
+    font-size: 12px;
+    padding-left: 30px;
+}
+
+.panel-body {
+    padding: 9px 15px 9px 15px;
 }
 
 #tasks-content {
@@ -30,12 +62,44 @@ body {
 
 #task-list {
     margin-right: 10px;
+    overflow: auto;
 }
 
-#task-list>div {
+#task-list .panel,
+#task-list .list-group-item {
     border-radius: 0;
 }
 
-#task-list li:hover {
+#check-as-completed {
+    margin-right: 5px;
+}
+
+#delete-task {
+    float: right;
+}
+
+#sort-dropdown {
+    float: right;
+}
+
+#task-list a:hover {
     background-color: #F5F8FC;
+}
+
+#task-details .panel {
+    border-radius: 0;
+}
+
+#priority-select {
+    width: 115px;
+    margin-right: 15px;
+}
+
+#datepicker {
+    width: 115px;
+}
+
+#task-description-edit {
+    overflow: hidden;
+    margin-top: 10px;
 }

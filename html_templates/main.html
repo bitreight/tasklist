@@ -5,12 +5,31 @@
     <meta content="text/html; charset=utf-8">
     <title>Tasklist</title>
     <link href="vendor/bootstrap.min.css" rel="stylesheet">
+    <link href="vendor/bootstrap-datepicker3.min.css" rel="stylesheet">
+    <link href="vendor/bootstrap-select.min.css" rel="stylesheet">
     <link href="main.css" rel="stylesheet">
 </head>
 
 <body>
     <div id="content">
-        <div id="left-menu-col">menu</div>              
+        <div id="left-menu-col">
+            <div class="list-group">
+                <a href="#" class="list-group-item">MY PROFILE</a>                
+                <a href="#" class="list-group-item">ALL</a>
+                <a href="#" class="list-group-item">TODAY</a>
+                <a href="#" class="list-group-item">WEEK</a>                
+                <a href="#" class="list-group-item">
+                    PROJECTS
+                    <span id="add-project" class="glyphicon glyphicon-plus"/>
+                </a>
+                <div id="project-list">
+                    <a href="#" class="list-group-item">
+                        project 1
+                        <span id="delete-project" class="glyphicon glyphicon-trash pull-right"/>
+                    </a>                    
+                </div>
+            </div>
+        </div>              
         <div id="tasks-content">
             <div id="task-list">
                 <div class="panel panel-default">
@@ -22,39 +41,76 @@
                                 <button class="btn btn-default" type="button">Add task</button>
                             </span>
                         </div>                        
-                    </div>
-<!--
-                        <div class="panel-body">
-                            <p>...</p>
-                        </div>-->
-
-                        <!-- List group -->
-                        <ul class="list-group">
-                            <li class="list-group-item">Cras justo odio</li>
-                            <li class="list-group-item">Dapibus ac facilisis in</li>
-                            <li class="list-group-item">Morbi leo risus</li>
-                            <li class="list-group-item">Porta ac consectetur ac</li>
-                            <li class="list-group-item">Vestibulum at eros</li>
-                        </ul>
-                    </div>
+                    </div>                    
+                    <div class="panel-body">
+                        <div id="sort-dropdown" class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="task-sort" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                Sort by
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="task-sort">
+                                <li><a href="#">Name</a></li>
+                                <li><a href="#">Deadline</a></li>
+                                <li><a href="#">Priority</a></li>                                                                
+                            </ul>
+                        </div>
+                    </div>                    
+                    <div class="list-group">
+                        <a href="#" class="list-group-item">
+                            <input id="check-as-completed" type="checkbox"/>
+                            Task 1
+                            <span id="delete-task" class="glyphicon glyphicon-trash"/>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <input id="check-as-completed" type="checkbox"/>
+                            Task 2
+                            <span id="delete-task" class="glyphicon glyphicon-trash"/>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <input id="check-as-completed" type="checkbox"/>
+                            Task 3
+                            <span id="delete-task" class="glyphicon glyphicon-trash"/>
+                        </a>                                                
+                    </div>    
                 </div>
+            </div>
             <div id="task-details">
-                details
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <input id="task-name-edit" type="text" class="form-control">
+                    </div>
+                    <div class="panel-body">
+                        <div id="priority-select" class="form-group pull-left">                                                    
+                            <select class="selectpicker show-menu-arrow form-control">
+                                <option>High</option>
+                                <option selected>Normal</option>
+                                <option>Low</option>
+                            </select>
+                        </div>
+                        <input type="text" class="form-control pull-left" id="datepicker" placeholder="Deadline" />    
+                        <textarea id="task-description-edit" class="form-control pull-left" rows="5">Cool task</textarea>
+                    </div>                    
+                </div>
             </div>
-<!--
-            <div class="container">
-                <div class="col-md-6 col-sm-6">tasks</div>
-                <div class="col-md-6 col-sm-6">task-info</div>
-            </div>
--->
         </div>        
-    </div>
+    </div>    
     
-    
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>    
     <script src="vendor/bootstrap.min.js"></script>
-<!--    <script src="../web/js/vendor/validator.min.js"></script>-->
-</body>
+    <script src="vendor/bootstrap-datepicker.min.js"></script>
+    <script src="vendor/bootstrap-select.min.js"></script>
     
+    <script>
+        $(document).ready(function () {
+            var today = new Date();
+            $("#datepicker").datepicker({
+                format: "dd-mm-yyyy",
+                viewMode: "days",
+                minViewMode: "days",
+                endDate: today.getFullYear().toString()
+            });
+        });
+    </script>
+</body>    
     
 </html>
