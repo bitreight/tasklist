@@ -1,17 +1,29 @@
 html,
 body {
-    height: 100%;
-    background-color: #424B55;
+    height: 100%;    
 }
 
 .form-group {
     margin-bottom: 0px;
 }
 
+#login-form {
+    margin-top: 200px;
+}
+
+#login-form label {
+    margin-left: 20px;
+}
+
+#input-login {
+    margin-bottom: 10px;
+}
+
 #content {
     display: flex;    
-    height: 98.5%;
-    padding: 10px 10px 0px 10px;
+    height: 100%;
+    padding: 10px 10px 10px 10px;
+    background-color: #424B55;
 }
 
 #left-menu-col {    
