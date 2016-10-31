@@ -11,6 +11,7 @@
 
     <modules>
         <module>tasklist</module>
+        <module>tasklist-backend</module>
     </modules>
 
     <properties>
