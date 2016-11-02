@@ -19,8 +19,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void delete(int userId) {
-
+    public void deleteById(int userId) {
+        entityManager.remove(findById(userId));
     }
 
     @Override
@@ -30,6 +30,11 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findByUsernameAndPassword(String username, String password) {
-        return null;
+        User user = (User) entityManager.createQuery("Select u from User u where u.username LIKE :username " +
+                                                        "and u.password LIKE :password")
+                    .setParameter("username", username)
+                    .setParameter("password", password)
+                    .getSingleResult();
+        return user;
     }
 }
