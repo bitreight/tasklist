@@ -54,4 +54,27 @@ public class Project {
     public void setUser(User user) {
         this.user = user;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Project project = (Project) o;
+
+        if (id != project.id) return false;
+        if (title != null ? !title.equals(project.title) : project.title != null) return false;
+        if (description != null ? !description.equals(project.description) : project.description != null) return false;
+        return user != null ? user.equals(project.user) : project.user == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        return result;
+    }
 }

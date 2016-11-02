@@ -14,8 +14,11 @@ public class User {
     private int id;
 
     private String username;
+
     private String password;
+
     private String name;
+
     private String surname;
 
     public int getId() {
@@ -65,16 +68,19 @@ public class User {
 
         User user = (User) o;
 
-        if (!username.equals(user.username)) return false;
-        if (!password.equals(user.password)) return false;
+        if (id != user.id) return false;
+        if (username != null ? !username.equals(user.username) : user.username != null) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
         if (name != null ? !name.equals(user.name) : user.name != null) return false;
         return surname != null ? surname.equals(user.surname) : user.surname == null;
+
     }
 
     @Override
     public int hashCode() {
-        int result = username.hashCode();
-        result = 31 * result + password.hashCode();
+        int result = id;
+        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         return result;
