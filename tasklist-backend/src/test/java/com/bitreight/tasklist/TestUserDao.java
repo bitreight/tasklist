@@ -48,6 +48,7 @@ public class TestUserDao {
         assertEquals(user, userFromDb);
     }
 
+    @Test
     public void testFindByUsernameAndPassword() {
         User userFromDb = userDao.findByUsernameAndPassword(user.getUsername(), user.getPassword());
         assertEquals(user, userFromDb);
