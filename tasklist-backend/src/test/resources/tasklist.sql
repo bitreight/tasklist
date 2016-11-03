@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `deadline` DATE NULL,
   `task_priority` VARCHAR(10) NOT NULL,
   `projects_id` INT NOT NULL,
-  `is_completed` TINYINT(1) NOT NULL,
+  `is_completed` BOOLEAN NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `tasks_title_UNIQUE` (`title` ASC),
   CONSTRAINT `fk_tasks_projects`

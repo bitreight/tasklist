@@ -34,7 +34,6 @@ public class Task {
     private TaskPriority priority;
 
     @Column(name = "is_completed")
-    @Type(type = "byte")
     private boolean isCompleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
