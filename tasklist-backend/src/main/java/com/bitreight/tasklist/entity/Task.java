@@ -31,7 +31,7 @@ public class Task {
 
     @Column(name = "task_priority")
     @Enumerated(EnumType.STRING)
-    private TaskPriority taskPriority;
+    private TaskPriority priority;
 
     @Column(name = "is_completed")
     @Type(type = "byte")
@@ -73,12 +73,12 @@ public class Task {
         this.deadline = deadline;
     }
 
-    public TaskPriority getTaskPriority() {
-        return taskPriority;
+    public TaskPriority getPriority() {
+        return priority;
     }
 
-    public void setTaskPriority(TaskPriority taskPriority) {
-        this.taskPriority = taskPriority;
+    public void setPriority(TaskPriority priority) {
+        this.priority = priority;
     }
 
     public boolean isCompleted() {
@@ -109,7 +109,7 @@ public class Task {
         if (title != null ? !title.equals(task.title) : task.title != null) return false;
         if (description != null ? !description.equals(task.description) : task.description != null) return false;
         if (deadline != null ? !deadline.equals(task.deadline) : task.deadline != null) return false;
-        if (taskPriority != task.taskPriority) return false;
+        if (priority != task.priority) return false;
         return project != null ? project.equals(task.project) : task.project == null;
     }
 
@@ -119,7 +119,7 @@ public class Task {
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (deadline != null ? deadline.hashCode() : 0);
-        result = 31 * result + (taskPriority != null ? taskPriority.hashCode() : 0);
+        result = 31 * result + (priority != null ? priority.hashCode() : 0);
         result = 31 * result + (isCompleted ? 1 : 0);
         result = 31 * result + (project != null ? project.hashCode() : 0);
         return result;
