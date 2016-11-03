@@ -33,6 +33,7 @@ public class TestProjectDao {
     private UserDao userDao;
 
     private User user;
+
     private List<Project> projects;
 
     @Before
@@ -40,8 +41,6 @@ public class TestProjectDao {
         user = new User();
         user.setUsername("username");
         user.setPassword("pass");
-        user.setName("name");
-        user.setSurname("surname");
         userDao.save(user);
 
         projects = new ArrayList<>();
@@ -63,6 +62,7 @@ public class TestProjectDao {
 
     @After
     public void tearDown() {
+        projects.forEach(project -> projectDao.deleteById(project.getId()));
         userDao.deleteById(user.getId());
     }
 
@@ -80,11 +80,6 @@ public class TestProjectDao {
 
     @Test
     public void testUpdateProject() {
-        projects.get(0).setTitle("test1");
-        projects.get(0).setDescription("test1");
-        projects.get(1).setTitle("test2");
-        projects.get(1).setDescription("test2");
-
         projects.forEach(project -> { project.setTitle("test" + projects.indexOf(project));
                                         project.setDescription("test_description");
                                         projectDao.update(project);});
