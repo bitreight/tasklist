@@ -39,7 +39,7 @@ public class ProjectDaoImpl implements ProjectDao {
 
     @Override
     public List<Project> findByUser(User user) {
-        return entityManager.createQuery("Select p from Project p where p.user LIKE :user")
+        return (List<Project>) entityManager.createQuery("Select p from Project p where p.user LIKE :user")
                 .setParameter("user", user)
                 .getResultList();
     }
