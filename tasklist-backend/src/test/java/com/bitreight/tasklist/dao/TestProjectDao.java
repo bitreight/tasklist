@@ -2,8 +2,6 @@ package com.bitreight.tasklist.dao;
 
 import com.bitreight.tasklist.config.DaoContextConfiguration;
 import com.bitreight.tasklist.config.JpaConfiguration;
-import com.bitreight.tasklist.dao.ProjectDao;
-import com.bitreight.tasklist.dao.UserDao;
 import com.bitreight.tasklist.entity.Project;
 import com.bitreight.tasklist.entity.User;
 import org.junit.After;
@@ -81,9 +79,11 @@ public class TestProjectDao {
 
     @Test
     public void testUpdateProject() {
-        projects.forEach(project -> { project.setTitle("test" + projects.indexOf(project));
-                                        project.setDescription("test_description");
-                                        projectDao.update(project);});
+        for(Project project : projects) {
+            project.setTitle("test" + projects.indexOf(project));
+            project.setDescription("test_description");
+            projectDao.update(project);
+        }
 
         List<Project> projectsFromDb = projectDao.findByUser(user);
 
