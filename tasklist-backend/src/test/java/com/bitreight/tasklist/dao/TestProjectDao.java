@@ -1,5 +1,6 @@
-package com.bitreight.tasklist;
+package com.bitreight.tasklist.dao;
 
+import com.bitreight.tasklist.config.DaoContextConfiguration;
 import com.bitreight.tasklist.config.JpaConfiguration;
 import com.bitreight.tasklist.dao.ProjectDao;
 import com.bitreight.tasklist.dao.UserDao;
