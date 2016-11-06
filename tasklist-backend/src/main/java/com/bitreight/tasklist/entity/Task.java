@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import java.sql.Date;
 
 @Entity
@@ -39,6 +40,9 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "projects_id", foreignKey = @ForeignKey(name = "fk_tasks_projects"))
     private Project project;
+
+    @Version
+    private long version;
 
     public int getId() {
         return id;
@@ -94,6 +98,14 @@ public class Task {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
     }
 
     @Override
