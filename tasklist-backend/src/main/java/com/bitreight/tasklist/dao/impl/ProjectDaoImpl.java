@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Repository("projectDao")
@@ -39,8 +42,12 @@ public class ProjectDaoImpl implements ProjectDao {
 
     @Override
     public List<Project> findByUser(User user) {
-        return (List<Project>) entityManager.createQuery("Select p from Project p where p.user LIKE :user")
-                                            .setParameter("user", user)
-                                            .getResultList();
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<Project> criteria = builder.createQuery(Project.class);
+        Root<Project> root = criteria.from(Project.class);
+        criteria.where(builder.equal(root.get("user"), user));
+
+        return entityManager.createQuery(criteria).getResultList();
     }
 }
