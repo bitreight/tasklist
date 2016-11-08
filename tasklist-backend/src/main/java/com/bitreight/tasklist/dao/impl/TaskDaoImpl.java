@@ -23,10 +23,12 @@ public class TaskDaoImpl implements TaskDao {
     @Override
     public void update(Task task) {
         Task taskFromDb = findById(task.getId());
-        taskFromDb.setTitle(task.getTitle());
-        taskFromDb.setDescription(task.getDescription());
-        taskFromDb.setDeadline(task.getDeadline());
-        taskFromDb.setPriority(task.getPriority());
+        if(taskFromDb != null) {
+            taskFromDb.setTitle(task.getTitle());
+            taskFromDb.setDescription(task.getDescription());
+            taskFromDb.setDeadline(task.getDeadline());
+            taskFromDb.setPriority(task.getPriority());
+        }
     }
 
     @Override

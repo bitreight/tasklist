@@ -26,8 +26,10 @@ public class ProjectDaoImpl implements ProjectDao {
     @Override
     public void update(Project project) {
         Project projectFromDb = findById(project.getId());
-        projectFromDb.setTitle(project.getTitle());
-        projectFromDb.setDescription(project.getDescription());
+        if(projectFromDb != null) {
+            projectFromDb.setTitle(project.getTitle());
+            projectFromDb.setDescription(project.getDescription());
+        }
     }
 
     @Override

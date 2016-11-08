@@ -21,9 +21,11 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void update(User user) {
         User userFromDb = findById(user.getId());
-        userFromDb.setName(user.getName());
-        userFromDb.setSurname(user.getSurname());
-        userFromDb.setPassword(user.getPassword());
+        if(userFromDb != null) {
+            userFromDb.setName(user.getName());
+            userFromDb.setSurname(user.getSurname());
+            userFromDb.setPassword(user.getPassword());
+        }
     }
 
     @Override
