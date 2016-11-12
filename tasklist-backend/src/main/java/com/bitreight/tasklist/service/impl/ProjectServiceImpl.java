@@ -6,14 +6,14 @@ import com.bitreight.tasklist.dto.ProjectDto;
 import com.bitreight.tasklist.entity.Project;
 import com.bitreight.tasklist.entity.User;
 import com.bitreight.tasklist.service.ProjectService;
-import com.bitreight.tasklist.service.converter.impl.ProjectConverter;
+import com.bitreight.tasklist.service.converter.ProjectDtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service("projectService")
+@Service
 @Transactional
 public class ProjectServiceImpl implements ProjectService {
 
@@ -24,7 +24,7 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectDao projectDao;
 
     @Autowired
-    private ProjectConverter projectConverter;
+    private ProjectDtoConverter projectConverter;
 
     @Override
     public void add(ProjectDto projectDto, int userId) {
@@ -71,7 +71,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectDto> getByUser(int userId) {
+    public List<ProjectDto> getByUserId(int userId) {
         List<ProjectDto> projectDtos = null;
 
         if(userId > 0) {

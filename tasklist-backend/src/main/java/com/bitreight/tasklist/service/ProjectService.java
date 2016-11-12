@@ -5,6 +5,7 @@ import com.bitreight.tasklist.dto.ProjectDto;
 import java.util.List;
 
 public interface ProjectService {
+
     void add(ProjectDto projectDto, int userId);
 
     void update(ProjectDto projectDto);
@@ -13,5 +14,5 @@ public interface ProjectService {
 
     ProjectDto getById(int projectId);
 
-    List<ProjectDto> getByUser(int userId);
+    List<ProjectDto> getByUserId(int userId);
 }

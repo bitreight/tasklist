@@ -2,11 +2,11 @@ package com.bitreight.tasklist.service.converter.impl;
 
 import com.bitreight.tasklist.dto.ProjectDto;
 import com.bitreight.tasklist.entity.Project;
-import com.bitreight.tasklist.service.converter.DtoConverter;
+import com.bitreight.tasklist.service.converter.ProjectDtoConverter;
 import org.springframework.stereotype.Component;
 
-@Component("projectConverter")
-public class ProjectConverter extends DtoConverter<Project, ProjectDto> {
+@Component
+public class ProjectDtoConverterImpl implements ProjectDtoConverter {
 
     @Override
     public Project convertDto(ProjectDto projectDto) {
