@@ -37,7 +37,7 @@ public class TaskDtoConverterImpl implements TaskDtoConverter {
         taskDto.setTitle(task.getTitle());
         taskDto.setDescription(task.getDescription());
         taskDto.setDeadline(sqlDateToString(task.getDeadline()));
-        taskDto.setIsCompleted(task.isCompleted());
+        taskDto.setCompleted(task.isCompleted());
         taskDto.setPriority(task.getPriority().ordinal());
         taskDto.setVersion(task.getVersion());
         return taskDto;

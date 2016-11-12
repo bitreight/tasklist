@@ -69,12 +69,12 @@ public class TaskDto {
         this.priority = priority;
     }
 
-    public boolean getIsCompleted() {
+    public boolean isCompleted() {
         return isCompleted;
     }
 
-    public void setIsCompleted(boolean isCompleted) {
-        this.isCompleted = isCompleted;
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
     }
 
     public long getVersion() {
@@ -83,5 +83,47 @@ public class TaskDto {
 
     public void setVersion(long version) {
         this.version = version;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TaskDto taskDto = (TaskDto) o;
+
+        if (id != taskDto.id) return false;
+        if (priority != taskDto.priority) return false;
+        if (isCompleted != taskDto.isCompleted) return false;
+        if (version != taskDto.version) return false;
+        if (title != null ? !title.equals(taskDto.title) : taskDto.title != null) return false;
+        if (description != null ? !description.equals(taskDto.description) : taskDto.description != null) return false;
+        return deadline != null ? deadline.equals(taskDto.deadline) : taskDto.deadline == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (deadline != null ? deadline.hashCode() : 0);
+        result = 31 * result + priority;
+        result = 31 * result + (isCompleted ? 1 : 0);
+        result = 31 * result + (int) (version ^ (version >>> 32));
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "TaskDto [" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", deadline='" + deadline + '\'' +
+                ", priority=" + priority +
+                ", isCompleted=" + isCompleted +
+                ", version=" + version +
+                ']';
     }
 }
