@@ -1,7 +1,7 @@
 package com.bitreight.tasklist.dao;
 
+import com.bitreight.tasklist.config.BackendConfiguration;
 import com.bitreight.tasklist.config.DaoContextConfiguration;
-import com.bitreight.tasklist.config.JpaConfiguration;
 import com.bitreight.tasklist.entity.Project;
 import com.bitreight.tasklist.entity.Task;
 import com.bitreight.tasklist.entity.TaskPriority;
@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
@@ -25,9 +26,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { JpaConfiguration.class, DaoContextConfiguration.class },
+@ContextConfiguration(classes = { BackendConfiguration.class, DaoContextConfiguration.class },
         loader = AnnotationConfigContextLoader.class)
 @Transactional
+@ActiveProfiles("dev")
 public class TestTaskDao {
 
     @Autowired

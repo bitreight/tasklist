@@ -3,6 +3,7 @@ package com.bitreight.tasklist.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -20,7 +21,8 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource(value = { "classpath:application.properties" })
+@PropertySource(value = { "classpath:db.properties" })
+@Profile("dev")
 public class JpaConfiguration {
 
     @Autowired
@@ -66,6 +68,7 @@ public class JpaConfiguration {
         properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
         return properties;
     }
+
 
     @Bean
     @Autowired
