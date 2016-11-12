@@ -18,5 +18,5 @@ public interface TaskService {
 
     List<TaskDto> getAllTasksOfUser(int userId);
 
-    void setCompleted(int taskId);
+    void setIsCompleted(int taskId, boolean isCompleted);
 }
