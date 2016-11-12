@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `projects` (
   `users_owner_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `projects_title_UNIQUE` (`title` ASC),
-  CONSTRAINT `fk_projects_users1`
+  CONSTRAINT `fk_projects_users`
     FOREIGN KEY (`users_owner_id`)
     REFERENCES `users` (`id`)
     ON DELETE CASCADE
