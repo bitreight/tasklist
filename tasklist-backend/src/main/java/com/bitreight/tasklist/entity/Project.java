@@ -79,4 +79,14 @@ public class Project {
         result = 31 * result + (user != null ? user.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Project [" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", user_id=" + user.getId() +
+                ']';
+    }
 }

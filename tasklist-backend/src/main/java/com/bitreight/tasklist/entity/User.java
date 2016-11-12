@@ -85,4 +85,15 @@ public class User {
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "User [" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ']';
+    }
 }
