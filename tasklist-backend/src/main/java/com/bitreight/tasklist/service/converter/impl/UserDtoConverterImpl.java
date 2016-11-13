@@ -6,7 +6,7 @@ import com.bitreight.tasklist.service.converter.UserDtoConverter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserConverterImpl implements UserDtoConverter {
+public class UserDtoConverterImpl implements UserDtoConverter {
 
     @Override
     public User convertDto(UserDto userDto) {
