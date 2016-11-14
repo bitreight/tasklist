@@ -1,8 +1,10 @@
 package com.bitreight.tasklist.config;
 
+import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -21,12 +23,20 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource(value = { "classpath:db.properties" })
+@PropertySource(value = { "classpath:/db/db.properties" })
 @Profile("dev")
 public class JpaConfiguration {
 
     @Autowired
     private Environment environment;
+
+    @Bean(initMethod = "migrate")
+    public Flyway flyway() {
+        Flyway flyway = new Flyway();
+        flyway.setDataSource(dataSource());
+        flyway.setLocations(environment.getRequiredProperty("flyway.location"));
+        return flyway;
+    }
 
     @Bean
     public DataSource dataSource() {
@@ -39,6 +49,7 @@ public class JpaConfiguration {
     }
 
     @Bean
+    @DependsOn("flyway")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws NamingException {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setDataSource(dataSource());

@@ -1,9 +1,7 @@
-USE `tasklist` ;
-
 -- -----------------------------------------------------
--- Table `tasklist`.`users`
+-- Table `users`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tasklist`.`users` (
+CREATE TABLE IF NOT EXISTS `users` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(20) NOT NULL,
   `password` VARCHAR(20) NOT NULL,
@@ -15,41 +13,40 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `tasklist`.`projects`
+-- Table `projects`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tasklist`.`projects` (
+CREATE TABLE IF NOT EXISTS `projects` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(20) NOT NULL,
   `description` VARCHAR(500) NULL,
   `users_owner_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `title_UNIQUE` (`title` ASC),
-  INDEX `fk_projects_users1_idx` (`users_owner_id` ASC),
-  CONSTRAINT `fk_projects_users1`
+  UNIQUE INDEX `projects_title_UNIQUE` (`title` ASC),
+  CONSTRAINT `fk_projects_users`
     FOREIGN KEY (`users_owner_id`)
-    REFERENCES `tasklist`.`users` (`id`)
+    REFERENCES `users` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `tasklist`.`tasks`
+-- Table `tasks`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `tasklist`.`tasks` (
+CREATE TABLE IF NOT EXISTS `tasks` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(45) NOT NULL,
   `description` VARCHAR(500) NULL,
   `deadline` DATE NULL,
   `task_priority` VARCHAR(10) NOT NULL,
   `projects_id` INT NOT NULL,
-  `is_completed` TINYINT(1) NOT NULL,
+  `is_completed` BOOLEAN NOT NULL,
+  `version` INT8 NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `title_UNIQUE` (`title` ASC),
-  INDEX `fk_tasks_projects1_idx` (`projects_id` ASC),
+  UNIQUE INDEX `tasks_title_UNIQUE` (`title` ASC),
   CONSTRAINT `fk_tasks_projects`
     FOREIGN KEY (`projects_id`)
-    REFERENCES `tasklist`.`projects` (`id`)
+    REFERENCES `projects` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
