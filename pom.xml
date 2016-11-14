@@ -18,12 +18,14 @@
         <java.version>1.8</java.version>
 
         <junit.version>4.12</junit.version>
+        <mockito.version>2.2.15</mockito.version>
         <spring.version>4.3.3.RELEASE</spring.version>
         <hibernate.version>5.2.3.Final</hibernate.version>
         <mysql-connector.version>6.0.5</mysql-connector.version>
         <h2-connector.version>1.4.192</h2-connector.version>
         <jcl.slf4j.version>1.7.21</jcl.slf4j.version>
         <logback.version>1.1.7</logback.version>
+        <validation.api.version>1.1.0.Final</validation.api.version>
 
         <tomcat.plugin.version>2.2</tomcat.plugin.version>
 
@@ -117,6 +119,20 @@
                 <scope>test</scope>
             </dependency>
 
+            <!-- Validation -->
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${validation.api.version}</version>
+            </dependency>
+
+            <!-- Testing -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

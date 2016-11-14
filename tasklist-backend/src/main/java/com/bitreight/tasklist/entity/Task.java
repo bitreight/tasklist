@@ -1,13 +1,10 @@
 package com.bitreight.tasklist.entity;
 
-import org.hibernate.annotations.Type;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 @Entity
 @Table(name = "tasks")
@@ -38,7 +37,7 @@ public class Task {
     private boolean isCompleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "projects_id", foreignKey = @ForeignKey(name = "fk_tasks_projects"))
+    @JoinColumn(name = "projects_id")
     private Project project;
 
     @Version
@@ -117,11 +116,13 @@ public class Task {
 
         if (id != task.id) return false;
         if (isCompleted != task.isCompleted) return false;
+        if (version != task.version) return false;
         if (title != null ? !title.equals(task.title) : task.title != null) return false;
         if (description != null ? !description.equals(task.description) : task.description != null) return false;
         if (deadline != null ? !deadline.equals(task.deadline) : task.deadline != null) return false;
         if (priority != task.priority) return false;
         return project != null ? project.equals(task.project) : task.project == null;
+
     }
 
     @Override
@@ -133,6 +134,22 @@ public class Task {
         result = 31 * result + (priority != null ? priority.hashCode() : 0);
         result = 31 * result + (isCompleted ? 1 : 0);
         result = 31 * result + (project != null ? project.hashCode() : 0);
+        result = 31 * result + (int) (version ^ (version >>> 32));
         return result;
+    }
+
+    @Override
+    public String toString() {
+        DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
+        return "Task [" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", deadline='" + formatter.format(deadline) + '\'' +
+                ", priority='" + priority + '\'' +
+                ", isCompleted=" + isCompleted +
+                ", project_id=" + project.getId() +
+                ", version=" + version +
+                ']';
     }
 }

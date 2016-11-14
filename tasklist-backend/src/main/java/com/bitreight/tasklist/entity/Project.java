@@ -2,7 +2,6 @@ package com.bitreight.tasklist.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,7 +21,7 @@ public class Project {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_owner_id", foreignKey = @ForeignKey(name = "fk_projects_users1"))
+    @JoinColumn(name = "users_owner_id")
     private User user;
 
     public int getId() {
@@ -78,5 +77,15 @@ public class Project {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (user != null ? user.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Project [" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", user_id=" + user.getId() +
+                ']';
     }
 }

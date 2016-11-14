@@ -1,24 +1,24 @@
-package com.bitreight.tasklist.entity;
+package com.bitreight.tasklist.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-@Entity
-@Table(name = "users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UserDto {
+
     private int id;
 
+    @NotNull
+    @Size(min = 6, max = 20)
     private String username;
 
+    @NotNull
+    @Size(min = 6, max = 20)
     private String password;
 
+    @Size(max = 45)
     private String name;
 
+    @Size(max = 45)
     private String surname;
 
     public int getId() {
@@ -66,13 +66,13 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        User user = (User) o;
+        UserDto userDto = (UserDto) o;
 
-        if (id != user.id) return false;
-        if (username != null ? !username.equals(user.username) : user.username != null) return false;
-        if (password != null ? !password.equals(user.password) : user.password != null) return false;
-        if (name != null ? !name.equals(user.name) : user.name != null) return false;
-        return surname != null ? surname.equals(user.surname) : user.surname == null;
+        if (id != userDto.id) return false;
+        if (username != null ? !username.equals(userDto.username) : userDto.username != null) return false;
+        if (password != null ? !password.equals(userDto.password) : userDto.password != null) return false;
+        if (name != null ? !name.equals(userDto.name) : userDto.name != null) return false;
+        return surname != null ? surname.equals(userDto.surname) : userDto.surname == null;
 
     }
 
@@ -88,7 +88,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User [" +
+        return "UserDto [" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
