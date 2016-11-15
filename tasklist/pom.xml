@@ -23,6 +23,11 @@
             <artifactId>el-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+
         <!-- Spring 4 dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>

@@ -26,6 +26,7 @@
         <el-api.version>2.2</el-api.version>
         <spring.version>4.3.3.RELEASE</spring.version>
         <hibernate.version>5.2.3.Final</hibernate.version>
+        <jstl.version>1.2</jstl.version>
 
         <mysql-connector.version>6.0.5</mysql-connector.version>
         <h2-connector.version>1.4.192</h2-connector.version>
@@ -61,6 +62,12 @@
                 <artifactId>el-api</artifactId>
                 <version>${el-api.version}</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>jstl</groupId>
+                <artifactId>jstl</artifactId>
+                <version>${jstl.version}</version>
             </dependency>
 
             <!-- Spring 4 dependencies -->
