@@ -1,5 +1,9 @@
 # Description
-Tasklist is a web application for managing your tasks and to-dos, organizing collaborative projects.
+Tasklist is a web application for managing your tasks and to-dos, organizing collaborative projects.<br>
+It consists of three modules:
+* ak-parent - parent module with common settings, dependency and plugin management.
+* tasklist - front-end module as a spring-mvc web application.
+* tasklist-backend - main business-logic and DAO of the application.
 
 # Usecases
 Usecases of the first development iteration are:
