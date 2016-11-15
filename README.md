@@ -11,6 +11,10 @@ Usecases of the first development iteration are:
 Full information about development iterations see in docs.
 
 # Deploy
+Tasklist uses a MySQL as a production DBMS and a Flyway migration tool. So at first do the following:
+* Create an empty database.
+* Set database url, username and password as jdbc properties in tasklist-backend/src/main/resources/db/db.properties.
+
 ## Embedded server
 To run at tomcat7-maven-plugin embedded server:
 <p>`mvn clean package tomcat7:run`
