@@ -7,18 +7,18 @@ public class UserDto {
 
     private int id;
 
-    @NotNull
-    @Size(min = 6, max = 20)
+    @NotNull(message = "Enter login.")
+    @Size(min = 6, max = 20, message = "Login must be {min}..{max} characters long.")
     private String username;
 
-    @NotNull
-    @Size(min = 6, max = 20)
+    @NotNull(message = "Enter password.")
+    @Size(min = 6, max = 20, message = "Password must be {min}..{max} characters long.")
     private String password;
 
-    @Size(max = 45)
+    @Size(max = 45, message = "Name could be maximum {max} characters long.")
     private String name;
 
-    @Size(max = 45)
+    @Size(max = 45, message = "Surname could be maximum {max} characters long.")
     private String surname;
 
     public int getId() {
