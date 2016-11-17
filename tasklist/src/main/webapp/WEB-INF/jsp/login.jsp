@@ -37,16 +37,13 @@
                         </c:if>
                     </spring:bind>
 
-                    <label class="checkbox">
-                        <input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe"> Remember me
-                    </label>
-                    <button id="button-login" class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+                    <button id="button-login" class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
                 </form:form>
                 <a href="join">Create an account</a>
             </div>
         </div>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="<c:url value="/resources/vendor/jquery/jquery-3.1.1.min.js"/>"></script>
         <script src="<c:url value="/resources/vendor/bootstrap/js/bootstrap.min.js"/>"></script>
     </body>
 </html>

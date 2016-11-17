@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.validation.Valid;
 
 @Controller
-public class UserController {
+public class LoginController {
 
     @Autowired
     private UserService userService;
@@ -38,19 +38,9 @@ public class UserController {
 
         return "login";
     }
-
 //    @RequestMapping(value = "/logout", method = RequestMethod.GET)
 //    public String executeLogout() {
 //        return "login";
 //    }
-//
-//    @RequestMapping(value = "/join", method = RequestMethod.GET)
-//    public String goToRegistrationPage() {
-//        return "registration";
-//    }
-//
-//    @RequestMapping(value = "/join", method = RequestMethod.POST)
-//    public String executeRegistration() {
-//        return "registration";
-//    }
+
 }

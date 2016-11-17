@@ -12,11 +12,18 @@ body {
     padding: 0 50px 0 50px;
 }
 
-#login-form label {
+#registration-form-wrapper {
+    margin-top: 120px;
+    padding: 0 50px 0 50px;
+}
+
+#login-form-wrapper label,
+#registration-form-wrapper label {
     margin-left: 20px;
 }
 
-#input-login, #input-password {
+#login-form-wrapper input,
+#registration-form-wrapper input {
     margin-bottom: 10px;
 }
 
