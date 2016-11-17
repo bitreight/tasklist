@@ -2,10 +2,12 @@ package com.bitreight.tasklist.dao.impl;
 
 import com.bitreight.tasklist.dao.UserDao;
 import com.bitreight.tasklist.entity.User;
+import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Repository("userDao")
 public class UserDaoImpl implements UserDao {
@@ -30,7 +32,10 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void deleteById(int userId) {
-        entityManager.remove(findById(userId));
+        User userFromDb = findById(userId);
+        if(userFromDb != null) {
+            entityManager.remove(userFromDb);
+        }
     }
 
     @Override
@@ -40,10 +45,11 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findByUsernameAndPassword(String username, String password) {
-        return (User) entityManager.createQuery("Select u from User u where u.username LIKE :username " +
+        List<User> users = (List<User>) entityManager.createQuery("Select u from User u where u.username LIKE :username " +
                                                 "and u.password LIKE :password")
                                     .setParameter("username", username)
                                     .setParameter("password", password)
-                                    .getSingleResult();
+                                    .getResultList();
+        return users.isEmpty() ? null : users.get(0);
     }
 }

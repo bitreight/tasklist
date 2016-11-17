@@ -15,6 +15,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { BackendConfiguration.class, DaoContextConfiguration.class },
@@ -50,9 +51,21 @@ public class TestUserDao {
     }
 
     @Test
+    public void testFindById_nonExistentId() {
+        User userFromDb = userDao.findById(-1);
+        assertNull(userFromDb);
+    }
+
+    @Test
     public void testFindByUsernameAndPassword() {
         User userFromDb = userDao.findByUsernameAndPassword(user.getUsername(), user.getPassword());
         assertEquals(user, userFromDb);
+    }
+
+    @Test
+    public void testFindByUsernameAndPassword_nonExistentUsernameAndPassword() {
+        User userFromDb = userDao.findByUsernameAndPassword("", "");
+        assertNull(userFromDb);
     }
 
     @Test
@@ -63,9 +76,25 @@ public class TestUserDao {
         user.setSurname("test");
 
         userDao.update(user);
-
         User userFromDb = userDao.findById(user.getId());
 
+        assertEquals(user, userFromDb);
+    }
+
+    @Test
+    public void testUpdateUser_nonexistentUser() {
+        User invalidUser = new User();
+
+        userDao.update(invalidUser);
+        User userFromDb = userDao.findById(user.getId());
+
+        assertEquals(user, userFromDb);
+    }
+
+    @Test
+    public void testDeleteById_nonexistentId() {
+        userDao.deleteById(-1);
+        User userFromDb = userDao.findById(user.getId());
         assertEquals(user, userFromDb);
     }
 }

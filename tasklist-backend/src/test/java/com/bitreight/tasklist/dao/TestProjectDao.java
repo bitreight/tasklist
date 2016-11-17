@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { BackendConfiguration.class, DaoContextConfiguration.class },
@@ -74,9 +76,23 @@ public class TestProjectDao {
     }
 
     @Test
+    public void testFindProjectById_nonExistentId() {
+        Project projectFromDb = projectDao.findById(-1);
+        assertNull(projectFromDb);
+    }
+
+    @Test
     public void testFindProjectByUser() {
         List<Project> projectsFromDb = projectDao.findByUser(user);
         assertEquals(projects, projectsFromDb);
+    }
+
+    @Test
+    public void testFindProjectByUser_nonExistentUser() {
+        User invalidUser = new User();
+        invalidUser.setId(-1);
+        List<Project> projectsFromDb = projectDao.findByUser(invalidUser);
+        assertTrue(projectsFromDb.isEmpty());
     }
 
     @Test
@@ -89,6 +105,23 @@ public class TestProjectDao {
 
         List<Project> projectsFromDb = projectDao.findByUser(user);
 
+        assertEquals(projects, projectsFromDb);
+    }
+
+    @Test
+    public void testUpdateProject_nonExistentProject() {
+        Project invalidProject = new Project();
+
+        projectDao.update(invalidProject);
+        List<Project> projectsFromDb = projectDao.findByUser(user);
+
+        assertEquals(projects, projectsFromDb);
+    }
+
+    @Test
+    public void testDeleteById_nonExistentId() {
+        projectDao.deleteById(-1);
+        List<Project> projectsFromDb = projectDao.findByUser(user);
         assertEquals(projects, projectsFromDb);
     }
 }

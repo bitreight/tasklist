@@ -34,7 +34,10 @@ public class ProjectDaoImpl implements ProjectDao {
 
     @Override
     public void deleteById(int projectId) {
-        entityManager.remove(findById(projectId));
+        Project projectFromDb = findById(projectId);
+        if(projectFromDb != null) {
+            entityManager.remove(projectFromDb);
+        }
     }
 
     @Override
