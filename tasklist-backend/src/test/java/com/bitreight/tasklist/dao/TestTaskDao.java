@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -135,7 +134,8 @@ public class TestTaskDao {
     }
 
     @Test
-    public void testUpdateTask() throws DaoUpdateNonActualVersionOfTaskException {
+    public void testUpdateTask() throws DaoUpdateNonActualVersionOfTaskException,
+            DaoSaveDuplicatedTaskException {
         for(Task task : tasks) {
             task.setTitle("test" + tasks.indexOf(task));
             task.setDescription("test_description");
@@ -150,9 +150,19 @@ public class TestTaskDao {
         assertEquals(tasks, tasksFromDb);
     }
 
+    @Test(expected = DaoSaveDuplicatedTaskException.class)
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public void testUpdateTask_withDuplicatedTitle() throws DaoUpdateNonActualVersionOfTaskException,
+            DaoSaveDuplicatedTaskException {
+        Task duplicatedTask = tasks.get(1);
+        duplicatedTask.setTitle(tasks.get(0).getTitle());
+        taskDao.update(duplicatedTask);
+    }
+
     @Test(expected = DaoUpdateNonActualVersionOfTaskException.class)
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public void testUpdateTask_withNonActualVersion() throws DaoUpdateNonActualVersionOfTaskException {
+    public void testUpdateTask_withNonActualVersion() throws DaoUpdateNonActualVersionOfTaskException,
+            DaoSaveDuplicatedTaskException {
         //get task from db
         Task taskFromDb = taskDao.findById(tasks.get(0).getId());
 
@@ -174,7 +184,8 @@ public class TestTaskDao {
     }
 
     @Test
-    public void testUpdateTask_nonExistentTask() throws DaoUpdateNonActualVersionOfTaskException {
+    public void testUpdateTask_nonExistentTask() throws DaoUpdateNonActualVersionOfTaskException,
+            DaoSaveDuplicatedTaskException {
         Task invalidTask = new Task();
         invalidTask.setId(-1);
 

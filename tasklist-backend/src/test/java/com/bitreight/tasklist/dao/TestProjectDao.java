@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -108,7 +109,7 @@ public class TestProjectDao {
     }
 
     @Test
-    public void testUpdateProject() {
+    public void testUpdateProject() throws DaoSaveDuplicatedProjectException {
         for(Project project : projects) {
             project.setTitle("test" + projects.indexOf(project));
             project.setDescription("test_description");
@@ -120,8 +121,16 @@ public class TestProjectDao {
         assertEquals(projects, projectsFromDb);
     }
 
+    @Test(expected = DaoSaveDuplicatedProjectException.class)
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public void testUpdateProject_withDuplicatedTitle() throws DaoSaveDuplicatedProjectException {
+        Project duplicatedProject = projects.get(1);
+        duplicatedProject.setTitle(projects.get(0).getTitle());
+        projectDao.update(duplicatedProject);
+    }
+
     @Test
-    public void testUpdateProject_nonExistentProject() {
+    public void testUpdateProject_nonExistentProject() throws DaoSaveDuplicatedProjectException {
         Project invalidProject = new Project();
 
         projectDao.update(invalidProject);
