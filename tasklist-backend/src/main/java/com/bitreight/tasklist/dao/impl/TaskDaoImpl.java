@@ -26,27 +26,38 @@ public class TaskDaoImpl implements TaskDao {
     public void save(Task task) throws DaoSaveDuplicatedTaskException {
         try {
             entityManager.persist(task);
+
         } catch (PersistenceException e) {
             if(e.getCause() instanceof ConstraintViolationException) {
                 throw new DaoSaveDuplicatedTaskException(
-                        "Task with title \"" + task.getTitle() +
-                                "\" already exists in the database.", e);
+                                "Saving task with title \"" + task.getTitle() + "\"." +
+                                " Already exists.", e);
             }
         }
     }
 
     @Override
-    public void update(Task task) throws DaoUpdateNonActualVersionOfTaskException {
+    public void update(Task task) throws DaoUpdateNonActualVersionOfTaskException,
+            DaoSaveDuplicatedTaskException {
         Task taskFromDb = findById(task.getId());
         try {
             if (taskFromDb != null) {
                 entityManager.merge(task);
+                entityManager.flush();
             }
+
         } catch (OptimisticLockException e) {
             throw new DaoUpdateNonActualVersionOfTaskException(
                             "Version of the task id=" + task.getId() + " has been changed. " +
                             "Old version is " + task.getVersion() +
                             ", new version is " + taskFromDb.getVersion() + ".", e);
+
+        } catch (PersistenceException e) {
+            if(e.getCause() instanceof ConstraintViolationException) {
+                throw new DaoSaveDuplicatedTaskException(
+                                "Updating task with new title \"" + task.getTitle() + "\"." +
+                                " Already exists.", e);
+            }
         }
     }
 

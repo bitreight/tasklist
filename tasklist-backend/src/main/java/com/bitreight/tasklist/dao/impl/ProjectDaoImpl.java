@@ -27,21 +27,32 @@ public class ProjectDaoImpl implements ProjectDao {
     public void save(Project project) throws DaoSaveDuplicatedProjectException {
         try {
             entityManager.persist(project);
+
         } catch (PersistenceException e) {
             if (e.getCause() instanceof ConstraintViolationException) {
                 throw new DaoSaveDuplicatedProjectException(
-                                "Project with title \"" + project.getTitle() +
-                                "\" already exists in the database.", e);
+                                "Saving project with title \"" + project.getTitle() + "\"." +
+                                " Already exists.", e);
             }
         }
     }
 
     @Override
-    public void update(Project project) {
+    public void update(Project project) throws DaoSaveDuplicatedProjectException {
         Project projectFromDb = findById(project.getId());
-        if(projectFromDb != null) {
-            projectFromDb.setTitle(project.getTitle());
-            projectFromDb.setDescription(project.getDescription());
+        try {
+            if (projectFromDb != null) {
+                projectFromDb.setTitle(project.getTitle());
+                projectFromDb.setDescription(project.getDescription());
+                entityManager.flush();
+            }
+
+        } catch(PersistenceException e) {
+            if (e.getCause() instanceof ConstraintViolationException) {
+                throw new DaoSaveDuplicatedProjectException(
+                                "Updating project with new title \"" + project.getTitle() + "\"." +
+                                " Already exists.", e);
+            }
         }
     }
 

@@ -1,18 +1,15 @@
 package com.bitreight.tasklist.dao.impl;
 
 import com.bitreight.tasklist.dao.UserDao;
-import com.bitreight.tasklist.dao.exception.DaoException;
 import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedUserException;
 import com.bitreight.tasklist.entity.User;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Repository("userDao")

@@ -10,7 +10,7 @@ import java.util.List;
 public interface TaskDao {
     void save(Task task) throws DaoSaveDuplicatedTaskException;
 
-    void update(Task task) throws DaoUpdateNonActualVersionOfTaskException;
+    void update(Task task) throws DaoUpdateNonActualVersionOfTaskException, DaoSaveDuplicatedTaskException;
 
     void deleteById(int taskId);
 

@@ -9,7 +9,7 @@ import java.util.List;
 public interface ProjectDao {
     void save(Project project) throws DaoSaveDuplicatedProjectException;
 
-    void update(Project project);
+    void update(Project project) throws DaoSaveDuplicatedProjectException;
 
     void deleteById(int projectId);
 

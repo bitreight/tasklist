@@ -1,6 +1,5 @@
 package com.bitreight.tasklist.dao;
 
-import com.bitreight.tasklist.dao.exception.DaoException;
 import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedUserException;
 import com.bitreight.tasklist.entity.User;
 
