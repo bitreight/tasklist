@@ -2,6 +2,10 @@ package com.bitreight.tasklist.dao;
 
 import com.bitreight.tasklist.config.BackendConfiguration;
 import com.bitreight.tasklist.config.DaoContextConfiguration;
+import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedProjectException;
+import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedTaskException;
+import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedUserException;
+import com.bitreight.tasklist.dao.exception.DaoUpdateNonActualVersionOfTaskException;
 import com.bitreight.tasklist.entity.Project;
 import com.bitreight.tasklist.entity.Task;
 import com.bitreight.tasklist.entity.TaskPriority;
@@ -11,10 +15,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
@@ -23,13 +29,14 @@ import java.util.Calendar;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { BackendConfiguration.class, DaoContextConfiguration.class },
         loader = AnnotationConfigContextLoader.class)
-@Transactional
 @ActiveProfiles("dev")
+@Transactional
 public class TestTaskDao {
 
     @Autowired
@@ -46,7 +53,8 @@ public class TestTaskDao {
     private List<Task> tasks;
 
     @Before
-    public void setUp() {
+    public void setUp() throws DaoSaveDuplicatedTaskException, DaoSaveDuplicatedUserException,
+            DaoSaveDuplicatedProjectException {
         user = new User();
         user.setUsername("username");
         user.setPassword("pass");
@@ -77,7 +85,9 @@ public class TestTaskDao {
         task2.setProject(project);
         tasks.add(task2);
 
-        tasks.forEach(task -> taskDao.save(task));
+        for(Task task : tasks) {
+            taskDao.save(task);
+        }
     }
 
     @After
@@ -87,10 +97,25 @@ public class TestTaskDao {
         userDao.deleteById(user.getId());
     }
 
+    @Test(expected = DaoSaveDuplicatedTaskException.class)
+    public void testSaveTask_withDuplicatedName() throws DaoSaveDuplicatedTaskException {
+        Task duplicatedTask = new Task();
+        duplicatedTask.setTitle(tasks.get(0).getTitle());
+        duplicatedTask.setPriority(tasks.get(0).getPriority());
+        duplicatedTask.setProject(project);
+        taskDao.save(duplicatedTask);
+    }
+
     @Test
     public void testFindTaskById() {
         Task taskFromDb = taskDao.findById(tasks.get(0).getId());
         assertEquals(tasks.get(0), taskFromDb);
+    }
+
+    @Test
+    public void testFindTaskById_nonExistentId() {
+        Task taskFromDb = taskDao.findById(-1);
+        assertNull(taskFromDb);
     }
 
     @Test
@@ -100,7 +125,17 @@ public class TestTaskDao {
     }
 
     @Test
-    public void testUpdateTask() {
+    public void testFindTaskByProject_nonExistentProject() {
+        Project invalidProject = new Project();
+        invalidProject.setId(-1);
+
+        List<Task> tasksFromDb = taskDao.findByProject(invalidProject);
+
+        assertTrue(tasksFromDb.isEmpty());
+    }
+
+    @Test
+    public void testUpdateTask() throws DaoUpdateNonActualVersionOfTaskException {
         for(Task task : tasks) {
             task.setTitle("test" + tasks.indexOf(task));
             task.setDescription("test_description");
@@ -115,14 +150,61 @@ public class TestTaskDao {
         assertEquals(tasks, tasksFromDb);
     }
 
+    @Test(expected = DaoUpdateNonActualVersionOfTaskException.class)
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public void testUpdateTask_withNonActualVersion() throws DaoUpdateNonActualVersionOfTaskException {
+        //get task from db
+        Task taskFromDb = taskDao.findById(tasks.get(0).getId());
+
+        //create its copy with current version
+        Task taskOldVersion = new Task();
+        taskOldVersion.setId(taskFromDb.getId());
+        taskOldVersion.setTitle(taskFromDb.getTitle());
+        taskOldVersion.setDescription(taskFromDb.getDescription());
+        taskOldVersion.setDeadline(taskFromDb.getDeadline());
+        taskOldVersion.setPriority(taskFromDb.getPriority());
+        taskOldVersion.setCompleted(taskFromDb.isCompleted());
+        taskOldVersion.setProject(taskFromDb.getProject());
+
+        //update task from db (version is changed)
+        taskFromDb.setDescription("new_description");
+        taskDao.update(taskFromDb);
+
+        taskDao.update(taskOldVersion);
+    }
+
+    @Test
+    public void testUpdateTask_nonExistentTask() throws DaoUpdateNonActualVersionOfTaskException {
+        Task invalidTask = new Task();
+        invalidTask.setId(-1);
+
+        taskDao.update(invalidTask);
+        List<Task> tasksFromDb = taskDao.findByProject(project);
+
+        assertEquals(tasks, tasksFromDb);
+    }
+
     @Test
     public void testSetTaskIsCompleted() {
         Task task = tasks.get(0);
 
         taskDao.setIsCompleted(task.getId(), true);
-
         Task taskFromDb = taskDao.findById(task.getId());
 
         assertTrue(taskFromDb.isCompleted());
+    }
+
+    @Test
+    public void testSetTaskIsCompleted_nonExistentTask() {
+        taskDao.setIsCompleted(-1, true);
+        List<Task> tasksFromDb = taskDao.findByProject(project);
+        assertEquals(tasks, tasksFromDb);
+    }
+
+    @Test
+    public void testDeleteTask_nonExistentTask() {
+        taskDao.deleteById(-1);
+        List<Task> tasksFromDb = taskDao.findByProject(project);
+        assertEquals(tasks.size(), tasksFromDb.size());
     }
 }

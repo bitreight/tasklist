@@ -2,6 +2,8 @@ package com.bitreight.tasklist.dao;
 
 import com.bitreight.tasklist.config.BackendConfiguration;
 import com.bitreight.tasklist.config.DaoContextConfiguration;
+import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedProjectException;
+import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedUserException;
 import com.bitreight.tasklist.entity.Project;
 import com.bitreight.tasklist.entity.User;
 import org.junit.After;
@@ -40,7 +42,7 @@ public class TestProjectDao {
     private List<Project> projects;
 
     @Before
-    public void setUp() {
+    public void setUp() throws DaoSaveDuplicatedUserException, DaoSaveDuplicatedProjectException {
         user = new User();
         user.setUsername("username");
         user.setPassword("pass");
@@ -60,13 +62,23 @@ public class TestProjectDao {
         project2.setUser(user);
         projects.add(project2);
 
-        projects.forEach(project -> projectDao.save(project));
+        for(Project project : projects) {
+            projectDao.save(project);
+        }
     }
 
     @After
     public void tearDown() {
         projects.forEach(project -> projectDao.deleteById(project.getId()));
         userDao.deleteById(user.getId());
+    }
+
+    @Test(expected = DaoSaveDuplicatedProjectException.class)
+    public void testSaveProject_withDuplicatedTitle() throws DaoSaveDuplicatedProjectException {
+        Project duplicatedProject = new Project();
+        duplicatedProject.setTitle(projects.get(0).getTitle());
+        duplicatedProject.setUser(projects.get(0).getUser());
+        projectDao.save(duplicatedProject);
     }
 
     @Test

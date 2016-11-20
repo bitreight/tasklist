@@ -2,6 +2,7 @@ package com.bitreight.tasklist.dao;
 
 import com.bitreight.tasklist.config.BackendConfiguration;
 import com.bitreight.tasklist.config.DaoContextConfiguration;
+import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedUserException;
 import com.bitreight.tasklist.entity.User;
 import org.junit.After;
 import org.junit.Before;
@@ -30,7 +31,7 @@ public class TestUserDao {
     private User user;
 
     @Before
-    public void setUp() {
+    public void setUp() throws DaoSaveDuplicatedUserException {
         user = new User();
         user.setUsername("username");
         user.setPassword("pass");
@@ -44,26 +45,34 @@ public class TestUserDao {
         userDao.deleteById(user.getId());
     }
 
+    @Test(expected = DaoSaveDuplicatedUserException.class)
+    public void testSaveUser_withDuplicatedUsername() throws DaoSaveDuplicatedUserException {
+        User duplicatedUser = new User();
+        duplicatedUser.setUsername(user.getUsername());
+        duplicatedUser.setPassword(user.getPassword());
+        userDao.save(duplicatedUser);
+    }
+
     @Test
-    public void testFindById() {
+    public void testFindUserById() {
         User userFromDb = userDao.findById(user.getId());
         assertEquals(user, userFromDb);
     }
 
     @Test
-    public void testFindById_nonExistentId() {
+    public void testFindUserById_nonExistentId() {
         User userFromDb = userDao.findById(-1);
         assertNull(userFromDb);
     }
 
     @Test
-    public void testFindByUsernameAndPassword() {
+    public void testFindUserByUsernameAndPassword() {
         User userFromDb = userDao.findByUsernameAndPassword(user.getUsername(), user.getPassword());
         assertEquals(user, userFromDb);
     }
 
     @Test
-    public void testFindByUsernameAndPassword_nonExistentUsernameAndPassword() {
+    public void testFindUserByUsernameAndPassword_nonExistentUsernameAndPassword() {
         User userFromDb = userDao.findByUsernameAndPassword("", "");
         assertNull(userFromDb);
     }
@@ -92,7 +101,7 @@ public class TestUserDao {
     }
 
     @Test
-    public void testDeleteById_nonexistentId() {
+    public void testDeleteUserById_nonExistentId() {
         userDao.deleteById(-1);
         User userFromDb = userDao.findById(user.getId());
         assertEquals(user, userFromDb);
