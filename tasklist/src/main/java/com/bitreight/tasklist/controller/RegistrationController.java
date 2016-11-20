@@ -34,6 +34,7 @@ public class RegistrationController {
             userService.register(userDto);
         } catch (ServiceUserAlreadyExistsException e) {
             //error message on page
+            return "registration";
         }
 
         return "redirect:/login";
