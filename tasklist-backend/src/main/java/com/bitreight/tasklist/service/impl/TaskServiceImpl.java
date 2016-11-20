@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service("taskService")
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class TaskServiceImpl implements TaskService {
 
     @Autowired
