@@ -2,6 +2,7 @@ package com.bitreight.tasklist.controller;
 
 import com.bitreight.tasklist.dto.UserDto;
 import com.bitreight.tasklist.service.UserService;
+import com.bitreight.tasklist.service.exception.ServiceUserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +30,11 @@ public class RegistrationController {
             return "registration";
         }
 
-        userService.register(userDto);
+        try {
+            userService.register(userDto);
+        } catch (ServiceUserAlreadyExistsException e) {
+            //error message on page
+        }
 
         return "redirect:/login";
     }
