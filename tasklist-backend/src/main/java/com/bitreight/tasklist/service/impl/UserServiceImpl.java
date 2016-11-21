@@ -37,11 +37,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto checkCredentials(UserDto userDto) {
+        UserDto actualUser = null;
+
         if(userDto != null) {
             User user = userDao.findByUsernameAndPassword(userDto.getUsername(), userDto.getPassword());
-            return userConverter.convertEntity(user);
+
+            if(user != null) {
+                actualUser = userConverter.convertEntity(user);
+            }
         }
-        return null;
+
+        return actualUser;
     }
 
     @Override
@@ -58,7 +64,10 @@ public class UserServiceImpl implements UserService {
 
         if(userId > 0) {
             User user = userDao.findById(userId);
-            userDto = userConverter.convertEntity(user);
+
+            if(user != null) {
+                userDto = userConverter.convertEntity(user);
+            }
         }
 
         return userDto;
