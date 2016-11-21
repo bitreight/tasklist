@@ -1,47 +1,48 @@
 package com.bitreight.tasklist.service;
 
-import com.bitreight.tasklist.config.DaoMockConfiguration;
-import com.bitreight.tasklist.config.ServiceContextConfiguration;
 import com.bitreight.tasklist.dao.UserDao;
+import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedUserException;
 import com.bitreight.tasklist.dto.UserDto;
 import com.bitreight.tasklist.entity.User;
-import org.junit.After;
+import com.bitreight.tasklist.service.converter.UserDtoConverter;
+import com.bitreight.tasklist.service.converter.impl.UserDtoConverterImpl;
+import com.bitreight.tasklist.service.exception.ServiceUserAlreadyExistsException;
+import com.bitreight.tasklist.service.impl.UserServiceImpl;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { ServiceContextConfiguration.class, DaoMockConfiguration.class },
-        loader = AnnotationConfigContextLoader.class)
+@RunWith(MockitoJUnitRunner.class)
 public class TestUserService {
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
+    @Mock
     private UserDao mockUserDao;
 
-    private static UserDto userDto = new UserDto();
-    private static UserDto userDtoToAdd = new UserDto();
+    @Spy
+    private UserDtoConverter spyUserConverter = new UserDtoConverterImpl();
+
+    @InjectMocks
+    private UserService userService = new UserServiceImpl();
 
     private static User user = new User();
-    private static User userToAdd = new User();
+    private static User userToSave = new User();
+    private static UserDto userDto = new UserDto();
+    private static UserDto userDtoToRegister = new UserDto();
 
     @BeforeClass
     public static void setUpBeforeClass() {
@@ -49,79 +50,123 @@ public class TestUserService {
         userDto.setUsername("test_user");
         userDto.setPassword("pass");
 
-        userDtoToAdd.setUsername("test_user");
-        userDtoToAdd.setPassword("pass");
+        userDtoToRegister.setUsername("new_user");
+        userDtoToRegister.setPassword("pass");
 
         user.setId(1);
         user.setUsername("test_user");
         user.setPassword("pass");
 
-        userToAdd.setUsername("test_user");
-        userToAdd.setPassword("pass");
-    }
-
-    @Before
-    public void setUp() {
-        when(mockUserDao.findById(user.getId()))
-                .thenReturn(user);
-        when(mockUserDao.findByUsernameAndPassword(user.getUsername(), user.getPassword()))
-                .thenReturn(user);
-    }
-
-    @After
-    public void tearDown() {
-        reset(mockUserDao);
+        userToSave.setUsername("new_user");
+        userToSave.setPassword("pass");
     }
 
     @Test
-    public void testRegister() {
-        userService.register(userDtoToAdd);
-        verify(mockUserDao, times(1)).save(userToAdd);
+    public void testRegisterUser() throws ServiceUserAlreadyExistsException,
+            DaoSaveDuplicatedUserException {
+        userService.register(userDtoToRegister);
+
+        verify(spyUserConverter).convertDto(userDtoToRegister);
+        verify(mockUserDao).save(userToSave);
     }
 
     @Test
-    public void testRegister_nullUserDto() {
+    public void testRegisterUser_nullUserDto() throws ServiceUserAlreadyExistsException,
+            DaoSaveDuplicatedUserException {
         userService.register(null);
+
+        verify(spyUserConverter, never()).convertDto(any());
         verify(mockUserDao, never()).save(any());
+    }
+
+    @Test(expected = ServiceUserAlreadyExistsException.class)
+    public void testRegisterUser_duplicatedUser() throws ServiceUserAlreadyExistsException,
+            DaoSaveDuplicatedUserException {
+        doThrow(DaoSaveDuplicatedUserException.class).when(mockUserDao).save(userToSave);
+
+        userService.register(userDtoToRegister);
+
+        verify(spyUserConverter).convertDto(userDtoToRegister);
+        verify(mockUserDao).save(userToSave);
     }
 
     @Test
     public void testCheckCredentials() {
+        when(mockUserDao.findByUsernameAndPassword(user.getUsername(), user.getPassword()))
+                .thenReturn(user);
+
         UserDto newUserDto = userService.checkCredentials(userDto);
+
         assertEquals(newUserDto, userDto);
-        verify(mockUserDao, times(1)).findByUsernameAndPassword(user.getUsername(), user.getPassword());
+        verify(spyUserConverter).convertEntity(user);
+        verify(mockUserDao).findByUsernameAndPassword(user.getUsername(), user.getPassword());
     }
 
     @Test
     public void testCheckCredentials_nullUserDto() {
         UserDto newUserDto = userService.checkCredentials(null);
+
         assertNull(newUserDto);
+        verify(spyUserConverter, never()).convertEntity(any());
         verify(mockUserDao, never()).findByUsernameAndPassword(anyString(), anyString());
     }
 
     @Test
-    public void testUpdate() {
-        userService.update(userDto);
-        verify(mockUserDao, times(1)).update(user);
+    public void testCheckCredentials_nonExistentUser() {
+        when(mockUserDao.findByUsernameAndPassword(user.getUsername(), user.getPassword()))
+                .thenReturn(null);
+
+        UserDto newUserDto = userService.checkCredentials(userDto);
+
+        assertNull(newUserDto);
+        verify(spyUserConverter, never()).convertEntity(user);
+        verify(mockUserDao).findByUsernameAndPassword(user.getUsername(), user.getPassword());
     }
 
     @Test
-    public void testUpdate_nullUserDto() {
+    public void testUpdateUser() {
+        userService.update(userDto);
+
+        verify(spyUserConverter).convertDto(userDto);
+        verify(mockUserDao).update(user);
+    }
+
+    @Test
+    public void testUpdateUser_nullUserDto() {
         userService.update(null);
+
+        verify(spyUserConverter, never()).convertDto(any());
         verify(mockUserDao, never()).update(any());
     }
 
     @Test
     public void testGetInfoById() {
+        when(mockUserDao.findById(1)).thenReturn(user);
+
         UserDto newUserDto = userService.getInfoById(userDto.getId());
+
         assertEquals(newUserDto, userDto);
-        verify(mockUserDao, times(1)).findById(user.getId());
+        verify(spyUserConverter).convertEntity(user);
+        verify(mockUserDao).findById(user.getId());
     }
 
     @Test
     public void testGetInfoById_zeroUserId() {
         UserDto newUserDto = userService.getInfoById(0);
+
         assertNull(newUserDto);
+        verify(spyUserConverter, never()).convertEntity(any());
         verify(mockUserDao, never()).findById(anyInt());
+    }
+
+    @Test
+    public void testGetInfoById_nonExistentUser() {
+        when(mockUserDao.findById(1)).thenReturn(null);
+
+        UserDto newUserDto = userService.getInfoById(1);
+
+        assertNull(newUserDto);
+        verify(spyUserConverter, never()).convertEntity(any());
+        verify(mockUserDao).findById(1);
     }
 }
