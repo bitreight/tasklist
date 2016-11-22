@@ -85,7 +85,7 @@ public class Project {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", user_id=" + user.getId() +
+                (user != null ? ", user_id=" + user.getId() : "") +
                 ']';
     }
 }

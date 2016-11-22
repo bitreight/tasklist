@@ -148,8 +148,8 @@ public class Task {
                 ", deadline='" + formatter.format(deadline) + '\'' +
                 ", priority='" + priority + '\'' +
                 ", isCompleted=" + isCompleted +
-                ", project_id=" + project.getId() +
                 ", version=" + version +
+                (project != null ? ", project_id=" + project.getId() : "") +
                 ']';
     }
 }
