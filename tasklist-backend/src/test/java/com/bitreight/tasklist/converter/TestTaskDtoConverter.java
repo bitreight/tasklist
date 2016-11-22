@@ -45,37 +45,37 @@ public class TestTaskDtoConverter {
     }
 
     @Test
-    public void testConvertProjectDto() {
+    public void testConvertTaskDto() {
         Task actualTask = taskConverter.convertDto(taskDto);
         assertEquals(actualTask, task);
     }
 
     @Test
-    public void testConvertProjectEntity() {
+    public void testConvertTaskEntity() {
         TaskDto actualTaskDto = taskConverter.convertEntity(task);
         assertEquals(actualTaskDto, taskDto);
     }
 
     @Test
-    public void testConvertProjectDtos() {
+    public void testConvertTaskDtos() {
         List<Task> actualTasks = taskConverter.convertDtos(taskDtos);
         assertEquals(actualTasks, tasks);
     }
 
     @Test
-    public void testConvertProjectEntities() {
+    public void testConvertTaskEntities() {
         List<TaskDto> actualTasksDtos = taskConverter.convertEntities(tasks);
         assertEquals(actualTasksDtos, taskDtos);
     }
 
     @Test
-    public void testConvertProjectDtos_emptyList() {
+    public void testConvertTaskDtos_emptyList() {
         List<Task> actualTasks = taskConverter.convertDtos(new ArrayList<>(0));
         assertTrue(actualTasks.isEmpty());
     }
 
     @Test
-    public void testConvertProjectEntities_emptyList() {
+    public void testConvertTaskEntities_emptyList() {
         List<TaskDto> actualTaskDtos = taskConverter.convertEntities(new ArrayList<>(0));
         assertTrue(actualTaskDtos.isEmpty());
     }
