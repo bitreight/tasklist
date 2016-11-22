@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class TaskDtoConverterImpl implements TaskDtoConverter {
 
-    private static final String DATE_PATTERN = "dd-mm-yyyy";
+    private static final String DATE_PATTERN = "dd-MM-yyyy";
 
     @Override
     public Task convertDto(TaskDto taskDto) {
