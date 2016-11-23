@@ -5,6 +5,7 @@ import com.bitreight.tasklist.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +25,7 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String executeLogin(@Valid UserDto userDto, BindingResult result) {
+    public String executeLogin(@Valid UserDto userDto, BindingResult result, Model model) {
         if(result.hasErrors()) {
             return "login";
         }
@@ -32,15 +33,13 @@ public class LoginController {
         UserDto validUser = userService.checkCredentials(userDto);
         if(validUser != null) {
             System.out.println("Succesfully logged in.\n" + validUser);
+
         } else {
             System.out.println("Invalid credentials.");
+            model.addAttribute("error", "Invalid credentials.");
+            return "login";
         }
 
-        return "login";
+        return "redirect:tasklist";
     }
-//    @RequestMapping(value = "/logout", method = RequestMethod.GET)
-//    public String executeLogout() {
-//        return "login";
-//    }
-
 }

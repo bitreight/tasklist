@@ -25,7 +25,7 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/join", method = RequestMethod.POST)
-    public String executeRegistration(@Valid UserDto userDto, BindingResult result) {
+    public String executeRegistration(@Valid UserDto userDto, BindingResult result, Model model) {
         if(result.hasErrors()) {
             return "registration";
         }
@@ -33,10 +33,10 @@ public class RegistrationController {
         try {
             userService.register(userDto);
         } catch (ServiceUserAlreadyExistsException e) {
-            //error message on page
+            model.addAttribute("error", "Username already exists.");
             return "registration";
         }
 
-        return "redirect:/login";
+        return "redirect:login";
     }
 }
