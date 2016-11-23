@@ -1,6 +1,6 @@
 html,
 body {
-    height: 100%;    
+    height: 100%;
 }
 
 .form-group {
@@ -19,11 +19,28 @@ body {
     margin-bottom: 10px;
 }
 
-#content {
-    display: flex;    
-    height: 100%;
-    padding: 10px 10px 10px 10px;
+.background-main {
+    display: flex;
+    flex-direction: column;
     background-color: #424B55;
+    height: 100%;
+}
+
+.header-style {    
+    margin: 0px 10px 10px 10px;
+    min-width: 100px;
+}
+
+.header-style>nav {
+    background-color: #F5F5F5;
+    margin: 0px;
+    border-radius: 0px;
+}
+ 
+#content {
+    display: flex;
+    padding: 0px 10px 10px 10px;    
+    height: 100%;
 }
 
 #left-menu-col {    
@@ -66,15 +83,16 @@ body {
     margin-left: 10px;    
 }
 
-#task-list, #task-details {
-    flex-grow: 1;
-    flex-basis: 50%;
+#task-list {
+    margin-right: 10px;
+    min-width: 250px;
+    flex-basis: 40%;
     background-color: white;
 }
 
-#task-list {
-    margin-right: 10px;
-    overflow: auto;
+#task-details {
+    flex-basis: 60%;
+    background-color: white;
 }
 
 #task-list .panel,
@@ -114,4 +132,8 @@ body {
 #task-description-edit {
     overflow: hidden;
     margin-top: 10px;
+}
+
+#task-save-button {
+    margin-left: 15px;
 }
