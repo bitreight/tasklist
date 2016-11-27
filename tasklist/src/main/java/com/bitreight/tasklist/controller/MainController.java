@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class MainController {
 
-    @RequestMapping(value = "/tasklist", method = RequestMethod.GET)
-    public String goToMain(Model model) {
+    @RequestMapping(value = "/workspace", method = RequestMethod.GET)
+    public String getMainPage() {
         return "main";
     }
 }
