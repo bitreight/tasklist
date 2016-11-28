@@ -7,7 +7,7 @@ public interface UserService {
 
     void register(UserDto userDto) throws ServiceUserAlreadyExistsException;
 
-    UserDto checkCredentials(UserDto userDto);
+    UserDto getByUsername(String username);
 
     void update(UserDto userDto);
 

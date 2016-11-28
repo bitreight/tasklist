@@ -36,11 +36,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto checkCredentials(UserDto userDto) {
+    public UserDto getByUsername(String username) {
         UserDto actualUser = null;
 
-        if(userDto != null) {
-            User user = userDao.findByUsernameAndPassword(userDto.getUsername(), userDto.getPassword());
+        if(username != null) {
+            User user = userDao.findByUsername(username);
 
             if(user != null) {
                 actualUser = userConverter.convertEntity(user);

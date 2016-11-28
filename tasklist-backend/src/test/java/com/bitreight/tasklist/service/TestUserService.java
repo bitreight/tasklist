@@ -92,35 +92,35 @@ public class TestUserService {
 
     @Test
     public void testCheckCredentials() {
-        when(mockUserDao.findByUsernameAndPassword(user.getUsername(), user.getPassword()))
+        when(mockUserDao.findByUsername(user.getUsername()))
                 .thenReturn(user);
 
-        UserDto newUserDto = userService.checkCredentials(userDto);
+        UserDto newUserDto = userService.getByUsername(userDto.getUsername());
 
         assertEquals(newUserDto, userDto);
         verify(spyUserConverter).convertEntity(user);
-        verify(mockUserDao).findByUsernameAndPassword(user.getUsername(), user.getPassword());
+        verify(mockUserDao).findByUsername(user.getUsername());
     }
 
     @Test
     public void testCheckCredentials_nullUserDto() {
-        UserDto newUserDto = userService.checkCredentials(null);
+        UserDto newUserDto = userService.getByUsername(null);
 
         assertNull(newUserDto);
         verify(spyUserConverter, never()).convertEntity(any());
-        verify(mockUserDao, never()).findByUsernameAndPassword(anyString(), anyString());
+        verify(mockUserDao, never()).findByUsername(anyString());
     }
 
     @Test
     public void testCheckCredentials_nonExistentUser() {
-        when(mockUserDao.findByUsernameAndPassword(user.getUsername(), user.getPassword()))
+        when(mockUserDao.findByUsername(user.getUsername()))
                 .thenReturn(null);
 
-        UserDto newUserDto = userService.checkCredentials(userDto);
+        UserDto newUserDto = userService.getByUsername(userDto.getUsername());
 
         assertNull(newUserDto);
         verify(spyUserConverter, never()).convertEntity(user);
-        verify(mockUserDao).findByUsernameAndPassword(user.getUsername(), user.getPassword());
+        verify(mockUserDao).findByUsername(user.getUsername());
     }
 
     @Test

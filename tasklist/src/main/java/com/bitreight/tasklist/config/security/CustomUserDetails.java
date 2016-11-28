@@ -14,6 +14,10 @@ public class CustomUserDetails extends User {
     }
 
     public int getId() {
-        return 1;
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -67,13 +67,13 @@ public class TestUserDao {
 
     @Test
     public void testFindUserByUsernameAndPassword() {
-        User userFromDb = userDao.findByUsernameAndPassword(user.getUsername(), user.getPassword());
+        User userFromDb = userDao.findByUsername(user.getUsername());
         assertEquals(user, userFromDb);
     }
 
     @Test
     public void testFindUserByUsernameAndPassword_nonExistentUsernameAndPassword() {
-        User userFromDb = userDao.findByUsernameAndPassword("", "");
+        User userFromDb = userDao.findByUsername("");
         assertNull(userFromDb);
     }
 

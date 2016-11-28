@@ -56,11 +56,9 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findByUsernameAndPassword(String username, String password) {
-        List<User> users = (List<User>) entityManager.createQuery("Select u from User u where u.username LIKE :username " +
-                                                "and u.password LIKE :password")
+    public User findByUsername(String username) {
+        List<User> users = (List<User>) entityManager.createQuery("Select u from User u where u.username LIKE :username")
                                     .setParameter("username", username)
-                                    .setParameter("password", password)
                                     .getResultList();
         return users.isEmpty() ? null : users.get(0);
     }
