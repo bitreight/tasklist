@@ -9,6 +9,7 @@ import com.bitreight.tasklist.entity.User;
 import com.bitreight.tasklist.service.ProjectService;
 import com.bitreight.tasklist.service.converter.ProjectDtoConverter;
 import com.bitreight.tasklist.service.exception.ServiceProjectAlreadyExistsException;
+import com.bitreight.tasklist.service.exception.ServiceProjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ProjectDtoConverter projectConverter;
 
+    //should return id of created
     @Override
     public void add(ProjectDto projectDto, int userId) throws ServiceProjectAlreadyExistsException {
         if(projectDto != null && userId > 0) {
@@ -41,22 +43,32 @@ public class ProjectServiceImpl implements ProjectService {
                 }
 
             } catch (DaoSaveDuplicatedProjectException e) {
-                throw new ServiceProjectAlreadyExistsException("Can't create project. Already exists.", e);
+                throw new ServiceProjectAlreadyExistsException("Project already exists.", e);
             }
         }
     }
 
+    //should return project
     @Override
-    public void update(ProjectDto projectDto) throws ServiceProjectAlreadyExistsException {
+    public void update(ProjectDto projectDto) throws ServiceProjectAlreadyExistsException,
+            ServiceProjectNotFoundException {
+
         if(projectDto != null) {
-            Project project = projectConverter.convertDto(projectDto);
+            Project projectFromDb = projectDao.findById(projectDto.getId());
+
             try {
-                projectDao.update(project);
+                if(projectFromDb != null) {
+                    Project project = projectConverter.convertDto(projectDto);
+                    projectDao.update(project);
+                    return;
+                }
 
             } catch (DaoSaveDuplicatedProjectException e) {
-                throw new ServiceProjectAlreadyExistsException("Can't update project. Already exists.", e);
+                throw new ServiceProjectAlreadyExistsException("Project already exists.", e);
             }
         }
+
+        throw new ServiceProjectNotFoundException("Project not found.");
     }
 
     @Override
