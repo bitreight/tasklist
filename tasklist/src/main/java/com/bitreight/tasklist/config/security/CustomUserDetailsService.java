@@ -22,6 +22,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDto user = userService.getByUsername(username);
+        if(user == null) {
+            throw new UsernameNotFoundException("Username \"" + username + "\" doesn't exist.");
+        }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("USER"));

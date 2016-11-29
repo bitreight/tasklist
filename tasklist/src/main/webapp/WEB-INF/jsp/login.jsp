@@ -19,7 +19,7 @@
                 <c:url value="/login" var="actionUrl"/>
                 <form:form modelAttribute="userDto" action="${actionUrl}" method="post" id="login-form">
                     <h2 class="form-signin-heading">Please login</h2>
-                    <c:if test="${loginError != null}">
+                    <c:if test="${param.error == true && loginError != null}">
                         <div class="alert alert-danger" role="alert">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                             <span class="sr-only">Error:</span>
@@ -50,7 +50,7 @@
 
                     <button id="button-login" class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
                 </form:form>
-                <a href="<c:url value="/join"/>">Create an account</a>
+                <a href="<c:url value="/join"/>">Create new account</a>
             </div>
         </div>
 

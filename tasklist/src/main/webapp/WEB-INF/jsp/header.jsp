@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -12,9 +13,14 @@
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="<c:url value="/join"/>">Sign up</a></li>
-                <li><a href="<c:url value="/login"/>">Login</a></li>
-                <li><a href="#">User</a></li>
+                <sec:authorize access="isAnonymous()">
+                    <li><a href="<c:url value="/join"/>">Sign up</a></li>
+                    <li><a href="<c:url value="/login"/>">Login</a></li>
+                </sec:authorize>
+                <sec:authorize access="isAuthenticated()">
+                    <li><a href="<c:url value="/profile"/>"><sec:authentication property="principal.username"/></a></li>
+                    <li><a href="<c:url value="/logout"/>">Logout</a></li>
+                </sec:authorize>
             </ul>
         </div>
     </div>

@@ -78,7 +78,7 @@
                 <version>${jstl.version}</version>
             </dependency>
 
-            <!-- Spring 4 dependencies -->
+            <!-- Spring dependencies -->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
@@ -116,15 +116,22 @@
                 <scope>test</scope>
             </dependency>
 
-            <!-- Security -->
+            <!-- Spring Security -->
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-web</artifactId>
                 <version>${spring-security.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
+                <version>${spring-security.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-taglibs</artifactId>
                 <version>${spring-security.version}</version>
             </dependency>
 

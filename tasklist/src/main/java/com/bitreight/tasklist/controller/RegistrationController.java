@@ -1,9 +1,11 @@
 package com.bitreight.tasklist.controller;
 
+import com.bitreight.tasklist.config.security.CustomUserDetails;
 import com.bitreight.tasklist.dto.UserDto;
 import com.bitreight.tasklist.service.UserService;
 import com.bitreight.tasklist.service.exception.ServiceUserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,7 +21,11 @@ public class RegistrationController {
     private UserService userService;
 
     @RequestMapping(value = "/join", method = RequestMethod.GET)
-    public String goToRegistrationPage(Model model) {
+    public String goToRegistrationPage(Model model, @AuthenticationPrincipal CustomUserDetails user) {
+        if(user != null) {
+            return "redirect:/workspace";
+        }
+
         model.addAttribute("userDto", new UserDto());
         return "registration";
     }
