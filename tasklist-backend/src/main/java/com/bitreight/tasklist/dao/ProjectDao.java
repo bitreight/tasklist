@@ -11,7 +11,7 @@ public interface ProjectDao {
 
     void update(Project project) throws DaoSaveDuplicatedProjectException;
 
-    void deleteById(int projectId);
+    void delete(Project project);
 
     Project findById(int projectId);
 

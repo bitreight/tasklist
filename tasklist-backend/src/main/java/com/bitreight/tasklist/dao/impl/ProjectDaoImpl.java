@@ -39,13 +39,9 @@ public class ProjectDaoImpl implements ProjectDao {
 
     @Override
     public void update(Project project) throws DaoSaveDuplicatedProjectException {
-        Project projectFromDb = findById(project.getId());
         try {
-            if (projectFromDb != null) {
-                projectFromDb.setTitle(project.getTitle());
-                projectFromDb.setDescription(project.getDescription());
-                entityManager.flush();
-            }
+            entityManager.merge(project);
+            entityManager.flush();
 
         } catch(PersistenceException e) {
             if (e.getCause() instanceof ConstraintViolationException) {
@@ -57,11 +53,8 @@ public class ProjectDaoImpl implements ProjectDao {
     }
 
     @Override
-    public void deleteById(int projectId) {
-        Project projectFromDb = findById(projectId);
-        if(projectFromDb != null) {
-            entityManager.remove(projectFromDb);
-        }
+    public void delete(Project project) {
+        entityManager.remove(project);
     }
 
     @Override
