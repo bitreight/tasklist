@@ -2,6 +2,7 @@ package com.bitreight.tasklist.config.security;
 
 import com.bitreight.tasklist.dto.UserDto;
 import com.bitreight.tasklist.service.UserService;
+import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,9 +22,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDto user = userService.getByUsername(username);
-        if(user == null) {
-            throw new UsernameNotFoundException("Username \"" + username + "\" doesn't exist.");
+        UserDto user = null;
+        try {
+            user = userService.getByUsername(username);
+
+        } catch (ServiceUserNotFoundException e) {
+            throw new UsernameNotFoundException("Username \"" + username + "\" doesn't exist.", e);
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
