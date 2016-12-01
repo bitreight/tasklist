@@ -9,6 +9,8 @@ import com.bitreight.tasklist.entity.User;
 import com.bitreight.tasklist.service.converter.ProjectDtoConverter;
 import com.bitreight.tasklist.service.converter.impl.ProjectDtoConverterImpl;
 import com.bitreight.tasklist.service.exception.ServiceProjectAlreadyExistsException;
+import com.bitreight.tasklist.service.exception.ServiceProjectNotFoundException;
+import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
 import com.bitreight.tasklist.service.impl.ProjectServiceImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -81,6 +83,7 @@ public class TestProjectService {
         projectToUpdate.setId(1);
         projectToUpdate.setTitle("test_project");
         projectToUpdate.setDescription("test_desc");
+        projectToUpdate.setUser(user);
 
         projectsOfUser.add(project);
         projectDtosOfUser.add(projectDto);
@@ -88,7 +91,7 @@ public class TestProjectService {
 
     @Test
     public void testAddProject() throws ServiceProjectAlreadyExistsException,
-            DaoSaveDuplicatedProjectException {
+            DaoSaveDuplicatedProjectException, ServiceUserNotFoundException {
         when(mockUserDao.findById(1)).thenReturn(user);
 
         projectService.add(projectDtoToAdd, 1);
@@ -98,19 +101,31 @@ public class TestProjectService {
         verify(mockProjectDao).save(projectToSave);
     }
 
-    @Test
-    public void testAddProject_nullProjectDtoAndZeroUserId() throws ServiceProjectAlreadyExistsException,
-            DaoSaveDuplicatedProjectException {
-        projectService.add(null, 0);
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddProject_nullProjectDto() throws ServiceProjectAlreadyExistsException,
+            DaoSaveDuplicatedProjectException, ServiceUserNotFoundException {
+        projectService.add(null, 1);
 
         verify(spyProjectConverter, never()).convertDto(projectDtoToAdd);
         verify(mockUserDao, never()).findById(anyInt());
         verify(mockProjectDao, never()).save(any());
     }
 
+    @Test(expected = ServiceUserNotFoundException.class)
+    public void testAddProject_nonExistentUser() throws ServiceProjectAlreadyExistsException,
+            DaoSaveDuplicatedProjectException, ServiceUserNotFoundException {
+        when(mockUserDao.findById(1)).thenReturn(null);
+
+        projectService.add(projectDtoToAdd, 1);
+
+        verify(mockUserDao).findById(1);
+        verify(spyProjectConverter,never()).convertDto(projectDtoToAdd);
+        verify(mockProjectDao, never()).save(projectToSave);
+    }
+
     @Test(expected = ServiceProjectAlreadyExistsException.class)
     public void testAddProject_duplicatedProject() throws ServiceProjectAlreadyExistsException,
-            DaoSaveDuplicatedProjectException {
+            DaoSaveDuplicatedProjectException, ServiceUserNotFoundException {
         when(mockUserDao.findById(1)).thenReturn(user);
         doThrow(DaoSaveDuplicatedProjectException.class).when(mockProjectDao).save(projectToSave);
 
@@ -122,30 +137,31 @@ public class TestProjectService {
     }
 
     @Test
-    public void testAddProject_nonExistentUser() throws ServiceProjectAlreadyExistsException,
-            DaoSaveDuplicatedProjectException {
-        when(mockUserDao.findById(1)).thenReturn(null);
-
-        projectService.add(projectDtoToAdd, 1);
-
-        verify(mockUserDao).findById(1);
-        verify(spyProjectConverter,never()).convertDto(projectDtoToAdd);
-        verify(mockProjectDao, never()).save(projectToSave);
-    }
-
-    @Test
     public void testUpdateProject() throws ServiceProjectAlreadyExistsException,
-            DaoSaveDuplicatedProjectException {
+            DaoSaveDuplicatedProjectException, ServiceProjectNotFoundException {
+        when(mockProjectDao.findById(1)).thenReturn(project);
+
         projectService.update(projectDto);
 
         verify(spyProjectConverter).convertDto(projectDto);
         verify(mockProjectDao).update(projectToUpdate);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testUpdateProject_nullProjectDto() throws ServiceProjectAlreadyExistsException,
-            DaoSaveDuplicatedProjectException {
+            DaoSaveDuplicatedProjectException, ServiceProjectNotFoundException {
         projectService.update(null);
+
+        verify(spyProjectConverter, never()).convertDto(projectDto);
+        verify(mockProjectDao, never()).update(project);
+    }
+
+    @Test(expected = ServiceProjectNotFoundException.class)
+    public void testUpdateProject_nonExistentProject() throws ServiceProjectAlreadyExistsException,
+            DaoSaveDuplicatedProjectException, ServiceProjectNotFoundException {
+        when(mockProjectDao.findById(1)).thenReturn(null);
+
+        projectService.update(projectDto);
 
         verify(spyProjectConverter, never()).convertDto(projectDto);
         verify(mockProjectDao, never()).update(project);
@@ -153,7 +169,8 @@ public class TestProjectService {
 
     @Test(expected = ServiceProjectAlreadyExistsException.class)
     public void testUpdateProject_duplicatedProject() throws ServiceProjectAlreadyExistsException,
-            DaoSaveDuplicatedProjectException {
+            DaoSaveDuplicatedProjectException, ServiceProjectNotFoundException {
+        when(mockProjectDao.findById(1)).thenReturn(project);
         doThrow(DaoSaveDuplicatedProjectException.class).when(mockProjectDao).update(projectToUpdate);
 
         projectService.update(projectDto);
@@ -163,19 +180,21 @@ public class TestProjectService {
     }
 
     @Test
-    public void testDeleteProjectById() {
+    public void testDeleteProjectById() throws ServiceProjectNotFoundException {
+        when(mockProjectDao.findById(1)).thenReturn(project);
         projectService.deleteById(1);
-        verify(mockProjectDao).deleteById(1);
+        verify(mockProjectDao).delete(project);
+    }
+
+    @Test(expected = ServiceProjectNotFoundException.class)
+    public void testDeleteProjectById_nonExistentProject() throws ServiceProjectNotFoundException {
+        when(mockProjectDao.findById(1)).thenReturn(null);
+        projectService.deleteById(1);
+        verify(mockProjectDao, never()).delete(project);
     }
 
     @Test
-    public void testDeleteProjectById_zeroProjectId() {
-        projectService.deleteById(0);
-        verify(mockProjectDao, never()).deleteById(1);
-    }
-
-    @Test
-    public void testGetProjectById() {
+    public void testGetProjectById() throws ServiceProjectNotFoundException {
         when(mockProjectDao.findById(1)).thenReturn(project);
 
         ProjectDto actualProjectDto = projectService.getById(1);
@@ -185,28 +204,19 @@ public class TestProjectService {
         verify(mockProjectDao).findById(1);
     }
 
-    @Test
-    public void testGetProjectById_zeroProjectId() {
-        ProjectDto actualProjectDto = projectService.getById(0);
-
-        assertNull(actualProjectDto);
-        verify(spyProjectConverter, never()).convertEntity(any());
-        verify(mockProjectDao, never()).findById(anyInt());
-    }
-
-    @Test
-    public void testGetProjectById_nonExistentProject() {
+    @Test(expected = ServiceProjectNotFoundException.class)
+    public void testGetProjectById_nonExistentProject() throws ServiceProjectNotFoundException {
         when(mockProjectDao.findById(1)).thenReturn(null);
 
         ProjectDto actualProjectDto = projectService.getById(1);
 
-        assertNull(actualProjectDto);
         verify(spyProjectConverter, never()).convertEntity(any());
         verify(mockProjectDao).findById(1);
     }
 
     @Test
-    public void testGetProjectByUserId() {
+    public void testGetProjectByUserId() throws ServiceUserNotFoundException,
+            ServiceProjectNotFoundException {
         when(mockUserDao.findById(1)).thenReturn(user);
         when(mockProjectDao.findByUser(user)).thenReturn(projectsOfUser);
 
@@ -218,36 +228,26 @@ public class TestProjectService {
         verify(spyProjectConverter).convertEntities(projectsOfUser);
     }
 
-    @Test
-    public void testGetProjectByUserId_zeroUserId() {
-        List<ProjectDto> actualProjectDtosOfUser = projectService.getByUserId(0);
-
-        assertNull(actualProjectDtosOfUser);
-        verify(mockUserDao, never()).findById(1);
-        verify(mockProjectDao, never()).findByUser(user);
-        verify(spyProjectConverter, never()).convertEntities(projectsOfUser);
-    }
-
-    @Test
-    public void testGetProjectByUserId_nonExistentUser() {
+    @Test(expected = ServiceUserNotFoundException.class)
+    public void testGetProjectByUserId_nonExistentUser() throws ServiceUserNotFoundException,
+            ServiceProjectNotFoundException {
         when(mockUserDao.findById(1)).thenReturn(null);
 
         List<ProjectDto> actualProjectDtosOfUser = projectService.getByUserId(1);
 
-        assertNull(actualProjectDtosOfUser);
         verify(mockUserDao).findById(1);
         verify(mockProjectDao, never()).findByUser(user);
         verify(spyProjectConverter, never()).convertEntities(projectsOfUser);
     }
 
-    @Test
-    public void testGetProjectByUserId_noProjects() {
+    @Test(expected = ServiceProjectNotFoundException.class)
+    public void testGetProjectByUserId_noProjects() throws ServiceUserNotFoundException,
+            ServiceProjectNotFoundException {
         when(mockUserDao.findById(1)).thenReturn(user);
         when(mockProjectDao.findByUser(user)).thenReturn(null);
 
         List<ProjectDto> actualProjectDtosOfUser = projectService.getByUserId(1);
 
-        assertNull(actualProjectDtosOfUser);
         verify(mockUserDao).findById(1);
         verify(mockProjectDao).findByUser(user);
         verify(spyProjectConverter, never()).convertEntities(projectsOfUser);

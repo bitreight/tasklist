@@ -92,7 +92,7 @@ public class TestTaskDao {
     @After
     public void tearDown() {
         tasks.forEach(task -> taskDao.deleteById(task.getId()));
-        projectDao.deleteById(project.getId());
+        projectDao.delete(project);
         userDao.deleteById(user.getId());
     }
 

@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -70,7 +71,7 @@ public class TestProjectDao {
 
     @After
     public void tearDown() {
-        projects.forEach(project -> projectDao.deleteById(project.getId()));
+        projects.forEach(project -> projectDao.delete(project));
         userDao.deleteById(user.getId());
     }
 
@@ -89,23 +90,9 @@ public class TestProjectDao {
     }
 
     @Test
-    public void testFindProjectById_nonExistentId() {
-        Project projectFromDb = projectDao.findById(-1);
-        assertNull(projectFromDb);
-    }
-
-    @Test
     public void testFindProjectByUser() {
         List<Project> projectsFromDb = projectDao.findByUser(user);
         assertEquals(projects, projectsFromDb);
-    }
-
-    @Test
-    public void testFindProjectByUser_nonExistentUser() {
-        User invalidUser = new User();
-        invalidUser.setId(-1);
-        List<Project> projectsFromDb = projectDao.findByUser(invalidUser);
-        assertTrue(projectsFromDb.isEmpty());
     }
 
     @Test
@@ -122,27 +109,9 @@ public class TestProjectDao {
     }
 
     @Test(expected = DaoSaveDuplicatedProjectException.class)
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void testUpdateProject_withDuplicatedTitle() throws DaoSaveDuplicatedProjectException {
         Project duplicatedProject = projects.get(1);
         duplicatedProject.setTitle(projects.get(0).getTitle());
         projectDao.update(duplicatedProject);
-    }
-
-    @Test
-    public void testUpdateProject_nonExistentProject() throws DaoSaveDuplicatedProjectException {
-        Project invalidProject = new Project();
-
-        projectDao.update(invalidProject);
-        List<Project> projectsFromDb = projectDao.findByUser(user);
-
-        assertEquals(projects, projectsFromDb);
-    }
-
-    @Test
-    public void testDeleteById_nonExistentId() {
-        projectDao.deleteById(-1);
-        List<Project> projectsFromDb = projectDao.findByUser(user);
-        assertEquals(projects, projectsFromDb);
     }
 }

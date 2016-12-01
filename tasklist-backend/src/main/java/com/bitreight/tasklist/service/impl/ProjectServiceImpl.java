@@ -39,22 +39,22 @@ public class ProjectServiceImpl implements ProjectService {
             throw new IllegalArgumentException("projectDto cannot be null");
         }
 
-        User user = userDao.findById(userId);
-        if(user == null) {
+        User userFromDb = userDao.findById(userId);
+        if(userFromDb == null) {
             throw new ServiceUserNotFoundException("User not found.");
         }
 
-        Project project = projectConverter.convertDto(projectDto);
-        project.setId(0);
-        project.setUser(user);
+        Project projectToSave = projectConverter.convertDto(projectDto);
+        projectToSave.setId(0);
+        projectToSave.setUser(userFromDb);
 
         try {
-            projectDao.save(project);
+            projectDao.save(projectToSave);
         } catch (DaoSaveDuplicatedProjectException e) {
             throw new ServiceProjectAlreadyExistsException("Project already exists.", e);
         }
 
-        return project.getId();
+        return projectToSave.getId();
     }
 
     @Override
@@ -70,10 +70,11 @@ public class ProjectServiceImpl implements ProjectService {
             throw new ServiceProjectNotFoundException("Project not found.");
         }
 
-        Project project = projectConverter.convertDto(projectDto);
+        Project projectToUpdate = projectConverter.convertDto(projectDto);
+        projectToUpdate.setUser(projectFromDb.getUser());
 
         try {
-            projectDao.update(project);
+            projectDao.update(projectToUpdate);
         } catch (DaoSaveDuplicatedProjectException e) {
             throw new ServiceProjectAlreadyExistsException("Project already exists.", e);
         }
@@ -81,36 +82,36 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void deleteById(int projectId) throws ServiceProjectNotFoundException {
-        Project project = projectDao.findById(projectId);
-        if(project == null) {
+        Project projectToDelete = projectDao.findById(projectId);
+        if(projectToDelete == null) {
             throw new ServiceProjectNotFoundException("Project not found.");
         }
-        projectDao.delete(project);
+        projectDao.delete(projectToDelete);
     }
 
     @Override
     public ProjectDto getById(int projectId) throws ServiceProjectNotFoundException {
-        Project project = projectDao.findById(projectId);
-        if(project == null) {
+        Project projectFromDb = projectDao.findById(projectId);
+        if(projectFromDb == null) {
             throw new ServiceProjectNotFoundException("Project not found.");
         }
-        return projectConverter.convertEntity(project);
+        return projectConverter.convertEntity(projectFromDb);
     }
 
     @Override
     public List<ProjectDto> getByUserId(int userId) throws ServiceUserNotFoundException,
             ServiceProjectNotFoundException {
 
-        User user = userDao.findById(userId);
-        if (user == null) {
+        User userFromDb = userDao.findById(userId);
+        if (userFromDb == null) {
             throw new ServiceUserNotFoundException("User not found.");
         }
 
-        List<Project> projects = projectDao.findByUser(user);
-        if (projects == null) {
+        List<Project> projectsFromDb = projectDao.findByUser(userFromDb);
+        if (projectsFromDb == null) {
             throw new ServiceProjectNotFoundException("Projects not found.");
         }
 
-        return projectConverter.convertEntities(projects);
+        return projectConverter.convertEntities(projectsFromDb);
     }
 }
