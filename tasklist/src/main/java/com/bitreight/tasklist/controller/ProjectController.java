@@ -2,8 +2,11 @@ package com.bitreight.tasklist.controller;
 
 import com.bitreight.tasklist.config.security.CustomUserDetails;
 import com.bitreight.tasklist.dto.ProjectDto;
+import com.bitreight.tasklist.dto.UserDto;
 import com.bitreight.tasklist.service.ProjectService;
 import com.bitreight.tasklist.service.exception.ServiceProjectAlreadyExistsException;
+import com.bitreight.tasklist.service.exception.ServiceProjectNotFoundException;
+import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,23 +27,25 @@ public class ProjectController {
     private ProjectService projectService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> createProject(@AuthenticationPrincipal CustomUserDetails user,
-                                                          @RequestBody ProjectDto projectDto)
-            throws ServiceProjectAlreadyExistsException {
+    public ResponseEntity<Integer> createProject(@AuthenticationPrincipal CustomUserDetails user,
+                                                 @RequestBody ProjectDto projectDto)
+            throws ServiceProjectAlreadyExistsException, ServiceUserNotFoundException {
 
-        projectService.add(projectDto, user.getId());
-        return new ResponseEntity<>(HttpStatus.CREATED);    //need id
+        int id = projectService.add(projectDto, user.getId());
+        return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "{projectId}", method = RequestMethod.GET)
-    public ResponseEntity<ProjectDto> getProject(@PathVariable int projectId) {
+    public ResponseEntity<ProjectDto> getProject(@PathVariable int projectId)
+            throws ServiceProjectNotFoundException {
 
         ProjectDto project = projectService.getById(projectId);
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<ProjectDto>> getProjectsByUser(@AuthenticationPrincipal CustomUserDetails user) {
+    public ResponseEntity<List<ProjectDto>> getProjectsByUser(@AuthenticationPrincipal CustomUserDetails user)
+            throws ServiceUserNotFoundException, ServiceProjectNotFoundException {
 
         List<ProjectDto> projects = projectService.getByUserId(user.getId());
         return new ResponseEntity<>(projects, HttpStatus.OK);
@@ -49,15 +54,16 @@ public class ProjectController {
     @RequestMapping(value = "{projectId}", method = RequestMethod.PUT)
     public ResponseEntity<Void> updateProject(@PathVariable int projectId,
                                               @RequestBody ProjectDto projectDto)
-            throws ServiceProjectAlreadyExistsException {
+            throws ServiceProjectAlreadyExistsException, ServiceProjectNotFoundException {
 
         projectDto.setId(projectId);
         projectService.update(projectDto);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT); //return updated
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(value = "{projectId}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> deleteProject(@PathVariable int projectId) {
+    public ResponseEntity<Void> deleteProject(@PathVariable int projectId)
+            throws ServiceProjectNotFoundException {
 
         projectService.deleteById(projectId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
