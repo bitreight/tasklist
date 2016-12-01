@@ -42,7 +42,7 @@ public class TestUserDao {
 
     @After
     public void tearDown() {
-        userDao.deleteById(user.getId());
+        userDao.delete(user);
     }
 
     @Test(expected = DaoSaveDuplicatedUserException.class)
@@ -60,19 +60,19 @@ public class TestUserDao {
     }
 
     @Test
-    public void testFindUserById_nonExistentId() {
+    public void testFindUserById_invalidId() {
         User userFromDb = userDao.findById(-1);
         assertNull(userFromDb);
     }
 
     @Test
-    public void testFindUserByUsernameAndPassword() {
+    public void testFindUserByUsername() {
         User userFromDb = userDao.findByUsername(user.getUsername());
         assertEquals(user, userFromDb);
     }
 
     @Test
-    public void testFindUserByUsernameAndPassword_nonExistentUsernameAndPassword() {
+    public void testFindUserByUsernameAndPassword_nonExistentUsername() {
         User userFromDb = userDao.findByUsername("");
         assertNull(userFromDb);
     }
@@ -90,20 +90,20 @@ public class TestUserDao {
         assertEquals(user, userFromDb);
     }
 
-    @Test
-    public void testUpdateUser_nonexistentUser() {
-        User invalidUser = new User();
-
-        userDao.update(invalidUser);
-        User userFromDb = userDao.findById(user.getId());
-
-        assertEquals(user, userFromDb);
-    }
-
-    @Test
-    public void testDeleteUserById_nonExistentId() {
-        userDao.deleteById(-1);
-        User userFromDb = userDao.findById(user.getId());
-        assertEquals(user, userFromDb);
-    }
+//    @Test
+//    public void testUpdateUser_nonexistentUser() {
+//        User invalidUser = new User();
+//
+//        userDao.update(invalidUser);
+//        User userFromDb = userDao.findById(user.getId());
+//
+//        assertEquals(user, userFromDb);
+//    }
+//
+//    @Test
+//    public void testDeleteUserById_nonExistentId() {
+//        userDao.deleteById(-1);
+//        User userFromDb = userDao.findById(user.getId());
+//        assertEquals(user, userFromDb);
+//    }
 }

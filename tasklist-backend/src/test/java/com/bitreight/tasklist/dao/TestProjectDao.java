@@ -72,7 +72,7 @@ public class TestProjectDao {
     @After
     public void tearDown() {
         projects.forEach(project -> projectDao.delete(project));
-        userDao.deleteById(user.getId());
+        userDao.delete(user);
     }
 
     @Test(expected = DaoSaveDuplicatedProjectException.class)
@@ -87,6 +87,12 @@ public class TestProjectDao {
     public void testFindProjectById() {
         Project projectFromDb = projectDao.findById(projects.get(0).getId());
         assertEquals(projects.get(0), projectFromDb);
+    }
+
+    @Test
+    public void testFindProjectById_invalidId() {
+        Project projectFromDb = projectDao.findById(-1);
+        assertNull(projectFromDb);
     }
 
     @Test

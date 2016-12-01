@@ -23,6 +23,7 @@ public class UserDaoImpl implements UserDao {
     public void save(User user) throws DaoSaveDuplicatedUserException {
         try {
             entityManager.persist(user);
+
         } catch (PersistenceException e) {
             if(e.getCause() instanceof ConstraintViolationException) {
                 throw new DaoSaveDuplicatedUserException(
@@ -43,11 +44,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteById(int userId) {
-        User userFromDb = findById(userId);
-        if(userFromDb != null) {
-            entityManager.remove(userFromDb);
-        }
+    public void delete(User user) {
+        entityManager.remove(user);
     }
 
     @Override

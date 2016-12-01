@@ -12,6 +12,7 @@ import com.bitreight.tasklist.entity.TaskPriority;
 import com.bitreight.tasklist.entity.User;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ import static org.junit.Assert.assertTrue;
         loader = AnnotationConfigContextLoader.class)
 @ActiveProfiles("dev")
 @Transactional
+@Ignore
 public class TestTaskDao {
 
     @Autowired
@@ -89,133 +91,133 @@ public class TestTaskDao {
         }
     }
 
-    @After
-    public void tearDown() {
-        tasks.forEach(task -> taskDao.deleteById(task.getId()));
-        projectDao.delete(project);
-        userDao.deleteById(user.getId());
-    }
-
-    @Test(expected = DaoSaveDuplicatedTaskException.class)
-    public void testSaveTask_withDuplicatedName() throws DaoSaveDuplicatedTaskException {
-        Task duplicatedTask = new Task();
-        duplicatedTask.setTitle(tasks.get(0).getTitle());
-        duplicatedTask.setPriority(tasks.get(0).getPriority());
-        duplicatedTask.setProject(project);
-        taskDao.save(duplicatedTask);
-    }
-
-    @Test
-    public void testFindTaskById() {
-        Task taskFromDb = taskDao.findById(tasks.get(0).getId());
-        assertEquals(tasks.get(0), taskFromDb);
-    }
-
-    @Test
-    public void testFindTaskById_nonExistentId() {
-        Task taskFromDb = taskDao.findById(-1);
-        assertNull(taskFromDb);
-    }
-
-    @Test
-    public void testFindTaskByProject() {
-        List<Task> tasksFromDb = taskDao.findByProject(project);
-        assertEquals(tasks, tasksFromDb);
-    }
-
-    @Test
-    public void testFindTaskByProject_nonExistentProject() {
-        Project invalidProject = new Project();
-        invalidProject.setId(-1);
-
-        List<Task> tasksFromDb = taskDao.findByProject(invalidProject);
-
-        assertTrue(tasksFromDb.isEmpty());
-    }
-
-    @Test
-    public void testUpdateTask() throws DaoUpdateNonActualVersionOfTaskException,
-            DaoSaveDuplicatedTaskException {
-        for(Task task : tasks) {
-            task.setTitle("test" + tasks.indexOf(task));
-            task.setDescription("test_description");
-            task.setDeadline(new Date(Calendar.getInstance().getTime().getTime()));
-            task.setPriority(TaskPriority.NORMAL);
-            task.setCompleted(!task.isCompleted());
-            taskDao.update(task);
-        }
-
-        List<Task> tasksFromDb = taskDao.findByProject(project);
-
-        assertEquals(tasks, tasksFromDb);
-    }
-
-    @Test(expected = DaoSaveDuplicatedTaskException.class)
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public void testUpdateTask_withDuplicatedTitle() throws DaoUpdateNonActualVersionOfTaskException,
-            DaoSaveDuplicatedTaskException {
-        Task duplicatedTask = tasks.get(1);
-        duplicatedTask.setTitle(tasks.get(0).getTitle());
-        taskDao.update(duplicatedTask);
-    }
-
-    @Test(expected = DaoUpdateNonActualVersionOfTaskException.class)
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public void testUpdateTask_withNonActualVersion() throws DaoUpdateNonActualVersionOfTaskException,
-            DaoSaveDuplicatedTaskException {
-        //get task from db
-        Task taskFromDb = taskDao.findById(tasks.get(0).getId());
-
-        //create its copy with current version
-        Task taskOldVersion = new Task();
-        taskOldVersion.setId(taskFromDb.getId());
-        taskOldVersion.setTitle(taskFromDb.getTitle());
-        taskOldVersion.setDescription(taskFromDb.getDescription());
-        taskOldVersion.setDeadline(taskFromDb.getDeadline());
-        taskOldVersion.setPriority(taskFromDb.getPriority());
-        taskOldVersion.setCompleted(taskFromDb.isCompleted());
-        taskOldVersion.setProject(taskFromDb.getProject());
-
-        //update task from db (version is changed)
-        taskFromDb.setDescription("new_description");
-        taskDao.update(taskFromDb);
-
-        taskDao.update(taskOldVersion);
-    }
-
-    @Test
-    public void testUpdateTask_nonExistentTask() throws DaoUpdateNonActualVersionOfTaskException,
-            DaoSaveDuplicatedTaskException {
-        Task invalidTask = new Task();
-        invalidTask.setId(-1);
-
-        taskDao.update(invalidTask);
-        List<Task> tasksFromDb = taskDao.findByProject(project);
-
-        assertEquals(tasks, tasksFromDb);
-    }
-
-    @Test
-    public void testSetTaskIsCompleted() {
-        Task task = tasks.get(0);
-
-        taskDao.setIsCompleted(task.getId(), true);
-        Task taskFromDb = taskDao.findById(task.getId());
-
-        assertTrue(taskFromDb.isCompleted());
-    }
-
-    @Test
-    public void testSetTaskIsCompleted_nonExistentTask() {
-        taskDao.setIsCompleted(-1, true);
-        List<Task> tasksFromDb = taskDao.findByProject(project);
-        assertEquals(tasks, tasksFromDb);
-    }
-
-    @Test
-    public void testDeleteTask_nonExistentTask() {
-        taskDao.deleteById(-1);
-        List<Task> tasksFromDb = taskDao.findByProject(project);
-        assertEquals(tasks.size(), tasksFromDb.size());
-    }
+//    @After
+//    public void tearDown() {
+//        tasks.forEach(task -> taskDao.deleteById(task.getId()));
+//        projectDao.delete(project);
+//        userDao.deleteById(user.getId());
+//    }
+//
+//    @Test(expected = DaoSaveDuplicatedTaskException.class)
+//    public void testSaveTask_withDuplicatedName() throws DaoSaveDuplicatedTaskException {
+//        Task duplicatedTask = new Task();
+//        duplicatedTask.setTitle(tasks.get(0).getTitle());
+//        duplicatedTask.setPriority(tasks.get(0).getPriority());
+//        duplicatedTask.setProject(project);
+//        taskDao.save(duplicatedTask);
+//    }
+//
+//    @Test
+//    public void testFindTaskById() {
+//        Task taskFromDb = taskDao.findById(tasks.get(0).getId());
+//        assertEquals(tasks.get(0), taskFromDb);
+//    }
+//
+//    @Test
+//    public void testFindTaskById_nonExistentId() {
+//        Task taskFromDb = taskDao.findById(-1);
+//        assertNull(taskFromDb);
+//    }
+//
+//    @Test
+//    public void testFindTaskByProject() {
+//        List<Task> tasksFromDb = taskDao.findByProject(project);
+//        assertEquals(tasks, tasksFromDb);
+//    }
+//
+//    @Test
+//    public void testFindTaskByProject_nonExistentProject() {
+//        Project invalidProject = new Project();
+//        invalidProject.setId(-1);
+//
+//        List<Task> tasksFromDb = taskDao.findByProject(invalidProject);
+//
+//        assertTrue(tasksFromDb.isEmpty());
+//    }
+//
+//    @Test
+//    public void testUpdateTask() throws DaoUpdateNonActualVersionOfTaskException,
+//            DaoSaveDuplicatedTaskException {
+//        for(Task task : tasks) {
+//            task.setTitle("test" + tasks.indexOf(task));
+//            task.setDescription("test_description");
+//            task.setDeadline(new Date(Calendar.getInstance().getTime().getTime()));
+//            task.setPriority(TaskPriority.NORMAL);
+//            task.setCompleted(!task.isCompleted());
+//            taskDao.update(task);
+//        }
+//
+//        List<Task> tasksFromDb = taskDao.findByProject(project);
+//
+//        assertEquals(tasks, tasksFromDb);
+//    }
+//
+//    @Test(expected = DaoSaveDuplicatedTaskException.class)
+//    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+//    public void testUpdateTask_withDuplicatedTitle() throws DaoUpdateNonActualVersionOfTaskException,
+//            DaoSaveDuplicatedTaskException {
+//        Task duplicatedTask = tasks.get(1);
+//        duplicatedTask.setTitle(tasks.get(0).getTitle());
+//        taskDao.update(duplicatedTask);
+//    }
+//
+//    @Test(expected = DaoUpdateNonActualVersionOfTaskException.class)
+//    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+//    public void testUpdateTask_withNonActualVersion() throws DaoUpdateNonActualVersionOfTaskException,
+//            DaoSaveDuplicatedTaskException {
+//        //get task from db
+//        Task taskFromDb = taskDao.findById(tasks.get(0).getId());
+//
+//        //create its copy with current version
+//        Task taskOldVersion = new Task();
+//        taskOldVersion.setId(taskFromDb.getId());
+//        taskOldVersion.setTitle(taskFromDb.getTitle());
+//        taskOldVersion.setDescription(taskFromDb.getDescription());
+//        taskOldVersion.setDeadline(taskFromDb.getDeadline());
+//        taskOldVersion.setPriority(taskFromDb.getPriority());
+//        taskOldVersion.setCompleted(taskFromDb.isCompleted());
+//        taskOldVersion.setProject(taskFromDb.getProject());
+//
+//        //update task from db (version is changed)
+//        taskFromDb.setDescription("new_description");
+//        taskDao.update(taskFromDb);
+//
+//        taskDao.update(taskOldVersion);
+//    }
+//
+//    @Test
+//    public void testUpdateTask_nonExistentTask() throws DaoUpdateNonActualVersionOfTaskException,
+//            DaoSaveDuplicatedTaskException {
+//        Task invalidTask = new Task();
+//        invalidTask.setId(-1);
+//
+//        taskDao.update(invalidTask);
+//        List<Task> tasksFromDb = taskDao.findByProject(project);
+//
+//        assertEquals(tasks, tasksFromDb);
+//    }
+//
+//    @Test
+//    public void testSetTaskIsCompleted() {
+//        Task task = tasks.get(0);
+//
+//        taskDao.setIsCompleted(task.getId(), true);
+//        Task taskFromDb = taskDao.findById(task.getId());
+//
+//        assertTrue(taskFromDb.isCompleted());
+//    }
+//
+//    @Test
+//    public void testSetTaskIsCompleted_nonExistentTask() {
+//        taskDao.setIsCompleted(-1, true);
+//        List<Task> tasksFromDb = taskDao.findByProject(project);
+//        assertEquals(tasks, tasksFromDb);
+//    }
+//
+//    @Test
+//    public void testDeleteTask_nonExistentTask() {
+//        taskDao.deleteById(-1);
+//        List<Task> tasksFromDb = taskDao.findByProject(project);
+//        assertEquals(tasks.size(), tasksFromDb.size());
+//    }
 }

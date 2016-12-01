@@ -7,6 +7,7 @@ import com.bitreight.tasklist.entity.User;
 import com.bitreight.tasklist.service.converter.UserDtoConverter;
 import com.bitreight.tasklist.service.converter.impl.UserDtoConverterImpl;
 import com.bitreight.tasklist.service.exception.ServiceUserAlreadyExistsException;
+import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
 import com.bitreight.tasklist.service.impl.UserServiceImpl;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -70,7 +71,7 @@ public class TestUserService {
         verify(mockUserDao).save(userToSave);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testRegisterUser_nullUserDto() throws ServiceUserAlreadyExistsException,
             DaoSaveDuplicatedUserException {
         userService.register(null);
@@ -91,56 +92,69 @@ public class TestUserService {
     }
 
     @Test
-    public void testCheckCredentials() {
+    public void testFindByUsername() throws ServiceUserNotFoundException {
         when(mockUserDao.findByUsername(user.getUsername()))
                 .thenReturn(user);
 
-        UserDto newUserDto = userService.getByUsername(userDto.getUsername());
+        UserDto actualUserDto = userService.getByUsername(userDto.getUsername());
 
-        assertEquals(newUserDto, userDto);
+        assertEquals(actualUserDto, userDto);
         verify(spyUserConverter).convertEntity(user);
         verify(mockUserDao).findByUsername(user.getUsername());
     }
 
-    @Test
-    public void testCheckCredentials_nullUserDto() {
-        UserDto newUserDto = userService.getByUsername(null);
+    @Test(expected = IllegalArgumentException.class)
+    public void testFindByUsername_nullUserDto() throws ServiceUserNotFoundException {
+        UserDto actualUserDto = userService.getByUsername(null);
 
-        assertNull(newUserDto);
         verify(spyUserConverter, never()).convertEntity(any());
         verify(mockUserDao, never()).findByUsername(anyString());
     }
 
-    @Test
-    public void testCheckCredentials_nonExistentUser() {
+    @Test(expected = ServiceUserNotFoundException.class)
+    public void testFindByUsername_nonExistentUser() throws ServiceUserNotFoundException {
         when(mockUserDao.findByUsername(user.getUsername()))
                 .thenReturn(null);
 
-        UserDto newUserDto = userService.getByUsername(userDto.getUsername());
+        UserDto actualUserDto = userService.getByUsername(userDto.getUsername());
 
-        assertNull(newUserDto);
         verify(spyUserConverter, never()).convertEntity(user);
         verify(mockUserDao).findByUsername(user.getUsername());
     }
 
     @Test
-    public void testUpdateUser() {
+    public void testUpdateUser() throws ServiceUserNotFoundException {
+        when(mockUserDao.findById(1)).thenReturn(user);
+
         userService.update(userDto);
 
         verify(spyUserConverter).convertDto(userDto);
+        verify(mockUserDao).findById(1);
         verify(mockUserDao).update(user);
     }
 
-    @Test
-    public void testUpdateUser_nullUserDto() {
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateUser_nullUserDto() throws ServiceUserNotFoundException {
         userService.update(null);
 
         verify(spyUserConverter, never()).convertDto(any());
+        verify(mockUserDao, never()).findById(anyInt());
+        verify(mockUserDao, never()).update(any());
+    }
+
+    @Test(expected = ServiceUserNotFoundException.class)
+    public void testUpdateUser_nonExistentUer() throws ServiceUserNotFoundException {
+        when(mockUserDao.findById(1)).thenReturn(null);
+
+        userService.update(userDto);
+
+        verify(spyUserConverter, never()).convertDto(any());
+        verify(mockUserDao).findById(1);
         verify(mockUserDao, never()).update(any());
     }
 
     @Test
-    public void testGetInfoById() {
+    public void testGetInfoById() throws ServiceUserNotFoundException {
         when(mockUserDao.findById(1)).thenReturn(user);
 
         UserDto newUserDto = userService.getInfoById(userDto.getId());
@@ -150,22 +164,12 @@ public class TestUserService {
         verify(mockUserDao).findById(user.getId());
     }
 
-    @Test
-    public void testGetInfoById_zeroUserId() {
-        UserDto newUserDto = userService.getInfoById(0);
-
-        assertNull(newUserDto);
-        verify(spyUserConverter, never()).convertEntity(any());
-        verify(mockUserDao, never()).findById(anyInt());
-    }
-
-    @Test
-    public void testGetInfoById_nonExistentUser() {
+    @Test(expected = ServiceUserNotFoundException.class)
+    public void testGetInfoById_nonExistentUser() throws ServiceUserNotFoundException {
         when(mockUserDao.findById(1)).thenReturn(null);
 
         UserDto newUserDto = userService.getInfoById(1);
 
-        assertNull(newUserDto);
         verify(spyUserConverter, never()).convertEntity(any());
         verify(mockUserDao).findById(1);
     }

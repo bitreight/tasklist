@@ -2,14 +2,15 @@ package com.bitreight.tasklist.service;
 
 import com.bitreight.tasklist.dto.UserDto;
 import com.bitreight.tasklist.service.exception.ServiceUserAlreadyExistsException;
+import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
 
 public interface UserService {
 
     void register(UserDto userDto) throws ServiceUserAlreadyExistsException;
 
-    UserDto getByUsername(String username);
+    UserDto getByUsername(String username) throws ServiceUserNotFoundException;
 
-    void update(UserDto userDto);
+    void update(UserDto userDto) throws ServiceUserNotFoundException;
 
-    UserDto getInfoById(int userId);
+    UserDto getInfoById(int userId) throws ServiceUserNotFoundException;
 }
