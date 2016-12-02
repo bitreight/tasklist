@@ -17,25 +17,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/projects")
+@RequestMapping(value = "/api")
 public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "projects", method = RequestMethod.POST)
     public ResponseEntity<Integer> createProject(@AuthenticationPrincipal CustomUserDetails user,
-                                                 @RequestBody ProjectDto projectDto)
+                                                 @Valid @RequestBody ProjectDto projectDto)
             throws ServiceProjectAlreadyExistsException, ServiceUserNotFoundException {
 
         int id = projectService.add(projectDto, user.getId());
         return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "{projectId}", method = RequestMethod.GET)
+    @RequestMapping(value = "projects/{projectId}", method = RequestMethod.GET)
     public ResponseEntity<ProjectDto> getProject(@PathVariable int projectId)
             throws ServiceProjectNotFoundException {
 
@@ -43,7 +44,7 @@ public class ProjectController {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "projects", method = RequestMethod.GET)
     public ResponseEntity<List<ProjectDto>> getProjectsByUser(@AuthenticationPrincipal CustomUserDetails user)
             throws ServiceUserNotFoundException, ServiceProjectNotFoundException {
 
@@ -51,9 +52,9 @@ public class ProjectController {
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "{projectId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "projects/{projectId}", method = RequestMethod.PUT)
     public ResponseEntity<Void> updateProject(@PathVariable int projectId,
-                                              @RequestBody ProjectDto projectDto)
+                                              @Valid @RequestBody ProjectDto projectDto)
             throws ServiceProjectAlreadyExistsException, ServiceProjectNotFoundException {
 
         projectDto.setId(projectId);
@@ -61,7 +62,7 @@ public class ProjectController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "{projectId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "projects/{projectId}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> deleteProject(@PathVariable int projectId)
             throws ServiceProjectNotFoundException {
 
