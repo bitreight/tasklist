@@ -7,11 +7,11 @@ public class ProjectDto {
 
     private int id;
 
-    @NotNull
-    @Size(min = 1, max = 20)
+    @NotNull(message = "Enter project title.")
+    @Size(min = 1, max = 20, message = "Project title must be {min}..{max} characters long.")
     private String title;
 
-    @Size(max = 500)
+    @Size(max = 500, message = "Project description could be maximum {max} characters long.")
     private String description;
 
     public int getId() {

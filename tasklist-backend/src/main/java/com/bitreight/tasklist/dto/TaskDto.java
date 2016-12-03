@@ -10,23 +10,23 @@ public class TaskDto {
 
     private int id;
 
-    @NotNull
+    @NotNull(message = "Enter task title.")
     @Size(min = 1, max = 45)
     private String title;
 
-    @Size(max = 500)
+    @Size(max = 500, message = "Task description could be maximum {max} characters long.")
     private String description;
 
-    @Pattern(regexp = "\\d{2}-\\d{2}-\\d{4}")
+    @Pattern(regexp = "\\d{2}-\\d{2}-\\d{4}", message = "Task deadline must be in dd-mm-yyyy format.")
     private String deadline;
 
-    @Min(0)
-    @Max(2)
+    @Min(value = 0, message = "Error when saving task.")
+    @Max(value = 2, message = "Error when saving task.")
     private int priority;
 
     private boolean isCompleted;
 
-    @Min(1)
+    @Min(value = 1, message = "Error when saving task.")
     private long version;
 
     public int getId() {
