@@ -2,7 +2,6 @@ package com.bitreight.tasklist.service;
 
 import com.bitreight.tasklist.dto.ProjectDto;
 import com.bitreight.tasklist.service.exception.ServiceProjectAlreadyExistsException;
-import com.bitreight.tasklist.service.exception.ServiceProjectCreationException;
 import com.bitreight.tasklist.service.exception.ServiceProjectNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
 

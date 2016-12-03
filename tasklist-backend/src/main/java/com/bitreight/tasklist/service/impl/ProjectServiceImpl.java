@@ -9,7 +9,6 @@ import com.bitreight.tasklist.entity.User;
 import com.bitreight.tasklist.service.ProjectService;
 import com.bitreight.tasklist.service.converter.ProjectDtoConverter;
 import com.bitreight.tasklist.service.exception.ServiceProjectAlreadyExistsException;
-import com.bitreight.tasklist.service.exception.ServiceProjectCreationException;
 import com.bitreight.tasklist.service.exception.ServiceProjectNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
