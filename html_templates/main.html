@@ -37,21 +37,24 @@
 
         <div id="content">
             <div id="left-menu-col">
-                <div class="list-group">                                    
-                    <a href="#" class="list-group-item">ALL</a>
-                    <a href="#" class="list-group-item">TODAY</a>
-                    <a href="#" class="list-group-item">WEEK</a>                
-                    <div class="list-group-item">
+                <ul class="list-group">                                    
+                    <li class="list-group-item">ALL</li>
+                    <li class="list-group-item">TODAY</li>
+                    <li class="list-group-item">WEEK</li>                
+                    <li class="list-group-item">
                         PROJECTS
                         <span id="add-project" class="glyphicon glyphicon-plus"/>
-                    </div>
+                    </li>
                     <div id="project-list">
-                        <a href="#" class="list-group-item">
+                        <li rel class="list-group-item">
                             project 1
+                            <span data-project-id="1" class="glyphicon glyphicon-pencil pull-right"/>
                             <span id="delete-project" class="glyphicon glyphicon-trash pull-right"/>
-                        </a>                    
+                            
+
+                        </li>                    
                     </div>
-                </div>
+                </ul>
             </div>  
 
             <div id="tasks-content">

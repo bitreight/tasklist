@@ -76,13 +76,25 @@ body {
     font-size: 12px;
 }
 
-#project-list a.list-group-item {
-    font-size: 12px;
-    padding-left: 30px;
+#project-list li.list-group-item {
+    /*font-size: 12px;*/
+    padding-left: 20px;
+}
+
+.delete-project {
+    margin-left: 12px;
 }
 
 .panel-body {
     padding: 9px 15px 9px 15px;
+}
+
+.modal-content {
+    border-radius: 0px;
+}
+
+#project-title {
+    margin-bottom: 15px;
 }
 
 #tasks-content {

@@ -19,19 +19,45 @@
 
             <div id="content">
                 <div id="left-menu-col">
-                    <div class="list-group">
-                        <a href="#" class="list-group-item">ALL</a>
-                        <a href="#" class="list-group-item">TODAY</a>
-                        <a href="#" class="list-group-item">WEEK</a>
-                        <div class="list-group-item">
+                    <ul class="list-group">
+                        <li class="list-group-item">ALL</li>
+                        <li class="list-group-item">TODAY</li>
+                        <%--<li class="list-group-item">WEEK</li>--%>
+                        <li class="list-group-item">
                             PROJECTS
                             <span id="add-project" class="glyphicon glyphicon-plus"></span>
-                        </div>
-                        <div id="project-list">
-                            <a href="#" class="list-group-item">
-                                project 1
-                                <span id="delete-project" class="glyphicon glyphicon-trash pull-right"></span>
-                            </a>
+                        </li>
+                    </ul>
+                    <ul id="project-list" class="list-group">
+                        <!-- projects of the user -->
+                    </ul>
+                </div>
+
+                <!-- Project edit modal window -->
+                <div class="modal fade" id="project-details-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <%--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>--%>
+                                <h4 class="modal-title" id="myModalLabel">Project description</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form id="project-details-form">
+                                    <%--<div class="panel panel-default">--%>
+                                        <input id="project-id" type="hidden"/>
+                                        <%--<div class="panel-heading">--%>
+                                            <input id="project-title" type="text" class="form-control" placeholder="Title"/>
+                                        <%--</div>--%>
+                                        <%--<div class="panel-body">--%>
+                                            <textarea id="project-description" class="form-control" rows="6" placeholder="Description"></textarea>
+                                        <%--</div>--%>
+                                    <%--</div>--%>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button id="save-project" type="submit" class="btn btn-primary">Save</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -99,6 +125,7 @@
         <script src="<c:url value="/resources/vendor/bootstrap/js/bootstrap.min.js"/>"></script>
         <script src="<c:url value="/resources/vendor/js/bootstrap-datepicker.min.js"/>"></script>
         <script src="<c:url value="/resources/vendor/js/bootstrap-select.min.js"/>"></script>
+        <script src="<c:url value="/resources/js/main.js"/>"></script>
 
         <script>
             $(document).ready(function () {
@@ -106,8 +133,8 @@
                 $("#datepicker").datepicker({
                     format: "dd-mm-yyyy",
                     viewMode: "days",
-                    minViewMode: "days",
-                    endDate: today.getFullYear().toString()
+                    minViewMode: "days"
+                    //endDate: today.getFullYear().toString()
                 });
             });
         </script>
