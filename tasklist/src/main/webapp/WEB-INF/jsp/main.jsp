@@ -25,7 +25,7 @@
                         <%--<li class="list-group-item">WEEK</li>--%>
                         <li class="list-group-item">
                             PROJECTS
-                            <span id="add-project" class="glyphicon glyphicon-plus"></span>
+                            <span id="add-project" class="glyphicon glyphicon-plus pull-right"></span>
                         </li>
                     </ul>
                     <ul id="project-list" class="list-group">
@@ -39,24 +39,45 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <%--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>--%>
-                                <h4 class="modal-title" id="myModalLabel">Project description</h4>
+                                <h4 class="modal-title" id="project-modal-title"></h4>
                             </div>
                             <div class="modal-body">
                                 <form id="project-details-form">
-                                    <%--<div class="panel panel-default">--%>
-                                        <input id="project-id" type="hidden"/>
-                                        <%--<div class="panel-heading">--%>
-                                            <input id="project-title" type="text" class="form-control" placeholder="Title"/>
-                                        <%--</div>--%>
-                                        <%--<div class="panel-body">--%>
-                                            <textarea id="project-description" class="form-control" rows="6" placeholder="Description"></textarea>
-                                        <%--</div>--%>
-                                    <%--</div>--%>
+                                    <div id="project-save-error" class="alert alert-danger project-error" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="sr-only">Error:</span>
+                                    </div>
+                                    <input id="project-id" type="hidden"/>
+                                    <input id="project-title" type="text" class="form-control" placeholder="Title"/>
+                                    <div id="project-title-error" class="alert alert-danger project-error" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="sr-only">Error:</span>
+                                    </div>
+                                    <textarea id="project-description" class="form-control" rows="6" placeholder="Description"></textarea>
+                                    <div id="project-description-error" class="alert alert-danger project-error" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="sr-only">Error:</span>
+                                    </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                 <button id="save-project" type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project delete modal window -->
+                <div class="modal fade" id="project-delete-confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                Are you sure you want to delete project?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button id="delete-project" type="button" class="btn btn-primary">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -87,11 +108,11 @@
                                 </div>
                             </div>
                             <div class="list-group">
-                                <a href="#" class="list-group-item">
-                                    <input id="check-as-completed" type="checkbox"/>
-                                    Task 1
-                                    <span id="delete-task" class="glyphicon glyphicon-trash"></span>
-                                </a>
+                                <%--<a href="#" class="list-group-item">--%>
+                                    <%--<input id="check-as-completed" type="checkbox"/>--%>
+                                    <%--Task 1--%>
+                                    <%--<span id="delete-task" class="glyphicon glyphicon-trash"></span>--%>
+                                <%--</a>--%>
                             </div>
                         </div>
                     </div>
@@ -112,7 +133,7 @@
                                     </div>
                                     <input type="text" class="form-control pull-left" id="datepicker" placeholder="Deadline" />
                                     <button id="task-save-button" type="button" class="btn btn-default pull-left">Save</button>
-                                    <textarea id="task-description-edit" class="form-control pull-left" rows="6">Cool task</textarea>
+                                    <textarea id="task-description-edit" class="form-control pull-left" rows="6"></textarea>
                                 </div>
                             </div>
                         </form>

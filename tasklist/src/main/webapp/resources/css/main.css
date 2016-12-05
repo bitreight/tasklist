@@ -7,6 +7,10 @@ body {
     margin-bottom: 0px;
 }
 
+.alert {
+    display: none;
+}
+
 #login-form-wrapper {
     margin-top: 150px;
     padding: 0 50px 0 50px;
@@ -81,6 +85,14 @@ body {
     padding-left: 20px;
 }
 
+#project-list li > span {
+    display: none;
+}
+
+#project-list li:hover > span {
+    display: inline;
+}
+
 .delete-project {
     margin-left: 12px;
 }
@@ -93,7 +105,7 @@ body {
     border-radius: 0px;
 }
 
-#project-title {
+#project-title, #project-description {
     margin-bottom: 15px;
 }
 
