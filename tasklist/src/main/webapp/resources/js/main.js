@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
     var projectEditMode = false;
+    var projectDeleteMode = false;
     var projectsApiBaseUrl = "/tasklist/api/projects";
 
     getUserProjects();
@@ -38,22 +39,26 @@ $(document).ready(function () {
             }
         });
     }
+    
+    function deleteProject(projectId, projectItem) {
+        $.ajax({
+            url: projectsApiBaseUrl + "/" + projectId,
+            type: "DELETE",
+            success: function () {
+                projectItem.remove();
+            }            
+        }).always(function () {
+            $("#project-delete-confirm").modal("hide");
+        });        
+    }
 
     $("#project-list")
         .on("click", ".delete-project", function () {
-            var projectItem = $(this).parent();
-            var projectId = projectItem.data("project-id");
-            
-            $("#project-delete-confirm").modal("show");
-    
-            // $.ajax({
-            //     url: projectsApiBaseUrl + "/" + projectId,
-            //     type: "DELETE",
-            //     success: function () {
-            //         projectItem.remove();
-            //     }
-            // });
+            var projectId = $(this).parent().data("project-id");
 
+            $("#delete-project").data("project-id", projectId);
+            $("#project-delete-confirm").modal("show");
+            
         }).on("click", ".edit-project", function () {
             var projectId = $(this).parent().data("project-id");
             getProjectDetails(projectId);
@@ -138,7 +143,14 @@ $(document).ready(function () {
         errorDivs.text("");
     });
 
-
+    $("#delete-project").click(function () {
+        var projectId = $("#delete-project").data("project-id");
+        var projectItem = $('li[data-project-id="'+ projectId +'"]');
+        deleteProject(projectId, projectItem);
+    });  
+    
+    
+    
     /*----- tasks functionality -----*/
 
 });
