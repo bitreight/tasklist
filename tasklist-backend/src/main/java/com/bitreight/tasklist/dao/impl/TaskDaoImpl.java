@@ -5,6 +5,7 @@ import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedTaskException;
 import com.bitreight.tasklist.dao.exception.DaoUpdateNonActualVersionOfTaskException;
 import com.bitreight.tasklist.entity.Project;
 import com.bitreight.tasklist.entity.Task;
+import com.bitreight.tasklist.entity.User;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Root;
+import java.sql.Date;
 import java.util.List;
 
 @Repository("taskDao")
@@ -39,18 +46,14 @@ public class TaskDaoImpl implements TaskDao {
     @Override
     public void update(Task task) throws DaoUpdateNonActualVersionOfTaskException,
             DaoSaveDuplicatedTaskException {
-        Task taskFromDb = findById(task.getId());
         try {
-            if (taskFromDb != null) {
-                entityManager.merge(task);
-                entityManager.flush();
-            }
+            entityManager.merge(task);
+            entityManager.flush();
 
         } catch (OptimisticLockException e) {
             throw new DaoUpdateNonActualVersionOfTaskException(
                             "Version of the task id=" + task.getId() + " has been changed. " +
-                            "Old version is " + task.getVersion() +
-                            ", new version is " + taskFromDb.getVersion() + ".", e);
+                            "(updated by another user.)");
 
         } catch (PersistenceException e) {
             if(e.getCause() instanceof ConstraintViolationException) {
@@ -62,11 +65,8 @@ public class TaskDaoImpl implements TaskDao {
     }
 
     @Override
-    public void deleteById(int taskId) {
-        Task taskFromDb = findById(taskId);
-        if(taskFromDb != null) {
-            entityManager.remove(taskFromDb);
-        }
+    public void delete(Task task) {
+        entityManager.remove(task);
     }
 
     @Override
@@ -75,17 +75,42 @@ public class TaskDaoImpl implements TaskDao {
     }
 
     @Override
-    public List<Task> findByProject(Project project) {
-        return (List<Task>) entityManager.createQuery("Select t from Task t where t.project LIKE :project")
-                                            .setParameter("project", project)
-                                            .getResultList();
+    public List<Task> findByUserAndMaxDate(User user, Date date, String sortField) {
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<Task> query = builder.createQuery(Task.class);
+        Root<Task> task = query.from(Task.class);
+
+        Join<Task, Project> taskProject = task.join("project");
+        Join<Project, User> taskProjectUser = taskProject.join("user");
+
+        Order order = null;
+        if(sortField == null) {
+            order = builder.asc(task.get("title"));
+        } else {
+            order = builder.asc(task.get(sortField));
+        }
+
+        query.where(builder.equal(taskProjectUser.get("username"), user.getUsername()),
+                    builder.lessThanOrEqualTo(task.get("deadline"), date))
+             .orderBy(order);
+
+        return entityManager.createQuery(query).getResultList();
     }
 
     @Override
-    public void setIsCompleted(int taskId, boolean isCompleted) {
-        Task taskFromDb = findById(taskId);
-        if(taskFromDb != null) {
-            taskFromDb.setCompleted(isCompleted);
-        }
+    public List<Task> findByProjectAndMaxDate(Project project, Date date, String sortField) {
+        CriteriaBuilder builder = getCriteriaBuilder();
+        CriteriaQuery<Task> query = builder.createQuery(Task.class);
+        Root<Task> task = query.from(Task.class);
+
+        query.where(builder.equal(task.get("project"), project),
+                    builder.lessThanOrEqualTo(task.get("deadline"), date))
+             .orderBy(builder.asc(task.get(sortField)));
+
+        return entityManager.createQuery(query).getResultList();
+    }
+
+    private CriteriaBuilder getCriteriaBuilder() {
+        return entityManager.getCriteriaBuilder();
     }
 }

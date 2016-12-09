@@ -4,19 +4,23 @@ import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedTaskException;
 import com.bitreight.tasklist.dao.exception.DaoUpdateNonActualVersionOfTaskException;
 import com.bitreight.tasklist.entity.Project;
 import com.bitreight.tasklist.entity.Task;
+import com.bitreight.tasklist.entity.User;
+import org.hibernate.Criteria;
 
+import java.sql.Date;
 import java.util.List;
 
 public interface TaskDao {
+
     void save(Task task) throws DaoSaveDuplicatedTaskException;
 
     void update(Task task) throws DaoUpdateNonActualVersionOfTaskException, DaoSaveDuplicatedTaskException;
 
-    void deleteById(int taskId);
+    void delete(Task task);
 
     Task findById(int taskId);
 
-    List<Task> findByProject(Project project);
+    List<Task> findByUserAndMaxDate(User user, Date date, String sortField);
 
-    void setIsCompleted(int taskId, boolean isCompleted);
+    List<Task> findByProjectAndMaxDate(Project project, Date date, String sortField);
 }
