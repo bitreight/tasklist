@@ -16,10 +16,13 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository("taskDao")
@@ -75,7 +78,7 @@ public class TaskDaoImpl implements TaskDao {
     }
 
     @Override
-    public List<Task> findByUserAndMaxDate(User user, Date date, String sortField) {
+    public List<Task> findByUserAndMaxDeadline(User user, Date date, String orderField) {
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Task> query = builder.createQuery(Task.class);
         Root<Task> task = query.from(Task.class);
@@ -83,34 +86,54 @@ public class TaskDaoImpl implements TaskDao {
         Join<Task, Project> taskProject = task.join("project");
         Join<Project, User> taskProjectUser = taskProject.join("user");
 
-        Order order = null;
-        if(sortField == null) {
-            order = builder.asc(task.get("title"));
-        } else {
-            order = builder.asc(task.get(sortField));
-        }
+        List<Predicate> predicates = new ArrayList<>();
+        addEqualPredicate(predicates, builder, taskProjectUser, "username", user.getUsername());
+        addLessThanOrEqualToPredicate(predicates, builder, task, "deadline", date);
 
-        query.where(builder.equal(taskProjectUser.get("username"), user.getUsername()),
-                    builder.lessThanOrEqualTo(task.get("deadline"), date))
-             .orderBy(order);
+        List<Order> orders = new ArrayList<>();
+        addAscOrder(orders, builder, task, orderField);
+
+        query.where(predicates.toArray(new Predicate[0])).orderBy(orders);
 
         return entityManager.createQuery(query).getResultList();
     }
 
     @Override
-    public List<Task> findByProjectAndMaxDate(Project project, Date date, String sortField) {
+    public List<Task> findByProjectAndMaxDeadline(Project project, Date date, String orderField) {
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Task> query = builder.createQuery(Task.class);
         Root<Task> task = query.from(Task.class);
 
-        query.where(builder.equal(task.get("project"), project),
-                    builder.lessThanOrEqualTo(task.get("deadline"), date))
-             .orderBy(builder.asc(task.get(sortField)));
+        List<Predicate> predicates = new ArrayList<>();
+        addEqualPredicate(predicates, builder, task, "project", project);
+        addLessThanOrEqualToPredicate(predicates, builder, task, "deadline", date);
+
+        List<Order> orders = new ArrayList<>();
+        addAscOrder(orders, builder, task, orderField);
+
+        query.where(predicates.toArray(new Predicate[0])).orderBy(orders);
 
         return entityManager.createQuery(query).getResultList();
     }
 
     private CriteriaBuilder getCriteriaBuilder() {
         return entityManager.getCriteriaBuilder();
+    }
+
+    private <Z, X, V> void addEqualPredicate(List<Predicate> predicates, CriteriaBuilder builder,
+                                             From<Z, X> root, String field, V value) {
+        Predicate equalPredicate = builder.equal(root.get(field), value);
+        predicates.add(equalPredicate);
+    }
+
+    private <Z, X, V extends Comparable<V>> void addLessThanOrEqualToPredicate(List<Predicate> predicates, CriteriaBuilder builder,
+                                                                               From<Z, X> root, String field, V value) {
+        Predicate lessOrEqualPredicate = builder.lessThanOrEqualTo(root.get(field), value);
+        predicates.add(lessOrEqualPredicate);
+    }
+
+    private <Z, X> void addAscOrder(List<Order> orders, CriteriaBuilder builder, From<Z, X> root, String field) {
+        Order order = builder.asc(root.get(field));
+        orders.add(order);
     }
 }

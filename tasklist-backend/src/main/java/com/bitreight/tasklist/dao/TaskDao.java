@@ -20,7 +20,7 @@ public interface TaskDao {
 
     Task findById(int taskId);
 
-    List<Task> findByUserAndMaxDate(User user, Date date, String sortField);
+    List<Task> findByUserAndMaxDeadline(User user, Date date, String sortField);
 
-    List<Task> findByProjectAndMaxDate(Project project, Date date, String sortField);
+    List<Task> findByProjectAndMaxDeadline(Project project, Date date, String sortField);
 }
