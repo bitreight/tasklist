@@ -30,7 +30,7 @@ public class Task {
     private Date deadline;
 
     @Column(name = "task_priority")
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private TaskPriority priority;
 
     @Column(name = "is_completed")
