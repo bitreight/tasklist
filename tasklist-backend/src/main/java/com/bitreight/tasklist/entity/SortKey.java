@@ -1,5 +1,5 @@
 package com.bitreight.tasklist.entity;
 
-public enum SortType {
+public enum SortKey {
     DEADLINE, PRIORITY, TITLE
 }

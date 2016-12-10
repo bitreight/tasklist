@@ -7,7 +7,7 @@ import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedTaskException;
 import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedUserException;
 import com.bitreight.tasklist.dao.exception.DaoUpdateNonActualVersionOfTaskException;
 import com.bitreight.tasklist.entity.Project;
-import com.bitreight.tasklist.entity.SortType;
+import com.bitreight.tasklist.entity.SortKey;
 import com.bitreight.tasklist.entity.Task;
 import com.bitreight.tasklist.entity.TaskPriority;
 import com.bitreight.tasklist.entity.User;
@@ -20,7 +20,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
@@ -30,9 +29,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.bitreight.tasklist.entity.SortType.DEADLINE;
-import static com.bitreight.tasklist.entity.SortType.PRIORITY;
-import static com.bitreight.tasklist.entity.SortType.TITLE;
+import static com.bitreight.tasklist.entity.SortKey.DEADLINE;
+import static com.bitreight.tasklist.entity.SortKey.PRIORITY;
+import static com.bitreight.tasklist.entity.SortKey.TITLE;
 import static java.time.DayOfWeek.SUNDAY;
 import static java.time.temporal.TemporalAdjusters.next;
 import static org.junit.Assert.assertEquals;
@@ -240,6 +239,12 @@ public class TestTaskDao {
         taskDao.update(taskFromDb);
 
         taskDao.update(taskOldVersion);
+    }
+
+    @Test
+    public void testDate() {
+        //System.out.println(LocalDate.now().with(next(SATURDAY)));
+        SortKey.valueOf(null);
     }
 
 //    @Test
