@@ -22,7 +22,7 @@
                     <ul class="list-group">
                         <li class="list-group-item">ALL</li>
                         <li class="list-group-item">TODAY</li>
-                        <%--<li class="list-group-item">WEEK</li>--%>
+                        <li class="list-group-item">WEEK</li>
                         <li class="list-group-item">
                             PROJECTS
                             <span id="add-project" class="glyphicon glyphicon-plus pull-right"></span>
@@ -101,7 +101,6 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="task-sort">
-                                        <li><a href="#">Name</a></li>
                                         <li><a href="#">Deadline</a></li>
                                         <li><a href="#">Priority</a></li>
                                     </ul>
