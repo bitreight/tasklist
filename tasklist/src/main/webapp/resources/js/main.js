@@ -35,7 +35,7 @@ $(document).ready(function () {
             success: function (project) {
                 $("#project-id").val(project.id);
                 $("#project-title").val(project.title);
-                $("#project-description").val(project.title);
+                $("#project-description").val(project.description);
             }
         });
     }
