@@ -19,8 +19,4 @@ public interface TaskDao {
     void delete(Task task);
 
     Task findById(int taskId);
-
-    List<Task> findByUserAndMaxDeadline(User user, Date deadline, String sortField);
-
-    List<Task> findByProjectAndMaxDeadline(Project project, Date deadline, String sortField);
 }
