@@ -32,7 +32,6 @@ import static org.junit.Assert.assertTrue;
         loader = AnnotationConfigContextLoader.class)
 @Transactional
 @ActiveProfiles("dev")
-@Ignore
 public class TestProjectDao {
 
     @Autowired
