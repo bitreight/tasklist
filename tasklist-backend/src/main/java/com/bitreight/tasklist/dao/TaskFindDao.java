@@ -7,7 +7,7 @@ import com.bitreight.tasklist.entity.User;
 import java.sql.Date;
 import java.util.List;
 
-public interface TaskSearchDao {
+public interface TaskFindDao {
 
     List<Task> findByUserAndMaxDeadline(User user, Date deadline, List<String> orderFields);
 

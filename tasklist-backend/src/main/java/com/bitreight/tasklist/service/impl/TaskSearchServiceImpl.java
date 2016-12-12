@@ -1,7 +1,7 @@
 package com.bitreight.tasklist.service.impl;
 
 import com.bitreight.tasklist.dao.ProjectDao;
-import com.bitreight.tasklist.dao.TaskSearchDao;
+import com.bitreight.tasklist.dao.TaskFindDao;
 import com.bitreight.tasklist.dao.UserDao;
 import com.bitreight.tasklist.dto.TaskDto;
 import com.bitreight.tasklist.entity.Project;
@@ -37,12 +37,12 @@ public class TaskSearchServiceImpl implements TaskSearchService {
     private ProjectDao projectDao;
 
     @Autowired
-    private TaskSearchDao taskSearchDao;
+    private TaskFindDao taskFindDao;
 
     @Autowired
     private TaskDtoConverter taskConverter;
 
-    private String defaultSortKey = SortKey.TITLE.toString().toLowerCase();
+    private static final String DEFAULT_SORT_KEY = SortKey.TITLE.toString().toLowerCase();
 
     @Override
     public List<TaskDto> getByProjectId(int projectId, String primarySortKey) throws ServiceProjectNotFoundException,
@@ -59,9 +59,9 @@ public class TaskSearchServiceImpl implements TaskSearchService {
         if(checkSortKey(primarySortKey)) {
             sortKeys.add(primarySortKey);
         }
-        sortKeys.add(defaultSortKey);
+        sortKeys.add(DEFAULT_SORT_KEY);
 
-        List<Task> tasksFromDb = taskSearchDao.findByProjectAndMaxDeadline(projectFromDb, farFuture, sortKeys);
+        List<Task> tasksFromDb = taskFindDao.findByProjectAndMaxDeadline(projectFromDb, farFuture, sortKeys);
         if(tasksFromDb == null) {
             throw new ServiceTaskNotFoundException("Tasks not found.");
         }
@@ -112,9 +112,9 @@ public class TaskSearchServiceImpl implements TaskSearchService {
         if(checkSortKey(primarySortKey)) {
             sortKeys.add(primarySortKey);
         }
-        sortKeys.add(defaultSortKey);
+        sortKeys.add(DEFAULT_SORT_KEY);
 
-        List<Task> tasksFromDb = taskSearchDao.findByUserAndMaxDeadline(userFromDb, sqlMaxDeadline, sortKeys);
+        List<Task> tasksFromDb = taskFindDao.findByUserAndMaxDeadline(userFromDb, sqlMaxDeadline, sortKeys);
         if(tasksFromDb == null) {
             throw new ServiceTaskNotFoundException("Tasks not found.");
         }

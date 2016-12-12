@@ -55,7 +55,7 @@ public class TestTaskDao {
     private TaskDao taskDao;
 
     @Autowired
-    private TaskSearchDao taskSearchDao;
+    private TaskFindDao taskFindDao;
 
     private User user;
     private Project project;
@@ -139,7 +139,7 @@ public class TestTaskDao {
             taskDao.update(task);
         }
 
-        List<Task> tasksFromDb = taskSearchDao
+        List<Task> tasksFromDb = taskFindDao
                 .findByProjectAndMaxDeadline(project, new Date(Long.MAX_VALUE),
                         Collections.singletonList(TITLE.toString().toLowerCase()));
 
@@ -181,7 +181,7 @@ public class TestTaskDao {
     @Test
     public void testFindTaskByUserAndMaxDate_todayAndSortByPriority() {
         Date today = Date.valueOf(LocalDate.now());
-        List<Task> todayTasksFromDb = taskSearchDao
+        List<Task> todayTasksFromDb = taskFindDao
                 .findByUserAndMaxDeadline(user, today,
                         Collections.singletonList(PRIORITY.toString().toLowerCase()));
 
@@ -192,7 +192,7 @@ public class TestTaskDao {
     @Test
     public void testFindTaskByUserAndMaxDate_sundayAndSortByDeadline() {
         Date sunday = Date.valueOf(LocalDate.now().with(next(SUNDAY)));
-        List<Task> sundayTasksFromDb = taskSearchDao
+        List<Task> sundayTasksFromDb = taskFindDao
                 .findByUserAndMaxDeadline(user, sunday,
                         Collections.singletonList(DEADLINE.toString().toLowerCase()));
         assertEquals(sundayTasksFromDb, tasks);
@@ -201,7 +201,7 @@ public class TestTaskDao {
     @Test
     public void testFindTaskByUserAndMaxDate_allTasksAndSortByTitle() {
         Date farFuture = new Date(Long.MAX_VALUE);
-        List<Task> tasksFromDb = taskSearchDao
+        List<Task> tasksFromDb = taskFindDao
                 .findByUserAndMaxDeadline(user, farFuture,
                         Collections.singletonList(TITLE.toString().toLowerCase()));
         assertEquals(tasks, tasksFromDb);
@@ -210,7 +210,7 @@ public class TestTaskDao {
     @Test
     public void testFindTaskByUserAndMaxDate_yesterdayAndSortByTitle() {
         Date yesterday = Date.valueOf(LocalDate.now().minus(Period.ofDays(1)));
-        List<Task> tasksFromDb = taskSearchDao
+        List<Task> tasksFromDb = taskFindDao
                 .findByUserAndMaxDeadline(user, yesterday,
                         Collections.singletonList(TITLE.toString().toLowerCase()));
         assertTrue(tasksFromDb.isEmpty());
@@ -219,7 +219,7 @@ public class TestTaskDao {
     @Test
     public void testFindTaskByProjectAndMaxDate_todayAndSortByPriority() {
         Date today = Date.valueOf(LocalDate.now());
-        List<Task> todayTasksFromDb = taskSearchDao
+        List<Task> todayTasksFromDb = taskFindDao
                 .findByProjectAndMaxDeadline(project, today,
                         Collections.singletonList(PRIORITY.toString().toLowerCase()));
 
@@ -230,7 +230,7 @@ public class TestTaskDao {
     @Test
     public void testFindTaskByProjectAndMaxDate_sundayAndSortByDeadline() {
         Date sunday = Date.valueOf(LocalDate.now().with(next(SUNDAY)));
-        List<Task> sundayTasksFromDb = taskSearchDao
+        List<Task> sundayTasksFromDb = taskFindDao
                 .findByProjectAndMaxDeadline(project, sunday,
                         Collections.singletonList(DEADLINE.toString().toLowerCase()));
         assertEquals(sundayTasksFromDb, tasks);
@@ -239,7 +239,7 @@ public class TestTaskDao {
     @Test
     public void testFindTaskByProjectAndMaxDate_allTasksAndSortByTitle() {
         Date farFuture = new Date(Long.MAX_VALUE);
-        List<Task> tasksFromDb = taskSearchDao
+        List<Task> tasksFromDb = taskFindDao
                 .findByProjectAndMaxDeadline(project, farFuture,
                         Collections.singletonList(TITLE.toString().toLowerCase()));
         assertEquals(tasks, tasksFromDb);
@@ -248,7 +248,7 @@ public class TestTaskDao {
     @Test
     public void testFindTaskByProjectAndMaxDate_yesterdayAndSortByTitle() {
         Date yesterday = Date.valueOf(LocalDate.now().minus(Period.ofDays(1)));
-        List<Task> tasksFromDb = taskSearchDao
+        List<Task> tasksFromDb = taskFindDao
                 .findByProjectAndMaxDeadline(project, yesterday,
                         Collections.singletonList(TITLE.toString().toLowerCase()));
         assertTrue(tasksFromDb.isEmpty());

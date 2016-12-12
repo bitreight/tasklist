@@ -1,6 +1,6 @@
 package com.bitreight.tasklist.dao.impl;
 
-import com.bitreight.tasklist.dao.TaskSearchDao;
+import com.bitreight.tasklist.dao.TaskFindDao;
 import com.bitreight.tasklist.entity.Project;
 import com.bitreight.tasklist.entity.Task;
 import com.bitreight.tasklist.entity.User;
@@ -22,7 +22,7 @@ import java.util.List;
 
 @Repository("taskSearchDao")
 @Transactional(rollbackFor = Exception.class)
-public class TaskSearchDaoImpl implements TaskSearchDao {
+public class TaskFindDaoImpl implements TaskFindDao {
 
     @PersistenceContext
     private EntityManager entityManager;
