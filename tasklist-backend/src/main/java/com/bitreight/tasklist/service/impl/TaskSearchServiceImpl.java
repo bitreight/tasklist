@@ -10,7 +10,6 @@ import com.bitreight.tasklist.entity.Task;
 import com.bitreight.tasklist.entity.User;
 import com.bitreight.tasklist.service.TaskSearchService;
 import com.bitreight.tasklist.service.converter.TaskDtoConverter;
-import com.bitreight.tasklist.service.exception.ServiceNoSuchSortKeyException;
 import com.bitreight.tasklist.service.exception.ServiceProjectNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceTaskNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
@@ -45,8 +44,33 @@ public class TaskSearchServiceImpl implements TaskSearchService {
     private static final String DEFAULT_SORT_KEY = SortKey.TITLE.toString().toLowerCase();
 
     @Override
-    public List<TaskDto> getByProjectId(int projectId, String primarySortKey) throws ServiceProjectNotFoundException,
-            ServiceNoSuchSortKeyException, ServiceTaskNotFoundException {
+    public List<TaskDto> getByUserId(int userId, String primarySortKey)
+            throws ServiceUserNotFoundException, ServiceTaskNotFoundException {
+
+        User userFromDb = userDao.findById(userId);
+        if(userFromDb == null) {
+            throw new ServiceUserNotFoundException("User not found.");
+        }
+
+        Date farFuture = new Date(Long.MAX_VALUE);
+
+        List<String> sortKeys = new ArrayList<>();
+        if(checkSortKey(primarySortKey)) {
+            sortKeys.add(primarySortKey);
+        }
+        sortKeys.add(DEFAULT_SORT_KEY);
+
+        List<Task> tasksFromDb = taskFindDao.findByUserAndMaxDeadline(userFromDb, farFuture, sortKeys);
+        if(tasksFromDb == null) {
+            throw new ServiceTaskNotFoundException("Tasks not found.");
+        }
+
+        return taskConverter.convertEntities(tasksFromDb);
+    }
+
+    @Override
+    public List<TaskDto> getByProjectId(int projectId, String primarySortKey)
+            throws ServiceProjectNotFoundException, ServiceTaskNotFoundException {
 
         Project projectFromDb = projectDao.findById(projectId);
         if(projectFromDb == null) {
@@ -71,7 +95,7 @@ public class TaskSearchServiceImpl implements TaskSearchService {
 
     @Override
     public List<TaskDto> getTodayTasksByUserId(int userId, LocalDate clientCurrentDate, String primarySortKey)
-            throws ServiceNoSuchSortKeyException, ServiceUserNotFoundException, ServiceTaskNotFoundException {
+            throws ServiceUserNotFoundException, ServiceTaskNotFoundException {
 
         if(clientCurrentDate == null) {
             throw new IllegalArgumentException("clientCurrentDate cannot be null.");
@@ -82,7 +106,7 @@ public class TaskSearchServiceImpl implements TaskSearchService {
 
     @Override
     public List<TaskDto> getWeekTasksByUserId(int userId, LocalDate clientCurrentDate, String primarySortKey)
-            throws ServiceNoSuchSortKeyException, ServiceUserNotFoundException, ServiceTaskNotFoundException {
+            throws ServiceUserNotFoundException, ServiceTaskNotFoundException {
 
         if(clientCurrentDate == null) {
             throw new IllegalArgumentException("clientCurrentDate cannot be null.");
@@ -99,7 +123,7 @@ public class TaskSearchServiceImpl implements TaskSearchService {
     }
 
     private List<TaskDto> getByUserIdAndMaxDeadline(int userId, LocalDate maxDeadline, String primarySortKey)
-            throws ServiceUserNotFoundException, ServiceNoSuchSortKeyException, ServiceTaskNotFoundException {
+            throws ServiceUserNotFoundException, ServiceTaskNotFoundException {
 
         User userFromDb = userDao.findById(userId);
         if(userFromDb == null) {
@@ -122,7 +146,7 @@ public class TaskSearchServiceImpl implements TaskSearchService {
         return taskConverter.convertEntities(tasksFromDb);
     }
 
-    private boolean checkSortKey(String sortKey) throws ServiceNoSuchSortKeyException {
+    private boolean checkSortKey(String sortKey) {
         try {
             SortKey.valueOf(sortKey);
         } catch (IllegalArgumentException | NullPointerException e) {

@@ -1,15 +1,10 @@
 package com.bitreight.tasklist.service;
 
 import com.bitreight.tasklist.dto.TaskDto;
-import com.bitreight.tasklist.service.exception.ServiceNoSuchSortKeyException;
 import com.bitreight.tasklist.service.exception.ServiceProjectNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceTaskAlreadyExistsException;
 import com.bitreight.tasklist.service.exception.ServiceTaskNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceTaskVersionIsOutdatedException;
-import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
-
-import java.time.LocalDate;
-import java.util.List;
 
 public interface TaskService {
 
