@@ -56,7 +56,7 @@ public class TaskSearchServiceImpl implements TaskSearchService {
 
         List<String> sortKeys = new ArrayList<>();
         if(checkSortKey(primarySortKey)) {
-            sortKeys.add(primarySortKey);
+            sortKeys.add(primarySortKey.toLowerCase());
         }
         sortKeys.add(DEFAULT_SORT_KEY);
 
@@ -81,7 +81,7 @@ public class TaskSearchServiceImpl implements TaskSearchService {
 
         List<String> sortKeys = new ArrayList<>();
         if(checkSortKey(primarySortKey)) {
-            sortKeys.add(primarySortKey);
+            sortKeys.add(primarySortKey.toLowerCase());
         }
         sortKeys.add(DEFAULT_SORT_KEY);
 
@@ -134,7 +134,7 @@ public class TaskSearchServiceImpl implements TaskSearchService {
 
         List<String> sortKeys = new ArrayList<>();
         if(checkSortKey(primarySortKey)) {
-            sortKeys.add(primarySortKey);
+            sortKeys.add(primarySortKey.toLowerCase());
         }
         sortKeys.add(DEFAULT_SORT_KEY);
 
@@ -148,7 +148,7 @@ public class TaskSearchServiceImpl implements TaskSearchService {
 
     private boolean checkSortKey(String sortKey) {
         try {
-            SortKey.valueOf(sortKey);
+            SortKey.valueOf(sortKey.toUpperCase());
         } catch (IllegalArgumentException | NullPointerException e) {
             return false;
         }
