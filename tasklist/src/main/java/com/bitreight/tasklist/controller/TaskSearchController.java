@@ -6,10 +6,13 @@ import com.bitreight.tasklist.service.TaskSearchService;
 import com.bitreight.tasklist.service.exception.ServiceProjectNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceTaskNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
+import com.bitreight.tasklist.util.LocalDateEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +30,7 @@ public class TaskSearchController {
     @Autowired
     private TaskSearchService taskSearchService;
 
-    @RequestMapping(value = "tasks/all", method = RequestMethod.GET)
+    @RequestMapping(value = "tasks", method = RequestMethod.GET)
     public ResponseEntity<List<TaskDto>> getAllTasksOfUser(@AuthenticationPrincipal CustomUserDetails user,
                                                            @RequestParam(required = false) String sort)
             throws ServiceUserNotFoundException, ServiceTaskNotFoundException {
@@ -39,22 +42,22 @@ public class TaskSearchController {
     @RequestMapping(value = "tasks/today", method = RequestMethod.GET)
     public ResponseEntity<List<TaskDto>> getAllTodayTasksOfUser(@AuthenticationPrincipal CustomUserDetails user,
                                                                 @RequestParam(required = false) String sort,
-                                                                @RequestHeader("Client-Date") Long clientDate)
+                                                                @RequestHeader("Client-Date") LocalDate clientDate)
             throws ServiceUserNotFoundException, ServiceTaskNotFoundException {
 
         List<TaskDto> tasks = taskSearchService
-                .getTodayTasksByUserId(user.getId(), LocalDate.ofEpochDay(clientDate), sort);
+                .getTodayTasksByUserId(user.getId(), clientDate, sort);
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
     @RequestMapping(value = "tasks/week", method = RequestMethod.GET)
     public ResponseEntity<List<TaskDto>> getAllWeekTasksOfUser(@AuthenticationPrincipal CustomUserDetails user,
                                                                @RequestParam(required = false) String sort,
-                                                               @RequestHeader("Client-Date") Long clientDate)
+                                                               @RequestHeader("Client-Date") LocalDate clientDate)
             throws ServiceUserNotFoundException, ServiceTaskNotFoundException {
 
         List<TaskDto> tasks = taskSearchService
-                .getWeekTasksByUserId(user.getId(), LocalDate.ofEpochDay(clientDate), sort);
+                .getWeekTasksByUserId(user.getId(), clientDate, sort);
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
@@ -65,5 +68,10 @@ public class TaskSearchController {
 
         List<TaskDto> tasks = taskSearchService.getByProjectId(projectId, sort);
         return new ResponseEntity<>(tasks, HttpStatus.OK);
+    }
+
+    @InitBinder
+    public void dataBinding(WebDataBinder binder) {
+        binder.registerCustomEditor(LocalDate.class, new LocalDateEditor());
     }
 }
