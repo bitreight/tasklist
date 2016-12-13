@@ -1,24 +1,20 @@
 package com.bitreight.tasklist.service;
 
 import com.bitreight.tasklist.dto.TaskDto;
+import com.bitreight.tasklist.service.exception.ServiceProjectNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceTaskAlreadyExistsException;
+import com.bitreight.tasklist.service.exception.ServiceTaskNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceTaskVersionIsOutdatedException;
-
-import java.util.List;
 
 public interface TaskService {
 
-    void add(TaskDto taskDto, int projectId) throws ServiceTaskAlreadyExistsException;
+    int add(TaskDto taskDto, int projectId) throws ServiceTaskAlreadyExistsException, ServiceProjectNotFoundException;
 
-    void update(TaskDto taskDto) throws ServiceTaskVersionIsOutdatedException, ServiceTaskAlreadyExistsException;
+    void update(TaskDto taskDto) throws ServiceTaskVersionIsOutdatedException, ServiceTaskAlreadyExistsException, ServiceTaskNotFoundException;
 
-    void deleteById(int taskId);
+    void deleteById(int taskId) throws ServiceTaskNotFoundException;
 
-    TaskDto getById(int taskId);
+    TaskDto getById(int taskId) throws ServiceTaskNotFoundException;
 
-    List<TaskDto> getByProjectId(int projectId);
-
-    List<TaskDto> getAllTasksOfUser(int userId);
-
-    void setIsCompleted(int taskId, boolean isCompleted);
+    void setIsCompleted(int taskId, boolean isCompleted) throws ServiceTaskNotFoundException;
 }

@@ -1,0 +1,1 @@
+ALTER TABLE `tasks` MODIFY `task_priority` INT NOT NULL;
