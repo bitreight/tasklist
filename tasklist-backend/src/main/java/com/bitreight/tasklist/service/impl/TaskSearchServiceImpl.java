@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.temporal.TemporalAdjusters.next;
+import static java.time.temporal.TemporalAdjusters.previous;
 
 @Service("taskSearchService")
 @Transactional(rollbackFor = Exception.class)
@@ -47,25 +48,26 @@ public class TaskSearchServiceImpl implements TaskSearchService {
     public List<TaskDto> getByUserId(int userId, String primarySortKey)
             throws ServiceUserNotFoundException, ServiceTaskNotFoundException {
 
-        User userFromDb = userDao.findById(userId);
-        if(userFromDb == null) {
-            throw new ServiceUserNotFoundException("User not found.");
-        }
+//        User userFromDb = userDao.findById(userId);
+//        if(userFromDb == null) {
+//            throw new ServiceUserNotFoundException("User not found.");
+//        }
+//
+//        Date longAgo = new Date(Long.MIN_VALUE);
+//        Date farFuture = new Date(Long.MAX_VALUE);
+//
+//        List<String> sortKeys = new ArrayList<>();
+//        if(checkSortKey(primarySortKey)) {
+//            sortKeys.add(primarySortKey.toLowerCase());
+//        }
+//        sortKeys.add(DEFAULT_SORT_KEY);
+//
+//        List<Task> tasksFromDb = taskFindDao.findByUserAndPeriod(userFromDb, longAgo, farFuture, sortKeys);
+//        if(tasksFromDb == null) {
+//            throw new ServiceTaskNotFoundException("Tasks not found.");
+//        }
 
-        Date farFuture = new Date(Long.MAX_VALUE);
-
-        List<String> sortKeys = new ArrayList<>();
-        if(checkSortKey(primarySortKey)) {
-            sortKeys.add(primarySortKey.toLowerCase());
-        }
-        sortKeys.add(DEFAULT_SORT_KEY);
-
-        List<Task> tasksFromDb = taskFindDao.findByUserAndMaxDeadline(userFromDb, farFuture, sortKeys);
-        if(tasksFromDb == null) {
-            throw new ServiceTaskNotFoundException("Tasks not found.");
-        }
-
-        return taskConverter.convertEntities(tasksFromDb);
+        return getByUserIdAndPeriod(userId, LocalDate.MIN, LocalDate.MAX, primarySortKey);
     }
 
     @Override
@@ -77,6 +79,7 @@ public class TaskSearchServiceImpl implements TaskSearchService {
             throw new ServiceProjectNotFoundException("Project not found.");
         }
 
+        Date longAgo = new Date(Long.MIN_VALUE);
         Date farFuture = new Date(Long.MAX_VALUE);
 
         List<String> sortKeys = new ArrayList<>();
@@ -85,7 +88,7 @@ public class TaskSearchServiceImpl implements TaskSearchService {
         }
         sortKeys.add(DEFAULT_SORT_KEY);
 
-        List<Task> tasksFromDb = taskFindDao.findByProjectAndMaxDeadline(projectFromDb, farFuture, sortKeys);
+        List<Task> tasksFromDb = taskFindDao.findByProjectAndPeriod(projectFromDb, longAgo, farFuture, sortKeys);
         if(tasksFromDb == null) {
             throw new ServiceTaskNotFoundException("Tasks not found.");
         }
@@ -101,7 +104,7 @@ public class TaskSearchServiceImpl implements TaskSearchService {
             throw new IllegalArgumentException("clientCurrentDate cannot be null.");
         }
 
-        return getByUserIdAndMaxDeadline(userId, clientCurrentDate, primarySortKey);
+        return getByUserIdAndPeriod(userId, clientCurrentDate, clientCurrentDate, primarySortKey);
     }
 
     @Override
@@ -112,17 +115,24 @@ public class TaskSearchServiceImpl implements TaskSearchService {
             throw new IllegalArgumentException("clientCurrentDate cannot be null.");
         }
 
-        LocalDate maxDeadline = null;
-        if(clientCurrentDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
-            maxDeadline = clientCurrentDate;
+        LocalDate monday = null;
+        if(clientCurrentDate.getDayOfWeek() == DayOfWeek.MONDAY) {
+            monday = clientCurrentDate;
         } else {
-            maxDeadline = clientCurrentDate.with(next(DayOfWeek.SUNDAY));
+            monday = clientCurrentDate.with(previous(DayOfWeek.MONDAY));
         }
 
-        return getByUserIdAndMaxDeadline(userId, maxDeadline, primarySortKey);
+        LocalDate sunday = null;
+        if(clientCurrentDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            sunday = clientCurrentDate;
+        } else {
+            sunday = clientCurrentDate.with(next(DayOfWeek.SUNDAY));
+        }
+
+        return getByUserIdAndPeriod(userId, monday, sunday, primarySortKey);
     }
 
-    private List<TaskDto> getByUserIdAndMaxDeadline(int userId, LocalDate maxDeadline, String primarySortKey)
+    private List<TaskDto> getByUserIdAndPeriod(int userId, LocalDate minDate, LocalDate maxDate, String primarySortKey)
             throws ServiceUserNotFoundException, ServiceTaskNotFoundException {
 
         User userFromDb = userDao.findById(userId);
@@ -130,7 +140,8 @@ public class TaskSearchServiceImpl implements TaskSearchService {
             throw new ServiceUserNotFoundException("User not found.");
         }
 
-        Date sqlMaxDeadline = Date.valueOf(maxDeadline);
+        Date sqlMinDate = Date.valueOf(minDate);
+        Date sqlMaxDate = Date.valueOf(maxDate);
 
         List<String> sortKeys = new ArrayList<>();
         if(checkSortKey(primarySortKey)) {
@@ -138,7 +149,7 @@ public class TaskSearchServiceImpl implements TaskSearchService {
         }
         sortKeys.add(DEFAULT_SORT_KEY);
 
-        List<Task> tasksFromDb = taskFindDao.findByUserAndMaxDeadline(userFromDb, sqlMaxDeadline, sortKeys);
+        List<Task> tasksFromDb = taskFindDao.findByUserAndPeriod(userFromDb, sqlMinDate, sqlMaxDate, sortKeys);
         if(tasksFromDb == null) {
             throw new ServiceTaskNotFoundException("Tasks not found.");
         }
