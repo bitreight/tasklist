@@ -61,6 +61,10 @@ body {
     background-color: #52606E;
 }
 
+#left-menu-col ul {
+    margin-bottom: 10px;
+}
+
 #left-menu-col .list-group-item:hover {    
     background-color: #44515F;
 }
@@ -159,8 +163,7 @@ body {
 }
 
 #priority-select {
-    width: 115px;
-    margin-right: 15px;
+    width: 100px;
 }
 
 #datepicker {

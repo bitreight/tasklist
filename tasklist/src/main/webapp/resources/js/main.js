@@ -152,20 +152,35 @@ $(document).ready(function () {
 
     
     /*----- tasks functionality -----*/
-    function getUserTasks() {
+    function getUserTasks(sort) {
         var apiUrl = "/tasklist/api/tasks";
         getTasks(apiUrl);
     }
 
-    function getProjectTasks(projectId) {
+    function getTodayUserTasks() {
+        var apiUrl = "/tasklist/api/tasks/today";
+        var currentDate = moment().format("MM-DD-YYYY");
+        getTasks(apiUrl, currentDate);
+    }
+
+    function getWeekUserTasks() {
+        var apiUrl = "/tasklist/api/tasks/week";        
+        var currentDate = moment().format("MM-DD-YYYY");
+        getTasks(apiUrl, currentDate);
+    }
+
+    function getProjectTasks(projectId, sort) {
         var apiUrl = "/tasklist/api/" + projectId + "/tasks";
         getTasks(apiUrl);
     }
 
-    function getTasks(apiUrl) {
+    function getTasks(apiUrl, currentDate) {
         $.ajax({
             url: apiUrl,
             type: "GET",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Client-Date", currentDate);
+            },
             success: function (tasks) {
                 var taskList = $("#task-list");
                 taskList.html('');
@@ -184,5 +199,17 @@ $(document).ready(function () {
             }
         });
     }
+
+    $("#all-tasks").click(function () {
+        getUserTasks();
+    });
+
+    $("#today-tasks").click(function () {
+        getTodayUserTasks();
+    });
+
+    $("#week-tasks").click(function () {
+        getWeekUserTasks();
+    })
 
 });

@@ -20,9 +20,9 @@
             <div id="content">
                 <div id="left-menu-col">
                     <ul class="list-group">
-                        <li class="list-group-item">ALL</li>
-                        <li class="list-group-item">TODAY</li>
-                        <li class="list-group-item">WEEK</li>
+                        <li id="all-tasks" class="list-group-item">ALL</li>
+                        <li id="today-tasks" class="list-group-item">TODAY</li>
+                        <li id="week-tasks" class="list-group-item">WEEK</li>
                         <li class="list-group-item">
                             PROJECTS
                             <span id="add-project" class="glyphicon glyphicon-plus pull-right"></span>
@@ -90,7 +90,7 @@
                                 <div class="input-group">
                                     <input id="task-title" type="text" class="form-control" placeholder="Enter task name...">
                                     <span class="input-group-btn">
-                                        <button id="save-task" class="btn btn-default" type="button">Add task</button>
+                                        <button id="add-task" class="btn btn-default" type="button">Add task</button>
                                     </span>
                                 </div>
                             </div>
@@ -107,7 +107,7 @@
                                 </div>
                             </div>
                             <ul id="task-list" class="list-group">
-                                <!-- tasks -->
+                                <!-- tasks of user or project -->
                             </ul>
                         </div>
                     </div>
@@ -116,19 +116,23 @@
                         <form id="task-details-form">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <input id="task-name-edit" type="text" class="form-control">
+                                    <div class="input-group">
+                                        <input id="task-name-edit" type="text" class="form-control" placeholder="Task name">
+                                        <span class="input-group-btn">
+                                            <button id="save-task" class="btn btn-default" type="button">Save</button>
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="panel-body">
-                                    <div id="priority-select" class="form-group pull-left">
+                                    <div id="priority-select" class="form-group pull-right">
                                         <select class="selectpicker show-menu-arrow form-control">
                                             <option>High</option>
                                             <option selected>Normal</option>
                                             <option>Low</option>
                                         </select>
                                     </div>
-                                    <input type="text" class="form-control pull-left" id="datepicker" placeholder="Deadline" />
-                                    <button id="task-save-button" type="button" class="btn btn-default pull-left">Save</button>
-                                    <textarea id="task-description-edit" class="form-control pull-left" rows="6"></textarea>
+                                    <input type="text" class="form-control pull-right" id="datepicker" placeholder="Deadline" />
+                                    <textarea id="task-description-edit" class="form-control pull-left" rows="6" placeholder="Description"></textarea>
                                 </div>
                             </div>
                         </form>
@@ -141,6 +145,7 @@
         <script src="<c:url value="/resources/vendor/bootstrap/js/bootstrap.min.js"/>"></script>
         <script src="<c:url value="/resources/vendor/js/bootstrap-datepicker.min.js"/>"></script>
         <script src="<c:url value="/resources/vendor/js/bootstrap-select.min.js"/>"></script>
+        <script src="<c:url value="/resources/vendor/js/moment.js"/>"></script>
         <script src="<c:url value="/resources/js/main.js"/>"></script>
 
         <script>
