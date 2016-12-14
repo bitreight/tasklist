@@ -109,13 +109,13 @@ body {
     margin-bottom: 15px;
 }
 
-#tasks-content {
+#tasks-column {
     display: flex;
     flex-basis: 100%;
     margin-left: 10px;    
 }
 
-#task-list {
+#tasks-content {
     margin-right: 10px;
     min-width: 250px;
     flex-basis: 40%;
@@ -127,16 +127,22 @@ body {
     background-color: white;
 }
 
-#task-list .panel,
-#task-list .list-group-item {
-    border-radius: 0;
+#tasks-content .list-group-item span{
+    margin-top: 4px;
 }
 
-#check-as-completed {
-    margin-right: 5px;
+.check-as-completed {
+    margin-right: 10px!important;
 }
 
-#delete-task {
+.task-deadline {
+    float: right;
+    color: #b3312d;
+    margin-right: 10px;
+    font-size: 12px;
+}
+
+.delete-task {
     float: right;
 }
 
@@ -144,7 +150,7 @@ body {
     float: right;
 }
 
-#task-list a:hover {
+#tasks-content a:hover {
     background-color: #F5F8FC;
 }
 

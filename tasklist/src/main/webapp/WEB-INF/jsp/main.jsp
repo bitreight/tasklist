@@ -83,15 +83,15 @@
                     </div>
                 </div>
 
-                <div id="tasks-content">
-                    <div id="task-list">
+                <div id="tasks-column">
+                    <div id="tasks-content">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Enter task name...">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button">Add task</button>
-                                        </span>
+                                    <input id="task-title" type="text" class="form-control" placeholder="Enter task name...">
+                                    <span class="input-group-btn">
+                                        <button id="save-task" class="btn btn-default" type="button">Add task</button>
+                                    </span>
                                 </div>
                             </div>
                             <div class="panel-body">
@@ -106,13 +106,9 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="list-group">
-                                <%--<a href="#" class="list-group-item">--%>
-                                    <%--<input id="check-as-completed" type="checkbox"/>--%>
-                                    <%--Task 1--%>
-                                    <%--<span id="delete-task" class="glyphicon glyphicon-trash"></span>--%>
-                                <%--</a>--%>
-                            </div>
+                            <ul id="task-list" class="list-group">
+                                <!-- tasks -->
+                            </ul>
                         </div>
                     </div>
 

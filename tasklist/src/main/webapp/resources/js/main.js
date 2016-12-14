@@ -5,6 +5,7 @@ $(document).ready(function () {
     var projectsApiBaseUrl = "/tasklist/api/projects";
 
     getUserProjects();
+    getUserTasks();
 
     /*----- projects functionality -----*/
     function getUserProjects() {
@@ -147,10 +148,41 @@ $(document).ready(function () {
         var projectId = $("#delete-project").data("project-id");
         var projectItem = $('li[data-project-id="'+ projectId +'"]');
         deleteProject(projectId, projectItem);
-    });  
-    
-    
+    });
+
     
     /*----- tasks functionality -----*/
+    function getUserTasks() {
+        var apiUrl = "/tasklist/api/tasks";
+        getTasks(apiUrl);
+    }
+
+    function getProjectTasks(projectId) {
+        var apiUrl = "/tasklist/api/" + projectId + "/tasks";
+        getTasks(apiUrl);
+    }
+
+    function getTasks(apiUrl) {
+        $.ajax({
+            url: apiUrl,
+            type: "GET",
+            success: function (tasks) {
+                var taskList = $("#task-list");
+                taskList.html('');
+
+                tasks.forEach(function (task, i, tasks) {
+                    var listItem = $('<li class="list-group-item">' +
+                                        '<input class="check-as-completed" type="checkbox"/>' +
+                                        '<span class="delete-task glyphicon glyphicon-trash"></span>' +
+                                        '<span class="task-deadline"></span>' +
+                                     '</li>');
+                    listItem.attr("data-task-id", task.id);
+                    listItem.find("input").after(task.title);
+                    listItem.find(".task-deadline").text(task.deadline);
+                    taskList.append(listItem);
+                });
+            }
+        });
+    }
 
 });
