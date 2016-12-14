@@ -27,6 +27,7 @@ public class TaskFindDaoImpl implements TaskFindDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    //TODO: refactor to find tasks of the period (min date, max date)
     @Override
     public List<Task> findByUserAndMaxDeadline(User user, Date deadline, List<String> orderFields) {
         CriteriaBuilder builder = getCriteriaBuilder();
@@ -48,6 +49,7 @@ public class TaskFindDaoImpl implements TaskFindDao {
         return entityManager.createQuery(query).getResultList();
     }
 
+    //TODO: refactor to find tasks of the period (min date, max date)
     @Override
     public List<Task> findByProjectAndMaxDeadline(Project project, Date deadline, List<String> orderFields) {
         CriteriaBuilder builder = getCriteriaBuilder();
