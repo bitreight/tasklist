@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TaskFindDao {
 
-    List<Task> findByUserAndMaxDeadline(User user, Date deadline, List<String> orderFields);
+    List<Task> findByUserAndPeriod(User user, Date minDate, Date maxDate, List<String> orderFields);
 
-    List<Task> findByProjectAndMaxDeadline(Project project, Date deadline, List<String> orderFields);
+    List<Task> findByProjectAndPeriod(Project project, Date minDate, Date maxDate, List<String> orderFields);
 }
