@@ -40,7 +40,7 @@ public class TestTaskDtoConverter {
         task.setTitle("test_task");
         task.setDescription("test_desc");
         task.setPriority(TaskPriority.HIGH);
-        task.setDeadline(Date.valueOf(localDate));
+        task.setDeadline(localDate);
         task.setVersion(5);
     }
 

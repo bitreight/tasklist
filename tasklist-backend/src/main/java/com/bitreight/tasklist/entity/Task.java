@@ -1,5 +1,7 @@
 package com.bitreight.tasklist.entity;
 
+import com.bitreight.tasklist.util.date.DateHelper;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,6 +17,8 @@ import javax.persistence.Version;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "tasks")
@@ -27,7 +31,7 @@ public class Task {
 
     private String description;
 
-    private Date deadline;
+    private LocalDate deadline;
 
     @Column(name = "task_priority")
     @Enumerated(EnumType.ORDINAL)
@@ -67,11 +71,11 @@ public class Task {
         this.description = description;
     }
 
-    public Date getDeadline() {
+    public LocalDate getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
 
@@ -140,12 +144,12 @@ public class Task {
 
     @Override
     public String toString() {
-        DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return "Task [" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", deadline='" + formatter.format(deadline) + '\'' +
+                ", deadline='" + DateHelper.stringFromDate(deadline) + '\'' +
                 ", priority='" + priority + '\'' +
                 ", isCompleted=" + isCompleted +
                 ", version=" + version +
