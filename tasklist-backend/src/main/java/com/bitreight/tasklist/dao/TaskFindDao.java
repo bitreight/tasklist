@@ -5,11 +5,12 @@ import com.bitreight.tasklist.entity.Task;
 import com.bitreight.tasklist.entity.User;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface TaskFindDao {
 
-    List<Task> findByUserAndPeriod(User user, Date minDate, Date maxDate, List<String> orderFields);
+    List<Task> findByUserAndPeriod(User user, LocalDate minDate, LocalDate maxDate, List<String> orderFields);
 
-    List<Task> findByProjectAndPeriod(Project project, Date minDate, Date maxDate, List<String> orderFields);
+    List<Task> findByProjectAndPeriod(Project project, LocalDate minDate, LocalDate maxDate, List<String> orderFields);
 }

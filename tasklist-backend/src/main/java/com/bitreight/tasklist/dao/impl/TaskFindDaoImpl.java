@@ -4,6 +4,7 @@ import com.bitreight.tasklist.dao.TaskFindDao;
 import com.bitreight.tasklist.entity.Project;
 import com.bitreight.tasklist.entity.Task;
 import com.bitreight.tasklist.entity.User;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +29,8 @@ public class TaskFindDaoImpl implements TaskFindDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    //TODO: refactor to find tasks of the period (min date, max date)
     @Override
-    public List<Task> findByUserAndPeriod(User user, Date minDate, Date maxDate, List<String> orderFields) {
+    public List<Task> findByUserAndPeriod(User user, LocalDate minDate, LocalDate maxDate, List<String> orderFields) {
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Task> query = builder.createQuery(Task.class);
         Root<Task> task = query.from(Task.class);
@@ -39,28 +40,25 @@ public class TaskFindDaoImpl implements TaskFindDao {
 
         List<Predicate> predicates = new ArrayList<>();
         addEqualPredicate(predicates, builder, taskProjectUser, "username", user.getUsername());
-        addLessThanOrEqualToPredicate(predicates, builder, task, "deadline", maxDate);
-        addGreaterThanOrEqualToPredicate(predicates, builder, task, "deadline", minDate);
+        addBetweenPredicate(predicates, builder, task, "deadline", minDate, maxDate);
 
         List<Order> orders = new ArrayList<>();
         orderFields.forEach(field -> addAscOrder(orders, builder, task, field));
 
         query.where(predicates.toArray(new Predicate[0])).orderBy(orders);
 
-        return entityManager.createQuery(query).getResultList();
-    }
+        return entityManager.createQuery(query).getResultList();    }
 
-    //TODO: refactor to find tasks of the period (min date, max date)
+
     @Override
-    public List<Task> findByProjectAndPeriod(Project project, Date minDate, Date maxDate, List<String> orderFields) {
+    public List<Task> findByProjectAndPeriod(Project project, LocalDate minDate, LocalDate maxDate, List<String> orderFields) {
         CriteriaBuilder builder = getCriteriaBuilder();
         CriteriaQuery<Task> query = builder.createQuery(Task.class);
         Root<Task> task = query.from(Task.class);
 
         List<Predicate> predicates = new ArrayList<>();
         addEqualPredicate(predicates, builder, task, "project", project);
-        addLessThanOrEqualToPredicate(predicates, builder, task, "deadline", maxDate);
-        addGreaterThanOrEqualToPredicate(predicates, builder, task, "deadline", minDate);
+        addBetweenPredicate(predicates, builder, task, "deadline", minDate, maxDate);
 
         List<Order> orders = new ArrayList<>();
         orderFields.forEach(field -> addAscOrder(orders, builder, task, field));
@@ -80,15 +78,21 @@ public class TaskFindDaoImpl implements TaskFindDao {
         predicates.add(equalPredicate);
     }
 
-    private <Z, X, V extends Comparable<V>> void addLessThanOrEqualToPredicate(List<Predicate> predicates, CriteriaBuilder builder,
-                                                                               From<Z, X> root, String field, V value) {
-        Predicate lessOrEqualPredicate = builder.lessThanOrEqualTo(root.get(field), value);
-        predicates.add(lessOrEqualPredicate);
-    }
+//    private <Z, X, V extends Comparable<V>> void addLessThanOrEqualToPredicate(List<Predicate> predicates, CriteriaBuilder builder,
+//                                                                               From<Z, X> root, String field, V value) {
+//        Predicate lessOrEqualPredicate = builder.lessThanOrEqualTo(root.get(field), value);
+//        predicates.add(lessOrEqualPredicate);
+//    }
+//
+//    private <Z, X, V extends Comparable<V>> void addGreaterThanOrEqualToPredicate(List<Predicate> predicates, CriteriaBuilder builder,
+//                                                                                  From<Z,X> root, String field, V value) {
+//        Predicate greaterOrEqualPredicate = builder.greaterThanOrEqualTo(root.get(field), value);
+//        predicates.add(greaterOrEqualPredicate);
+//    }
 
-    private <Z, X, V extends Comparable<V>> void addGreaterThanOrEqualToPredicate(List<Predicate> predicates, CriteriaBuilder builder,
-                     From<Z,X> root, String field, V value) {
-        Predicate greaterOrEqualPredicate = builder.greaterThanOrEqualTo(root.get(field), value);
+    private <Z, X, V extends Comparable<V>> void addBetweenPredicate(List<Predicate> predicates, CriteriaBuilder builder,
+                                                                     From<Z,X> root, String field, V minValue, V maxValue) {
+        Predicate greaterOrEqualPredicate = builder.between(root.get(field), minValue, maxValue);
         predicates.add(greaterOrEqualPredicate);
     }
 
