@@ -13,12 +13,10 @@ import com.bitreight.tasklist.service.converter.TaskDtoConverter;
 import com.bitreight.tasklist.service.exception.ServiceProjectNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceTaskNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
-import com.bitreight.tasklist.util.date.DateHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -49,26 +47,7 @@ public class TaskSearchServiceImpl implements TaskSearchService {
     public List<TaskDto> getByUserId(int userId, String primarySortKey)
             throws ServiceUserNotFoundException, ServiceTaskNotFoundException {
 
-//        User userFromDb = userDao.findById(userId);
-//        if(userFromDb == null) {
-//            throw new ServiceUserNotFoundException("User not found.");
-//        }
-//
-//        Date longAgo = new Date(Long.MIN_VALUE);
-//        Date farFuture = new Date(Long.MAX_VALUE);
-//
-//        List<String> sortKeys = new ArrayList<>();
-//        if(checkSortKey(primarySortKey)) {
-//            sortKeys.add(primarySortKey.toLowerCase());
-//        }
-//        sortKeys.add(DEFAULT_SORT_KEY);
-//
-//        List<Task> tasksFromDb = taskFindDao.findByUserAndPeriod(userFromDb, longAgo, farFuture, sortKeys);
-//        if(tasksFromDb == null) {
-//            throw new ServiceTaskNotFoundException("Tasks not found.");
-//        }
-
-        return getByUserIdAndPeriod(userId, DateHelper.getMinLocalDate(), DateHelper.getMaxLocalDate(), primarySortKey);
+        return getByUserIdAndPeriod(userId, null, null, primarySortKey);
     }
 
     @Override
@@ -80,9 +59,6 @@ public class TaskSearchServiceImpl implements TaskSearchService {
             throw new ServiceProjectNotFoundException("Project not found.");
         }
 
-//        Date longAgo = new Date(Long.MIN_VALUE);
-//        Date farFuture = new Date(Long.MAX_VALUE);
-
         List<String> sortKeys = new ArrayList<>();
         if(checkSortKey(primarySortKey)) {
             sortKeys.add(primarySortKey.toLowerCase());
@@ -90,7 +66,7 @@ public class TaskSearchServiceImpl implements TaskSearchService {
         sortKeys.add(DEFAULT_SORT_KEY);
 
         List<Task> tasksFromDb = taskFindDao
-                .findByProjectAndPeriod(projectFromDb, DateHelper.getMinLocalDate(), DateHelper.getMaxLocalDate(), sortKeys);
+                .findByProjectAndPeriod(projectFromDb, null, null, sortKeys);
         if(tasksFromDb == null) {
             throw new ServiceTaskNotFoundException("Tasks not found.");
         }
@@ -106,9 +82,7 @@ public class TaskSearchServiceImpl implements TaskSearchService {
             throw new IllegalArgumentException("clientCurrentDate cannot be null.");
         }
 
-        LocalDate nextDay = clientCurrentDate.plusDays(1);
-
-        return getByUserIdAndPeriod(userId, nextDay, nextDay, primarySortKey);
+        return getByUserIdAndPeriod(userId, clientCurrentDate, clientCurrentDate, primarySortKey);
     }
 
     @Override
@@ -143,9 +117,6 @@ public class TaskSearchServiceImpl implements TaskSearchService {
         if(userFromDb == null) {
             throw new ServiceUserNotFoundException("User not found.");
         }
-
-//        Date sqlMinDate = Date.valueOf(minDate);
-//        Date sqlMaxDate = Date.valueOf(maxDate);
 
         List<String> sortKeys = new ArrayList<>();
         if(checkSortKey(primarySortKey)) {

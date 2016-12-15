@@ -6,7 +6,7 @@ import com.bitreight.tasklist.service.TaskSearchService;
 import com.bitreight.tasklist.service.exception.ServiceProjectNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceTaskNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
-import com.bitreight.tasklist.util.LocalDateEditor;
+import com.bitreight.tasklist.util.date.LocalDateEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

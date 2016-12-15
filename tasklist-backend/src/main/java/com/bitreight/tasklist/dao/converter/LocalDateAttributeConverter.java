@@ -10,18 +10,7 @@ public class LocalDateAttributeConverter implements AttributeConverter<LocalDate
 
     @Override
     public Date convertToDatabaseColumn(LocalDate date) {
-        LocalDate localDateOfSqlMaxDate = new Date(Long.MAX_VALUE).toLocalDate();
-
-        if(date != null) {
-            if(date.isAfter(localDateOfSqlMaxDate)) {
-                return Date.valueOf(localDateOfSqlMaxDate);
-
-            } else {
-                return Date.valueOf(date);
-            }
-        }
-
-        return null;
+        return (date == null ? null : Date.valueOf(date));
     }
 
     @Override

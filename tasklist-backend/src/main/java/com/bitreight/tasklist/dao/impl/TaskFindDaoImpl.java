@@ -4,7 +4,6 @@ import com.bitreight.tasklist.dao.TaskFindDao;
 import com.bitreight.tasklist.entity.Project;
 import com.bitreight.tasklist.entity.Task;
 import com.bitreight.tasklist.entity.User;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +16,6 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +36,12 @@ public class TaskFindDaoImpl implements TaskFindDao {
         Join<Task, Project> taskProject = task.join("project");
         Join<Project, User> taskProjectUser = taskProject.join("user");
 
-        List<Predicate> predicates = new ArrayList<>();
+        List<Predicate> predicates = new ArrayList<>(2);
         addEqualPredicate(predicates, builder, taskProjectUser, "username", user.getUsername());
-        addBetweenPredicate(predicates, builder, task, "deadline", minDate, maxDate);
+
+        if(minDate != null && maxDate != null) {
+            addBetweenPredicate(predicates, builder, task, "deadline", minDate, maxDate);
+        }
 
         List<Order> orders = new ArrayList<>();
         orderFields.forEach(field -> addAscOrder(orders, builder, task, field));
@@ -56,9 +57,12 @@ public class TaskFindDaoImpl implements TaskFindDao {
         CriteriaQuery<Task> query = builder.createQuery(Task.class);
         Root<Task> task = query.from(Task.class);
 
-        List<Predicate> predicates = new ArrayList<>();
+        List<Predicate> predicates = new ArrayList<>(2);
         addEqualPredicate(predicates, builder, task, "project", project);
-        addBetweenPredicate(predicates, builder, task, "deadline", minDate, maxDate);
+
+        if(minDate != null && maxDate != null) {
+            addBetweenPredicate(predicates, builder, task, "deadline", minDate, maxDate);
+        }
 
         List<Order> orders = new ArrayList<>();
         orderFields.forEach(field -> addAscOrder(orders, builder, task, field));
@@ -77,18 +81,6 @@ public class TaskFindDaoImpl implements TaskFindDao {
         Predicate equalPredicate = builder.equal(root.get(field), value);
         predicates.add(equalPredicate);
     }
-
-//    private <Z, X, V extends Comparable<V>> void addLessThanOrEqualToPredicate(List<Predicate> predicates, CriteriaBuilder builder,
-//                                                                               From<Z, X> root, String field, V value) {
-//        Predicate lessOrEqualPredicate = builder.lessThanOrEqualTo(root.get(field), value);
-//        predicates.add(lessOrEqualPredicate);
-//    }
-//
-//    private <Z, X, V extends Comparable<V>> void addGreaterThanOrEqualToPredicate(List<Predicate> predicates, CriteriaBuilder builder,
-//                                                                                  From<Z,X> root, String field, V value) {
-//        Predicate greaterOrEqualPredicate = builder.greaterThanOrEqualTo(root.get(field), value);
-//        predicates.add(greaterOrEqualPredicate);
-//    }
 
     private <Z, X, V extends Comparable<V>> void addBetweenPredicate(List<Predicate> predicates, CriteriaBuilder builder,
                                                                      From<Z,X> root, String field, V minValue, V maxValue) {

@@ -1,16 +1,27 @@
 package com.bitreight.tasklist.util.date;
 
-import java.sql.Date;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class DateHelper {
 
-    public static LocalDate getMinLocalDate() {
-        return LocalDate.of(1970, 1, 1);
+    private static final String DEFAULT_DATE_PATTERN = "dd-MM-yyyy";
+
+    public static LocalDate dateFromString(String text) {
+        if(text != null) {
+            return LocalDate.parse(text, getFormatter());
+        }
+        return null;
     }
 
-    public static LocalDate getMaxLocalDate() {
-        return new Date(Long.MAX_VALUE).toLocalDate();
+    public static String stringFromDate(LocalDate date) {
+        if(date != null) {
+            return getFormatter().format(date);
+        }
+        return null;
     }
 
+    private static DateTimeFormatter getFormatter() {
+        return DateTimeFormatter.ofPattern(DEFAULT_DATE_PATTERN);
+    }
 }

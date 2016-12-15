@@ -4,7 +4,6 @@ import com.bitreight.tasklist.entity.Project;
 import com.bitreight.tasklist.entity.Task;
 import com.bitreight.tasklist.entity.User;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 

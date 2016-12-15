@@ -1,5 +1,7 @@
 package com.bitreight.tasklist.entity;
 
+import com.bitreight.tasklist.util.date.DateHelper;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -147,7 +149,7 @@ public class Task {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", deadline='" + formatter.format(deadline) + '\'' +
+                ", deadline='" + DateHelper.stringFromDate(deadline) + '\'' +
                 ", priority='" + priority + '\'' +
                 ", isCompleted=" + isCompleted +
                 ", version=" + version +

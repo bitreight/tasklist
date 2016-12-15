@@ -10,7 +10,6 @@ import com.bitreight.tasklist.entity.Project;
 import com.bitreight.tasklist.entity.Task;
 import com.bitreight.tasklist.entity.TaskPriority;
 import com.bitreight.tasklist.entity.User;
-import com.bitreight.tasklist.util.date.DateHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -139,7 +138,7 @@ public class TestTaskDao {
         }
 
         List<Task> tasksFromDb = taskFindDao
-                .findByProjectAndPeriod(project, DateHelper.getMinLocalDate(), DateHelper.getMaxLocalDate(),
+                .findByProjectAndPeriod(project, null, null,
                         Collections.singletonList(TITLE.toString().toLowerCase()));
 
         assertEquals(tasks, tasksFromDb);
@@ -201,8 +200,7 @@ public class TestTaskDao {
     @Test
     public void testFindTaskByUserAndPeriod_allTasksAndSortByTitle() {
         List<Task> tasksFromDb = taskFindDao
-                .findByUserAndPeriod(user, DateHelper.getMinLocalDate(), DateHelper.getMaxLocalDate(),
-                        Collections.singletonList(TITLE.toString().toLowerCase()));
+                .findByUserAndPeriod(user, null, null, Collections.singletonList(TITLE.toString().toLowerCase()));
         assertEquals(tasks, tasksFromDb);
     }
 
@@ -239,8 +237,7 @@ public class TestTaskDao {
     @Test
     public void testFindTaskByProjectAndPeriod_allTasksAndSortByTitle() {
         List<Task> tasksFromDb = taskFindDao
-                .findByProjectAndPeriod(project, DateHelper.getMinLocalDate(), DateHelper.getMaxLocalDate(),
-                        Collections.singletonList(TITLE.toString().toLowerCase()));
+                .findByProjectAndPeriod(project, null, null, Collections.singletonList(TITLE.toString().toLowerCase()));
         assertEquals(tasks, tasksFromDb);
     }
 
