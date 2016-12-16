@@ -1,11 +1,11 @@
 $(document).ready(function () {
 
     var projectEditMode = false;
-    var projectDeleteMode = false;
+    var defaultSort;
     var projectsApiBaseUrl = "/tasklist/api/projects";
 
     getUserProjects();
-    getUserTasks();
+    //getUserTasks();
 
     /*----- projects functionality -----*/
     function getUserProjects() {
@@ -152,7 +152,10 @@ $(document).ready(function () {
 
     
     /*----- tasks functionality -----*/
-    function getUserTasks(sort) {
+    var getTasks = createGetTasks();
+    getUserTasks();
+
+    function getUserTasks() {
         var apiUrl = "/tasklist/api/tasks";
         getTasks(apiUrl);
     }
@@ -164,39 +167,108 @@ $(document).ready(function () {
     }
 
     function getWeekUserTasks() {
-        var apiUrl = "/tasklist/api/tasks/week";        
+        var apiUrl = "/tasklist/api/tasks/week";
         var currentDate = moment().format("DD-MM-YYYY");
         getTasks(apiUrl, currentDate);
     }
 
-    function getProjectTasks(projectId, sort) {
-        var apiUrl = "/tasklist/api/" + projectId + "/tasks";
+    function getProjectTasks(projectId) {
+        var apiUrl = "/tasklist/api/projects/" + projectId + "/tasks";
         getTasks(apiUrl);
     }
 
-    function getTasks(apiUrl, currentDate) {
+    function addSortToUrl(url, sort) {
+        return (sort) ? url.concat("?sort=", sort) : url;
+    }
+    
+    function createGetTasks() {
+        var apiUrlHolder, currentDateHolder, sortHolder;
+
+        function getTasksClosure(apiUrl, currentDate, sort) {
+            var argLen = arguments.length;
+            
+            if(argLen === 1) {
+                apiUrlHolder = apiUrl;
+                currentDateHolder = null;
+            } else if (argLen === 2) {
+                apiUrlHolder = apiUrl;
+                currentDateHolder = currentDate;
+            } else if (argLen === 3) {
+                sortHolder = sort;
+            }
+
+            var url = addSortToUrl(apiUrlHolder, sortHolder);
+
+            $.ajax({
+                url: url,
+                type: "GET",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Client-Date", currentDateHolder);
+                },
+                success: function (tasks) {
+                    var taskList = $("#task-list");
+                    taskList.html('');
+
+                    tasks.forEach(function (task, i, tasks) {
+                        var taskItem = $('<li class="list-group-item">' +
+                            '<input class="check-as-completed" type="checkbox"/>' +
+                            '<span class="delete-task glyphicon glyphicon-trash"></span>' +
+                            '<span class="task-deadline"></span>' +
+                            '</li>');
+                        taskItem.attr("data-task-id", task.id);
+                        taskItem.find("input").after(task.title);
+                        taskItem.find(".task-deadline").text(task.deadline);
+                        if(task.completed) {
+                            taskItem.addClass("completed");
+                            taskItem.find(".check-as-completed").prop("checked", true);
+                        }
+                        taskList.append(taskItem);
+                    });
+                }
+            });
+        }
+
+        return getTasksClosure;
+    }
+
+    
+    function saveTask(taskJson, projectId, taskId) {
+        var apiUrl = "/tasklist/api/projects/" + projectId + "/tasks";
         $.ajax({
             url: apiUrl,
-            type: "GET",
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Client-Date", currentDate);
+            type: "POST",
+            data: JSON.stringify(taskJson),
+            contentType: "application/json",
+            success: function () {
+                $("#task-title").val("");
+                getTasks();
             },
-            success: function (tasks) {
-                var taskList = $("#task-list");
-                taskList.html('');
-
-                tasks.forEach(function (task, i, tasks) {
-                    var listItem = $('<li class="list-group-item">' +
-                                        '<input class="check-as-completed" type="checkbox"/>' +
-                                        '<span class="delete-task glyphicon glyphicon-trash"></span>' +
-                                        '<span class="task-deadline"></span>' +
-                                     '</li>');
-                    listItem.attr("data-task-id", task.id);
-                    listItem.find("input").after(task.title);
-                    listItem.find(".task-deadline").text(task.deadline);
-                    taskList.append(listItem);
-                });
+            error: function (error) {
+                //console.log(error);
             }
+        });
+    }
+
+    function deleteTask(taskId, taskItem) {
+        var apiUrl = "/tasklist/api/tasks/" + taskId;
+        $.ajax({
+            url: apiUrl,
+            type: "DELETE",
+            success: function () {
+                $(taskItem).remove();
+            }
+        });
+    }
+    
+    function setTaskCompleted(taskId, taskItem, isCompleted) {
+        var apiUrl = "/tasklist/api/tasks/" + taskId + "?is_completed=" + isCompleted;
+
+        $.ajax({
+            url: apiUrl,
+            type: "PATCH",
+            success: function () {
+                $(taskItem).toggleClass("completed");
+            }     
         });
     }
 
@@ -210,10 +282,56 @@ $(document).ready(function () {
 
     $("#week-tasks").click(function () {
         getWeekUserTasks();
-    })
+    });
 
-    $("#task-list").on("click", "li", function () {
-       $("#task-details").show();
+    $("#project-list").on("click", "li", function () {
+        var projectId = $(this).data("project-id");
+        $("#save-task").data("project-id", projectId);
+        getProjectTasks(projectId);
+    });
+
+    $("#add-task").click(function () {
+        var taskJson = 
+            {
+                "id": null, 
+                "title": null, 
+                "description": null, 
+                "deadline": null,
+                "priority": 1,
+                "isCompleted": false,
+                "version": 0
+            };
+        
+        taskJson.title = $("#task-title").val();
+        var projectId = $("#save-task").data("project-id");
+        saveTask(taskJson, projectId);
+    });
+
+    $("#task-list")
+        .on("click", ".delete-task", function () {
+            var taskItem = $(this).parent();
+            var taskId = $(taskItem).data("task-id");
+            deleteTask(taskId, taskItem);
+
+        }).on("click", ".check-as-completed", function () {
+            var taskItem = $(this).parent();
+            var taskId = $(taskItem).data("task-id");
+            var isCompleted = $(this).prop("checked");
+            setTaskCompleted(taskId, taskItem, isCompleted);
+    });
+
+    $("#sort-dropdown").on("click", "li", function () {
+        var sort = $(this).data("sort-type");
+        getTasks(null, null, sort)
+    });
+
+
+
+    /*-------------------- Behavior -----------------*/
+    $("#task-list").on("click", "li", function (e) {
+        if(e.target === this) {
+            $("#task-details").show();
+        }
     });
 
     $("#left-menu-col").on("click", "li", function () {

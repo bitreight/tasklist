@@ -159,6 +159,10 @@ body {
     margin-right: 10px!important;
 }
 
+.completed {
+    text-decoration: line-through;
+}
+
 .task-deadline {
     float: right;
     color: #b3312d;

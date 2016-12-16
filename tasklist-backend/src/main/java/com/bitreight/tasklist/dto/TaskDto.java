@@ -26,7 +26,7 @@ public class TaskDto {
 
     private boolean isCompleted;
 
-    @Min(value = 1, message = "Error when saving task.")
+    @Min(value = 0, message = "Error when saving task.")
     private long version;
 
     public int getId() {

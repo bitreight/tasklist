@@ -90,7 +90,7 @@
                                 <div class="input-group">
                                     <input id="task-title" type="text" class="form-control" placeholder="Enter task name...">
                                     <span class="input-group-btn">
-                                        <button id="add-task" class="btn btn-default" type="button">Add task</button>
+                                        <button id="add-task" data-project-id="" class="btn btn-default" type="button">Add task</button>
                                     </span>
                                 </div>
                             </div>
@@ -100,9 +100,10 @@
                                         Sort by
                                         <span class="caret"></span>
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="task-sort">
-                                        <li><a href="#">Deadline</a></li>
-                                        <li><a href="#">Priority</a></li>
+                                    <ul class="dropdown-menu pull-right" aria-labelledby="task-sort">
+                                        <li data-sort-type="title"><a href="#">Title</a></li>
+                                        <li data-sort-type="deadline"><a href="#">Deadline</a></li>
+                                        <li data-sort-type="priority"><a href="#">Priority</a></li>
                                     </ul>
                                 </div>
                             </div>

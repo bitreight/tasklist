@@ -61,8 +61,8 @@ public class TaskController {
     }
 
     @RequestMapping(value = "tasks/{taskId}", method = RequestMethod.PATCH)
-    public ResponseEntity<Void> setTaskAsCompleted(@PathVariable int taskId,
-                                                   @RequestParam(value = "is_completed") boolean isCompleted)
+    public ResponseEntity<Void> setTaskCompleted(@PathVariable int taskId,
+                                                 @RequestParam(value = "is_completed") boolean isCompleted)
             throws ServiceTaskNotFoundException {
 
         taskService.setIsCompleted(taskId, isCompleted);
