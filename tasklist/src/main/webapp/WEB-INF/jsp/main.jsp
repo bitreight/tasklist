@@ -84,8 +84,8 @@
                 </div>
 
                 <div id="tasks-column">
-                    <div id="tasks-content">
-                        <div class="panel panel-default">
+                    <%--<div id="tasks-content">--%>
+                        <div id="tasks-content" class="panel panel-default">
                             <div class="panel-heading">
                                 <div class="input-group">
                                     <input id="task-title" type="text" class="form-control" placeholder="Enter task name...">
@@ -110,7 +110,7 @@
                                 <!-- tasks of user or project -->
                             </ul>
                         </div>
-                    </div>
+                    <%--</div>--%>
 
                     <div id="task-details">
                         <form id="task-details-form">

@@ -159,13 +159,13 @@ $(document).ready(function () {
 
     function getTodayUserTasks() {
         var apiUrl = "/tasklist/api/tasks/today";
-        var currentDate = moment().format("MM-DD-YYYY");
+        var currentDate = moment().format("DD-MM-YYYY");
         getTasks(apiUrl, currentDate);
     }
 
     function getWeekUserTasks() {
         var apiUrl = "/tasklist/api/tasks/week";        
-        var currentDate = moment().format("MM-DD-YYYY");
+        var currentDate = moment().format("DD-MM-YYYY");
         getTasks(apiUrl, currentDate);
     }
 
@@ -211,5 +211,13 @@ $(document).ready(function () {
     $("#week-tasks").click(function () {
         getWeekUserTasks();
     })
+
+    $("#task-list").on("click", "li", function () {
+       $("#task-details").show();
+    });
+
+    $("#left-menu-col").on("click", "li", function () {
+        $("#task-details").hide();
+    });
 
 });
