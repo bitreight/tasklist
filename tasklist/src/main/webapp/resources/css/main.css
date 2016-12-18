@@ -58,8 +58,8 @@ body {
 }
 
 #left-menu-col {    
-    width: 200px;
-    min-width: 200px;    
+    width: 220px;
+    min-width: 220px;
     background-color: #52606E;
 }
 
@@ -95,11 +95,27 @@ body {
     padding-left: 20px;
 }
 
-#project-list li > span {
+#project-list .glyphicon {
     display: none;
 }
 
-#project-list li:hover > span {
+.project-title, .task-title {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 1;
+}
+
+.project-title {
+    width: 140px;
+}
+
+.task-title {
+    width: calc(100% - 135px);
+}
+
+#project-list li:hover .glyphicon {
     display: inline;
 }
 
@@ -132,7 +148,7 @@ body {
     /*min-width: 250px;*/
     background-color: white;
     border-style: none;
-    border-radius: 0px;
+    border-radius: 0;
 
     display: flex;
     flex-direction: column;
@@ -142,8 +158,10 @@ body {
 #task-details {
     margin-left: 10px;
     background-color: white;
-
     display: none;
+
+    flex-basis: 307px;
+    flex-shrink: 0;
 }
 
 #task-list {
@@ -197,11 +215,11 @@ body {
 }
 
 #priority-select {
-    width: 100px;
+    width: 130px;
 }
 
 #datepicker {
-    width: 115px;
+    width: 130px;
     margin-right: 15px;
 }
 

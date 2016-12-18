@@ -18,11 +18,12 @@ $(document).ready(function () {
 
                 projects.forEach(function (project, i , projects) {
                     var projectItem = $('<li class="menu-item list-group-item">' +
+                                            '<span class="project-title"></span>' +
                                             '<span class="delete-project glyphicon glyphicon-trash pull-right"></span>' +
                                             '<span class="edit-project glyphicon glyphicon-pencil pull-right"></span>' +
                                         '</li>');
                     projectItem.attr("data-project-id", project.id);
-                    projectItem.prepend(project.title);
+                    projectItem.find(".project-title").text(project.title);
                     projectList.append(projectItem);
                 });
 
@@ -243,6 +244,7 @@ $(document).ready(function () {
                     tasks.forEach(function (task, i, tasks) {
                         var taskItem = $('<li class="list-group-item">' +
                                             '<input class="check-as-completed" type="checkbox"/>' +
+                                            '<span class="task-title"></span>' +
                                             '<span class="delete-task glyphicon glyphicon-trash pull-right"></span>' +
                                             '<span class="task-deadline pull-right"></span>' +
                                         '</li>');
@@ -250,7 +252,7 @@ $(document).ready(function () {
                         var prioritySpanLow = $('<span class="low-prior glyphicon glyphicon-arrow-down pull-right"></span>');
 
                         taskItem.attr("data-task-id", task.id);
-                        taskItem.find("input").after(task.title);
+                        taskItem.find(".task-title").text(task.title);
 
                         var deadlineSpan = taskItem.find(".task-deadline");
                         deadlineSpan.text(task.deadline);
@@ -320,7 +322,14 @@ $(document).ready(function () {
             },
             error: function (errorResponse) {
                 var errorMessage = errorResponse.responseJSON.message;
-                showCommonError(errorMessage);
+                var fieldErrors = errorResponse.responseJSON.fieldErrors;
+
+                if(errorMessage) {
+                    showCommonError(errorMessage);
+                }
+                if(fieldErrors) {
+                    showCommonError(fieldErrors.title);
+                }
             }
         });
     }

@@ -11,7 +11,7 @@ public class TaskDto {
     private int id;
 
     @NotNull(message = "Enter task title.")
-    @Size(min = 1, max = 45)
+    @Size(min = 1, max = 45, message = "Task title must be {min}..{max} characters long.")
     private String title;
 
     @Size(max = 500, message = "Task description could be maximum {max} characters long.")
