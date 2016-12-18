@@ -504,7 +504,8 @@ $(document).ready(function () {
             hideTaskForm();
         })
         .on("click", ".menu-item", function (e) {
-            if(e.target === this) {
+            var titleSpan = $(this).find(".project-title")[0];
+            if(e.target === this || e.target === titleSpan) {
                 $(".menu-item").removeClass("menu-item-selected");
                 $(this).addClass("menu-item-selected");
             }
