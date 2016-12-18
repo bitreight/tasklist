@@ -19,21 +19,15 @@ public class SecurityService {
     public boolean isProjectOwner(int projectId) throws ServiceProjectNotFoundException {
         com.bitreight.tasklist.entity.User projectOwner = userDao.findByProjectId(projectId);
 
-        if(projectOwner == null) {
-            throw new ServiceProjectNotFoundException("Project not found.");
-        }
+        return projectOwner == null || projectOwner.getUsername().equals(getLoggedInUsername());
 
-        return projectOwner.getUsername().equals(getLoggedInUsername());
     }
 
     public boolean isTaskOwner(int taskId) throws ServiceTaskNotFoundException {
         com.bitreight.tasklist.entity.User taskOwner = userDao.findByTaskId(taskId);
 
-        if(taskOwner == null) {
-            throw new ServiceTaskNotFoundException("Task not found.");
-        }
+        return taskOwner == null || taskOwner.getUsername().equals(getLoggedInUsername());
 
-        return taskOwner.getUsername().equals(getLoggedInUsername());
     }
 
     private String getLoggedInUsername() {
