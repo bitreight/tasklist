@@ -67,8 +67,12 @@ body {
     margin-bottom: 10px;
 }
 
-#left-menu-col .list-group-item:hover {    
-    background-color: #44515F;
+.menu-item:hover {
+    background-color: #44515F!important;
+}
+
+.menu-item-selected {
+    background-color: #44515F!important;
 }
 
 #left-menu-col .list-group-item {    
@@ -164,14 +168,20 @@ body {
 }
 
 .task-deadline {
-    float: right;
+    /*float: right;*/
     color: #b3312d;
     margin-right: 10px;
     font-size: 12px;
 }
 
-.delete-task {
-    float: right;
+.high-prior {
+    margin-right: 10px;
+    color: #b3312d;
+}
+
+.low-prior {
+    margin-right: 10px;
+    color: dodgerblue;
 }
 
 #sort-dropdown {
@@ -198,4 +208,16 @@ body {
 #task-description-edit {
     overflow: hidden;
     margin-top: 10px;
+}
+
+#common-alert {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    top: 25px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 300px;
+    opacity: 0.985;
 }

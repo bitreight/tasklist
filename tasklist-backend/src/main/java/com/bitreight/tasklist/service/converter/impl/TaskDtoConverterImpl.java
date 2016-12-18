@@ -18,6 +18,7 @@ public class TaskDtoConverterImpl implements TaskDtoConverter {
         task.setDescription(taskDto.getDescription());
         task.setDeadline(DateHelper.dateFromString(taskDto.getDeadline()));
         task.setPriority(TaskPriority.values()[taskDto.getPriority()]);
+        task.setCompleted(taskDto.isCompleted());
         task.setVersion(taskDto.getVersion());
         return task;
     }

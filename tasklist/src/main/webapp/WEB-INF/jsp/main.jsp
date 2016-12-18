@@ -18,11 +18,18 @@
             </div>
 
             <div id="content">
+                <!-- Common alert -->
+                <div id="common-alert" class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    <span id="error-msg"></span>
+                </div>
+
                 <div id="left-menu-col">
-                    <ul class="list-group">
-                        <li id="all-tasks" class="list-group-item">ALL</li>
-                        <li id="today-tasks" class="list-group-item">TODAY</li>
-                        <li id="week-tasks" class="list-group-item">WEEK</li>
+                    <ul id="main-menu" class="list-group">
+                        <li id="all-tasks" class="menu-item list-group-item menu-item-selected">ALL</li>
+                        <li id="today-tasks" class="menu-item list-group-item">TODAY</li>
+                        <li id="week-tasks" class="menu-item list-group-item">WEEK</li>
                         <li class="list-group-item">
                             PROJECTS
                             <span id="add-project" class="glyphicon glyphicon-plus pull-right"></span>
@@ -85,32 +92,32 @@
 
                 <div id="tasks-column">
                     <%--<div id="tasks-content">--%>
-                        <div id="tasks-content" class="panel panel-default">
-                            <div class="panel-heading">
-                                <div class="input-group">
-                                    <input id="task-title" type="text" class="form-control" placeholder="Enter task name...">
-                                    <span class="input-group-btn">
-                                        <button id="add-task" data-project-id="" class="btn btn-default" type="button">Add task</button>
-                                    </span>
-                                </div>
+                    <div id="tasks-content" class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="input-group">
+                                <input id="task-title" type="text" class="form-control" placeholder="Enter task name...">
+                                <span class="input-group-btn">
+                                    <button id="add-task" data-project-id="" class="btn btn-default" type="button">Add task</button>
+                                </span>
                             </div>
-                            <div class="panel-body">
-                                <div id="sort-dropdown" class="dropdown">
-                                    <button class="btn btn-default dropdown-toggle" type="button" id="task-sort" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        Sort by
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu pull-right" aria-labelledby="task-sort">
-                                        <li data-sort-type="title"><a href="#">Title</a></li>
-                                        <li data-sort-type="deadline"><a href="#">Deadline</a></li>
-                                        <li data-sort-type="priority"><a href="#">Priority</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <ul id="task-list" class="list-group">
-                                <!-- tasks of user or project -->
-                            </ul>
                         </div>
+                        <div class="panel-body">
+                            <div id="sort-dropdown" class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="task-sort" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Sort by
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" aria-labelledby="task-sort">
+                                    <li data-sort-type="title"><a href="">Title</a></li>
+                                    <li data-sort-type="deadline"><a href="">Deadline</a></li>
+                                    <li data-sort-type="priority"><a href="">Priority</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <ul id="task-list" class="list-group">
+                            <!-- tasks of user or project -->
+                        </ul>
+                    </div>
                     <%--</div>--%>
 
                     <div id="task-details">
@@ -127,13 +134,16 @@
                                 <div class="panel-body">
                                     <div id="priority-select" class="form-group pull-right">
                                         <select class="selectpicker show-menu-arrow form-control">
-                                            <option>High</option>
-                                            <option selected>Normal</option>
-                                            <option>Low</option>
+                                            <option value="0">High</option>
+                                            <option value="1" selected>Normal</option>
+                                            <option value="2">Low</option>
                                         </select>
                                     </div>
                                     <input type="text" class="form-control pull-right" id="datepicker" placeholder="Deadline" />
                                     <textarea id="task-description-edit" class="form-control pull-left" rows="6" placeholder="Description"></textarea>
+                                    <input id="task-version" type="hidden" />
+                                    <input id="task-id" type="hidden"/>
+                                    <input id="task-is-completed" type="hidden"/>
                                 </div>
                             </div>
                         </form>
