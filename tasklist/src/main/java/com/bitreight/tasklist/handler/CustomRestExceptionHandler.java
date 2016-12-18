@@ -9,6 +9,7 @@ import com.bitreight.tasklist.service.exception.ServiceTaskVersionIsOutdatedExce
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -41,10 +42,9 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
-    @ExceptionHandler
-    public ResponseEntity<Object> handleAnyException(Exception e) {
-        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR,
-                "Error happened while processing the request.");
+    @ExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity<Object> handleAccessDenied(AccessDeniedException e) {
+        ApiError apiError = new ApiError(HttpStatus.FORBIDDEN, "Access denied.");
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
@@ -62,6 +62,13 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
         ValidationError validationError = new ValidationError(HttpStatus.BAD_REQUEST, fieldErrors);
         return handleExceptionInternal(ex, validationError, headers, validationError.getStatus(), request);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> handleAnyException(Exception e) {
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                "Error happened while processing the request.");
+        return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
 //    @Override

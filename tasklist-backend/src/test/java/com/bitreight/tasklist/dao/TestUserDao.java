@@ -2,11 +2,15 @@ package com.bitreight.tasklist.dao;
 
 import com.bitreight.tasklist.config.BackendConfiguration;
 import com.bitreight.tasklist.config.DaoContextConfiguration;
+import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedProjectException;
+import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedTaskException;
 import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedUserException;
+import com.bitreight.tasklist.entity.Project;
+import com.bitreight.tasklist.entity.Task;
+import com.bitreight.tasklist.entity.TaskPriority;
 import com.bitreight.tasklist.entity.User;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,16 +33,38 @@ public class TestUserDao {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private ProjectDao projectDao;
+
+    @Autowired
+    private TaskDao taskDao;
+
     private User user;
+    private Project project;
+    private Task task;
 
     @Before
-    public void setUp() throws DaoSaveDuplicatedUserException {
+    public void setUp() throws DaoSaveDuplicatedUserException,
+            DaoSaveDuplicatedProjectException, DaoSaveDuplicatedTaskException {
+
         user = new User();
         user.setUsername("username");
         user.setPassword("pass");
         user.setName("name");
         user.setSurname("surname");
         userDao.save(user);
+
+        project = new Project();
+        project.setTitle("project");
+        project.setDescription("description");
+        project.setUser(user);
+        projectDao.save(project);
+
+        task = new Task();
+        task.setTitle("task");
+        task.setPriority(TaskPriority.NORMAL);
+        task.setProject(project);
+        taskDao.save(task);
     }
 
     @After
@@ -91,20 +117,15 @@ public class TestUserDao {
         assertEquals(user, userFromDb);
     }
 
-//    @Test
-//    public void testUpdateUser_nonexistentUser() {
-//        User invalidUser = new User();
-//
-//        userDao.update(invalidUser);
-//        User userFromDb = userDao.findById(user.getId());
-//
-//        assertEquals(user, userFromDb);
-//    }
-//
-//    @Test
-//    public void testDeleteUserById_nonExistentId() {
-//        userDao.deleteById(-1);
-//        User userFromDb = userDao.findById(user.getId());
-//        assertEquals(user, userFromDb);
-//    }
+    @Test
+    public void testFindUsernameByProjectId() {
+        User userFromDb = userDao.findByProjectId(project.getId());
+        assertEquals(user, userFromDb);
+    }
+
+    @Test
+    public void testFindUsernameByTaskId() {
+        User userFromDb = userDao.findByTaskId(task.getId());
+        assertEquals(user, userFromDb);
+    }
 }

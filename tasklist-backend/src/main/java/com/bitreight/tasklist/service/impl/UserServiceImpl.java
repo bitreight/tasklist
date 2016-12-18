@@ -38,20 +38,20 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public UserDto getByUsername(String username) throws ServiceUserNotFoundException {
-
-        if(username == null) {
-            throw new IllegalArgumentException("Username cannot be null.");
-        }
-
-        User userFromDb = userDao.findByUsername(username);
-        if(userFromDb == null) {
-            throw new ServiceUserNotFoundException("User not found.");
-        }
-
-        return userConverter.convertEntity(userFromDb);
-    }
+//    @Override
+//    public UserDto getByUsername(String username) throws ServiceUserNotFoundException {
+//
+//        if(username == null) {
+//            throw new IllegalArgumentException("Username cannot be null.");
+//        }
+//
+//        User userFromDb = userDao.findByUsername(username);
+//        if(userFromDb == null) {
+//            throw new ServiceUserNotFoundException("User not found.");
+//        }
+//
+//        return userConverter.convertEntity(userFromDb);
+//    }
 
     @Override
     public void update(UserDto userDto) throws ServiceUserNotFoundException {
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getInfoById(int userId) throws ServiceUserNotFoundException {
+    public UserDto getById(int userId) throws ServiceUserNotFoundException {
         User userFromDb = userDao.findById(userId);
         if(userFromDb == null) {
             throw new ServiceUserNotFoundException("User not found.");

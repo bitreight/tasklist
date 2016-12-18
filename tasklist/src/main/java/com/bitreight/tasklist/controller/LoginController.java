@@ -1,6 +1,6 @@
 package com.bitreight.tasklist.controller;
 
-import com.bitreight.tasklist.config.security.CustomUserDetails;
+import com.bitreight.tasklist.security.CustomUserDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

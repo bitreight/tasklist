@@ -4,6 +4,7 @@ import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedUserException;
 import com.bitreight.tasklist.entity.User;
 
 public interface UserDao {
+
     void save(User user) throws DaoSaveDuplicatedUserException;
 
     void update(User user);
@@ -13,4 +14,8 @@ public interface UserDao {
     User findById(int userId);
 
     User findByUsername(String username);
+
+    User findByProjectId(int projectId);
+
+    User findByTaskId(int taskId);
 }

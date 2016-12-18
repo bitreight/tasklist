@@ -9,9 +9,7 @@ import com.bitreight.tasklist.service.converter.impl.UserDtoConverterImpl;
 import com.bitreight.tasklist.service.exception.ServiceUserAlreadyExistsException;
 import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
 import com.bitreight.tasklist.service.impl.UserServiceImpl;
-import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -92,36 +90,36 @@ public class TestUserService {
         verify(mockUserDao).save(userToSave);
     }
 
-    @Test
-    public void testFindByUsername() throws ServiceUserNotFoundException {
-        when(mockUserDao.findByUsername(user.getUsername()))
-                .thenReturn(user);
-
-        UserDto actualUserDto = userService.getByUsername(userDto.getUsername());
-
-        assertEquals(actualUserDto, userDto);
-        verify(spyUserConverter).convertEntity(user);
-        verify(mockUserDao).findByUsername(user.getUsername());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testFindByUsername_nullUserDto() throws ServiceUserNotFoundException {
-        UserDto actualUserDto = userService.getByUsername(null);
-
-        verify(spyUserConverter, never()).convertEntity(any());
-        verify(mockUserDao, never()).findByUsername(anyString());
-    }
-
-    @Test(expected = ServiceUserNotFoundException.class)
-    public void testFindByUsername_nonExistentUser() throws ServiceUserNotFoundException {
-        when(mockUserDao.findByUsername(user.getUsername()))
-                .thenReturn(null);
-
-        UserDto actualUserDto = userService.getByUsername(userDto.getUsername());
-
-        verify(spyUserConverter, never()).convertEntity(user);
-        verify(mockUserDao).findByUsername(user.getUsername());
-    }
+//    @Test
+//    public void testFindByUsername() throws ServiceUserNotFoundException {
+//        when(mockUserDao.findByUsername(user.getUsername()))
+//                .thenReturn(user);
+//
+//        UserDto actualUserDto = userService.getByUsername(userDto.getUsername());
+//
+//        assertEquals(actualUserDto, userDto);
+//        verify(spyUserConverter).convertEntity(user);
+//        verify(mockUserDao).findByUsername(user.getUsername());
+//    }
+//
+//    @Test(expected = IllegalArgumentException.class)
+//    public void testFindByUsername_nullUserDto() throws ServiceUserNotFoundException {
+//        UserDto actualUserDto = userService.getByUsername(null);
+//
+//        verify(spyUserConverter, never()).convertEntity(any());
+//        verify(mockUserDao, never()).findByUsername(anyString());
+//    }
+//
+//    @Test(expected = ServiceUserNotFoundException.class)
+//    public void testFindByUsername_nonExistentUser() throws ServiceUserNotFoundException {
+//        when(mockUserDao.findByUsername(user.getUsername()))
+//                .thenReturn(null);
+//
+//        UserDto actualUserDto = userService.getByUsername(userDto.getUsername());
+//
+//        verify(spyUserConverter, never()).convertEntity(user);
+//        verify(mockUserDao).findByUsername(user.getUsername());
+//    }
 
     @Test
     public void testUpdateUser() throws ServiceUserNotFoundException {
@@ -158,7 +156,7 @@ public class TestUserService {
     public void testGetInfoById() throws ServiceUserNotFoundException {
         when(mockUserDao.findById(1)).thenReturn(user);
 
-        UserDto newUserDto = userService.getInfoById(userDto.getId());
+        UserDto newUserDto = userService.getById(userDto.getId());
 
         assertEquals(newUserDto, userDto);
         verify(spyUserConverter).convertEntity(user);
@@ -169,7 +167,7 @@ public class TestUserService {
     public void testGetInfoById_nonExistentUser() throws ServiceUserNotFoundException {
         when(mockUserDao.findById(1)).thenReturn(null);
 
-        UserDto newUserDto = userService.getInfoById(1);
+        UserDto newUserDto = userService.getById(1);
 
         verify(spyUserConverter, never()).convertEntity(any());
         verify(mockUserDao).findById(1);

@@ -8,9 +8,7 @@ public interface UserService {
 
     void register(UserDto userDto) throws ServiceUserAlreadyExistsException;
 
-    UserDto getByUsername(String username) throws ServiceUserNotFoundException;
-
     void update(UserDto userDto) throws ServiceUserNotFoundException;
 
-    UserDto getInfoById(int userId) throws ServiceUserNotFoundException;
+    UserDto getById(int userId) throws ServiceUserNotFoundException;
 }
