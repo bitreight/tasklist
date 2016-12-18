@@ -10,7 +10,7 @@ public class TaskDto {
 
     private int id;
 
-    @NotNull(message = "Enter task title.")
+    @NotNull(message = "Task title must be {min}..{max} characters long.")
     @Size(min = 1, max = 45, message = "Task title must be {min}..{max} characters long.")
     private String title;
 

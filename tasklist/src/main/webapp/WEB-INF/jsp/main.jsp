@@ -132,6 +132,26 @@
                                     </div>
                                 </div>
                                 <div class="panel-body">
+                                    <!-- Field errors -->
+                                    <!-- Title error -->
+                                    <div id="title-error" class="task-field-error alert alert-danger" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="sr-only">Error:</span>
+                                        <span id="title-error-msg"></span>
+                                    </div>
+                                    <!-- Deadline error -->
+                                    <div id="deadline-error" class="task-field-error alert alert-danger" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="sr-only">Error:</span>
+                                        <span id="deadline-error-msg"></span>
+                                    </div>
+                                    <!-- Description error -->
+                                    <div id="description-error" class="task-field-error alert alert-danger" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="sr-only">Error:</span>
+                                        <span id="description-error-msg"></span>
+                                    </div>
+
                                     <div id="priority-select" class="form-group pull-right">
                                         <select class="selectpicker show-menu-arrow form-control">
                                             <option value="0">High</option>

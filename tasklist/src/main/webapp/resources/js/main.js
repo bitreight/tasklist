@@ -264,7 +264,7 @@ $(document).ready(function () {
                         }
 
                         if(task.completed) {
-                            taskItem.addClass("completed");
+                            taskItem.find(".task-title").addClass("completed");
                             taskItem.find(".check-as-completed").prop("checked", true);
                         }
 
@@ -298,7 +298,7 @@ $(document).ready(function () {
                 $("#task-is-completed").val(task.completed);
                 $("#task-version").val(task.version);
 
-                $("#task-details").show();
+                showTaskForm();
             },
             error: function (errorResponse) {
                 var errorMessage = errorResponse.responseJSON.message;
@@ -347,9 +347,32 @@ $(document).ready(function () {
             },
             error: function (errorResponse) {
                 var errorMessage = errorResponse.responseJSON.message;
-                showCommonError(errorMessage);
-                hideTaskForm();
-                getTasks();
+                var fieldErrors = errorResponse.responseJSON.fieldErrors;
+
+                if(errorMessage) {
+                    showCommonError(errorMessage);
+                    hideTaskForm();
+                    getTasks();
+                }
+
+                if(fieldErrors) {
+                    var priorityError = fieldErrors.priority;
+                    var versionError = fieldErrors.version;
+
+                    if(versionError) {
+                        showCommonError(versionError);
+                        hideTaskForm();
+                        getTasks();
+
+                    } else if(priorityError) {
+                        showCommonError(priorityError);
+                        hideTaskForm();
+                        getTasks();
+
+                    } else {
+                        showTaskErrors(fieldErrors);
+                    }
+                }
             }
         });
     }
@@ -360,7 +383,6 @@ $(document).ready(function () {
             url: apiUrl,
             type: "DELETE",
             success: function () {
-                //$(taskItem).remove();
                 getTasks();
             },
             error: function (errorResponse) {
@@ -378,7 +400,7 @@ $(document).ready(function () {
             url: apiUrl,
             type: "PATCH",
             success: function () {
-                $(taskItem).toggleClass("completed");
+                $(taskItem).find(".task-title").toggleClass("completed");
 
                 if(taskId == $("#task-id").val()) {
                     getTaskDetails(taskId);
@@ -406,7 +428,8 @@ $(document).ready(function () {
     });
 
     $("#project-list").on("click", "li", function (e) {
-        if(e.target === this) {
+        var titleSpan = $(this).find(".project-title")[0];
+        if(e.target === this || e.target === titleSpan) {
             var projectId = $(this).data("project-id");
             $("#add-task").data("project-id", projectId);
 
@@ -440,7 +463,8 @@ $(document).ready(function () {
 
     $("#task-list")
         .on("click", "li", function (e) {
-            if(e.target === this) {
+            var titleSpan = $(this).find(".task-title")[0];
+            if(e.target === this || e.target === titleSpan) {
                 var taskId = $(this).data("task-id");
                 getTaskDetails(taskId);
             }
@@ -505,6 +529,11 @@ $(document).ready(function () {
             taskTitleInput.val("");
         }
     }
+    
+    function showTaskForm() {
+        hideTaskErrors();
+        $("#task-details").show();
+    }
 
     function hideTaskForm() {
         $("#task-details-form input").val("");
@@ -512,6 +541,8 @@ $(document).ready(function () {
         $("#datepicker").val("");
         $(".selectpicker").val("");
         $("#task-details").hide();
+
+        hideTaskErrors();
     }
 
     function toggleSortMenu(taskListSize) {
@@ -525,13 +556,46 @@ $(document).ready(function () {
 
     function showCommonError(message) {
         var errorDiv = $("#common-alert");
-        //errorDiv.append(message);
         $("#error-msg").text(message);
+
         errorDiv.fadeIn(600);
         setTimeout(function () {
             errorDiv.fadeOut(600);
         }, 3000);
+        setTimeout(function () {
+            $("#error-msg").text("");
+        }, 3600);
     }
 
-    //showCommonError();
+    function showTaskErrors(fieldErrors) {
+        var titleError, descriptionError, deadlineError;
+
+        titleError = fieldErrors.title;
+        descriptionError = fieldErrors.description;
+        deadlineError = fieldErrors.deadline;
+
+        hideTaskErrors();
+
+        if(titleError) {
+            $("#title-error-msg").text(titleError);
+            $("#title-error").show();
+        }
+
+        if(descriptionError) {
+            $("#description-error-msg").text(descriptionError);
+            $("#description-error").show();
+        }
+
+        if(deadlineError) {
+            $("#deadline-error-msg").text(deadlineError);
+            $("#deadline-error").show();
+        }
+    }
+
+    function hideTaskErrors() {
+        $(".task-field-error").hide();
+        $("#title-error-msg").text("");
+        $("#deadline-error-msg").text("");
+        $("#description-error-msg").text("");
+    }
 });
