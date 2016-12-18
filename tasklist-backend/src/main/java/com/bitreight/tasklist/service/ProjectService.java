@@ -10,14 +10,18 @@ import java.util.List;
 
 public interface ProjectService {
 
+    @PreAuthorize("principal.id == #userId")
     int add(ProjectDto projectDto, int userId) throws ServiceProjectAlreadyExistsException, ServiceUserNotFoundException;
 
+    @PreAuthorize("@securityService.isProjectOwner(#projectDto.id)")
     void update(ProjectDto projectDto) throws ServiceProjectAlreadyExistsException, ServiceProjectNotFoundException;
 
+    @PreAuthorize("@securityService.isProjectOwner(#projectId)")
     void deleteById(int projectId) throws ServiceProjectNotFoundException;
 
-    @PreAuthorize("@securityService.isOwner()")
+    @PreAuthorize("@securityService.isProjectOwner(#projectId)")
     ProjectDto getById(int projectId) throws ServiceProjectNotFoundException;
 
+    @PreAuthorize("principal.id == #userId")
     List<ProjectDto> getByUserId(int userId) throws ServiceUserNotFoundException, ServiceProjectNotFoundException;
 }

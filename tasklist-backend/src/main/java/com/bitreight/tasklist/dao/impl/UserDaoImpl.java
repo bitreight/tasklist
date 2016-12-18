@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository("userDao")
@@ -56,8 +57,24 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User findByUsername(String username) {
         List<User> users = (List<User>) entityManager.createQuery("Select u from User u where u.username LIKE :username")
-                                    .setParameter("username", username)
-                                    .getResultList();
+                                                                .setParameter("username", username)
+                                                                .getResultList();
         return users.isEmpty() ? null : users.get(0);
+    }
+
+    @Override
+    public User findByProjectId(int projectId) {
+        Query query = entityManager.createQuery("Select up From Project p Join p.user up " +
+                                                "Where p.id Like :projectId")
+                                                .setParameter("projectId", projectId);
+        return (User) query.getSingleResult();
+    }
+
+    @Override
+    public User findByTaskId(int taskId) {
+        Query query = entityManager.createQuery("Select utp From Task t Join t.project pt Join pt.user utp " +
+                                                "Where t.id Like :taskId")
+                                                .setParameter("taskId", taskId);
+        return (User) query.getSingleResult();
     }
 }
