@@ -1,6 +1,6 @@
 package com.bitreight.tasklist.controller;
 
-import com.bitreight.tasklist.config.security.CustomUserDetails;
+import com.bitreight.tasklist.security.CustomUserDetails;
 import com.bitreight.tasklist.dto.TaskDto;
 import com.bitreight.tasklist.service.TaskSearchService;
 import com.bitreight.tasklist.service.exception.ServiceProjectNotFoundException;

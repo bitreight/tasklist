@@ -1,4 +1,4 @@
-package com.bitreight.tasklist.config.security;
+package com.bitreight.tasklist.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
