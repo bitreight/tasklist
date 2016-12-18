@@ -10,8 +10,8 @@ public class TaskDto {
 
     private int id;
 
-    @NotNull(message = "Enter task title.")
-    @Size(min = 1, max = 45)
+    @NotNull(message = "Task title must be {min}..{max} characters long.")
+    @Size(min = 1, max = 45, message = "Task title must be {min}..{max} characters long.")
     private String title;
 
     @Size(max = 500, message = "Task description could be maximum {max} characters long.")
@@ -26,7 +26,7 @@ public class TaskDto {
 
     private boolean isCompleted;
 
-    @Min(value = 1, message = "Error when saving task.")
+    @Min(value = 0, message = "Error when saving task.")
     private long version;
 
     public int getId() {

@@ -3,7 +3,6 @@ package com.bitreight.tasklist.dao.impl;
 import com.bitreight.tasklist.dao.TaskDao;
 import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedTaskException;
 import com.bitreight.tasklist.dao.exception.DaoUpdateNonActualVersionOfTaskException;
-import com.bitreight.tasklist.entity.Project;
 import com.bitreight.tasklist.entity.Task;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
@@ -13,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
-import java.util.List;
 
 @Repository("taskDao")
 @Transactional(rollbackFor = Exception.class)
@@ -39,18 +37,14 @@ public class TaskDaoImpl implements TaskDao {
     @Override
     public void update(Task task) throws DaoUpdateNonActualVersionOfTaskException,
             DaoSaveDuplicatedTaskException {
-        Task taskFromDb = findById(task.getId());
         try {
-            if (taskFromDb != null) {
-                entityManager.merge(task);
-                entityManager.flush();
-            }
+            entityManager.merge(task);
+            entityManager.flush();
 
         } catch (OptimisticLockException e) {
             throw new DaoUpdateNonActualVersionOfTaskException(
                             "Version of the task id=" + task.getId() + " has been changed. " +
-                            "Old version is " + task.getVersion() +
-                            ", new version is " + taskFromDb.getVersion() + ".", e);
+                            "(updated by another user.)");
 
         } catch (PersistenceException e) {
             if(e.getCause() instanceof ConstraintViolationException) {
@@ -62,30 +56,12 @@ public class TaskDaoImpl implements TaskDao {
     }
 
     @Override
-    public void deleteById(int taskId) {
-        Task taskFromDb = findById(taskId);
-        if(taskFromDb != null) {
-            entityManager.remove(taskFromDb);
-        }
+    public void delete(Task task) {
+        entityManager.remove(task);
     }
 
     @Override
     public Task findById(int taskId) {
         return entityManager.find(Task.class, taskId);
-    }
-
-    @Override
-    public List<Task> findByProject(Project project) {
-        return (List<Task>) entityManager.createQuery("Select t from Task t where t.project LIKE :project")
-                                            .setParameter("project", project)
-                                            .getResultList();
-    }
-
-    @Override
-    public void setIsCompleted(int taskId, boolean isCompleted) {
-        Task taskFromDb = findById(taskId);
-        if(taskFromDb != null) {
-            taskFromDb.setCompleted(isCompleted);
-        }
     }
 }

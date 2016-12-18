@@ -24,7 +24,6 @@ import static org.junit.Assert.assertNull;
         loader = AnnotationConfigContextLoader.class)
 @Transactional
 @ActiveProfiles("dev")
-@Ignore
 public class TestUserDao {
 
     @Autowired

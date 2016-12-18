@@ -9,13 +9,13 @@ import com.bitreight.tasklist.entity.Project;
 import com.bitreight.tasklist.entity.Task;
 import com.bitreight.tasklist.service.TaskService;
 import com.bitreight.tasklist.service.converter.TaskDtoConverter;
+import com.bitreight.tasklist.service.exception.ServiceProjectNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceTaskAlreadyExistsException;
+import com.bitreight.tasklist.service.exception.ServiceTaskNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceTaskVersionIsOutdatedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service("taskService")
 @Transactional(rollbackFor = Exception.class)
@@ -31,91 +31,81 @@ public class TaskServiceImpl implements TaskService {
     private TaskDtoConverter taskConverter;
 
     @Override
-    public void add(TaskDto taskDto, int projectId) throws ServiceTaskAlreadyExistsException {
-        if(taskDto != null && projectId > 0) {
-            Project project = projectDao.findById(projectId);
-            try {
-                if (project != null) {
-                    Task task = taskConverter.convertDto(taskDto);
-                    task.setId(0);
-                    task.setProject(project);
-                    taskDao.save(task);
-                }
+    public int add(TaskDto taskDto, int projectId) throws ServiceTaskAlreadyExistsException,
+            ServiceProjectNotFoundException {
 
-            } catch (DaoSaveDuplicatedTaskException e) {
-                throw new ServiceTaskAlreadyExistsException("Can't create task. Already exists.", e);
-            }
+        if(taskDto == null) {
+            throw new IllegalArgumentException("taskDto cannot be null");
         }
+
+        Project projectFromDb = projectDao.findById(projectId);
+        if(projectFromDb == null) {
+            throw new ServiceProjectNotFoundException("Project not found.");
+        }
+
+        Task taskToSave = taskConverter.convertDto(taskDto);
+        taskToSave.setId(0);
+        taskToSave.setProject(projectFromDb);
+
+        try {
+            taskDao.save(taskToSave);
+        } catch (DaoSaveDuplicatedTaskException e) {
+            throw new ServiceTaskAlreadyExistsException("Task already exists.", e);
+        }
+
+        return taskToSave.getId();
     }
 
     @Override
     public void update(TaskDto taskDto) throws ServiceTaskVersionIsOutdatedException,
-            ServiceTaskAlreadyExistsException {
-        if(taskDto != null) {
-            Task task = taskConverter.convertDto(taskDto);
-            try {
-                taskDao.update(task);
+            ServiceTaskAlreadyExistsException, ServiceTaskNotFoundException {
 
-            } catch (DaoUpdateNonActualVersionOfTaskException e) {
-                throw new ServiceTaskVersionIsOutdatedException("Can't update task. Version is outdated.", e);
+        if(taskDto == null) {
+            throw new IllegalArgumentException("taskDto cannot be null.");
+        }
 
-            } catch (DaoSaveDuplicatedTaskException e) {
-                throw new ServiceTaskAlreadyExistsException("Can't update task. Already exists.", e);
-            }
+        Task taskFromDb = taskDao.findById(taskDto.getId());
+        if(taskFromDb == null) {
+            throw new ServiceTaskNotFoundException("Task not found.");
+        }
+
+        Task taskToUpdate = taskConverter.convertDto(taskDto);
+        taskToUpdate.setProject(taskFromDb.getProject());
+
+        try {
+            taskDao.update(taskToUpdate);
+        } catch (DaoUpdateNonActualVersionOfTaskException e) {
+            throw new ServiceTaskVersionIsOutdatedException("Can't update task. Version is outdated.", e);
+
+        } catch (DaoSaveDuplicatedTaskException e) {
+            throw new ServiceTaskAlreadyExistsException("Task already exists.", e);
         }
     }
 
     @Override
-    public void deleteById(int taskId) {
-        if(taskId > 0) {
-            taskDao.deleteById(taskId);
+    public void deleteById(int taskId) throws ServiceTaskNotFoundException {
+        Task taskToDelete = taskDao.findById(taskId);
+        if(taskToDelete == null) {
+            throw new ServiceTaskNotFoundException("Task not found.");
         }
+        taskDao.delete(taskToDelete);
     }
 
     @Override
-    public TaskDto getById(int taskId) {
-        TaskDto taskDto = null;
-
-        if(taskId > 0) {
-            Task task = taskDao.findById(taskId);
-
-            if(task != null) {
-                taskDto = taskConverter.convertEntity(task);
-            }
+    public TaskDto getById(int taskId) throws ServiceTaskNotFoundException {
+        Task taskFromDb = taskDao.findById(taskId);
+        if(taskFromDb == null) {
+            throw new ServiceTaskNotFoundException("Task not found.");
         }
-
-        return taskDto;
+        return taskConverter.convertEntity(taskFromDb);
     }
 
     @Override
-    public List<TaskDto> getByProjectId(int projectId) {
-        List<TaskDto> taskDtos = null;
-
-        if(projectId > 0) {
-            Project project = projectDao.findById(projectId);
-
-            if(project != null) {
-                List<Task> tasks = taskDao.findByProject(project);
-
-                if(tasks != null) {
-                    taskDtos = taskConverter.convertEntities(tasks);
-                }
-            }
+    public void setIsCompleted(int taskId, boolean isCompleted) throws ServiceTaskNotFoundException {
+        Task taskFromDb = taskDao.findById(taskId);
+        if(taskFromDb == null) {
+            throw new ServiceTaskNotFoundException("Task not found.");
         }
-
-        return taskDtos;
-    }
-
-    //not implemented in dao
-    @Override
-    public List<TaskDto> getAllTasksOfUser(int userId) {
-        return null;
-    }
-
-    @Override
-    public void setIsCompleted(int taskId, boolean isCompleted) {
-        if(taskId > 0) {
-            taskDao.setIsCompleted(taskId, isCompleted);
-        }
+        taskFromDb.setCompleted(isCompleted);
     }
 }
