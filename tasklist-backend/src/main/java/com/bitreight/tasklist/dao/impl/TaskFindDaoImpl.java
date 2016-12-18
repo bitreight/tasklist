@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Order;
@@ -89,7 +90,9 @@ public class TaskFindDaoImpl implements TaskFindDao {
     }
 
     private <Z, X> void addAscOrder(List<Order> orders, CriteriaBuilder builder, From<Z, X> root, String field) {
-        Order order = builder.asc(root.get(field));
+        Expression<Object> orderCase = builder.selectCase().when(root.get(field).isNull(), Long.MAX_VALUE)
+                                              .otherwise(root.get(field));
+        Order order = builder.asc(orderCase);
         orders.add(order);
     }
 }
