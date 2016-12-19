@@ -9,6 +9,7 @@ import com.bitreight.tasklist.service.converter.UserDtoConverter;
 import com.bitreight.tasklist.service.exception.ServiceUserAlreadyExistsException;
 import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDtoConverter userConverter;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public void register(UserDto userDto) throws ServiceUserAlreadyExistsException {
         if(userDto == null) {
@@ -29,7 +33,10 @@ public class UserServiceImpl implements UserService {
         }
 
         User userToRegister = userConverter.convertDto(userDto);
+
         userToRegister.setId(0);
+        userToRegister.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
         try {
             userDao.save(userToRegister);
 
