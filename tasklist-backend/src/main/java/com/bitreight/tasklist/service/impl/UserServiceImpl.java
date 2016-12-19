@@ -2,10 +2,12 @@ package com.bitreight.tasklist.service.impl;
 
 import com.bitreight.tasklist.dao.UserDao;
 import com.bitreight.tasklist.dao.exception.DaoSaveDuplicatedUserException;
+import com.bitreight.tasklist.dto.ChangePasswordDto;
 import com.bitreight.tasklist.dto.UserDto;
 import com.bitreight.tasklist.entity.User;
 import com.bitreight.tasklist.service.UserService;
 import com.bitreight.tasklist.service.converter.UserDtoConverter;
+import com.bitreight.tasklist.service.exception.ServiceInvalidUserPasswordException;
 import com.bitreight.tasklist.service.exception.ServiceUserAlreadyExistsException;
 import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,8 +73,31 @@ public class UserServiceImpl implements UserService {
             throw new ServiceUserNotFoundException("User not found.");
         }
 
-        User userToUpdate = userConverter.convertDto(userDto);
-        userDao.update(userToUpdate);
+//        User userToUpdate = userConverter.convertDto(userDto);
+//        userDao.update(userToUpdate);
+
+        userFromDb.setName(userDto.getName());
+        userFromDb.setSurname(userDto.getSurname());
+    }
+
+    @Override
+    public void changePassword(ChangePasswordDto passwordDto)
+            throws ServiceUserNotFoundException, ServiceInvalidUserPasswordException {
+
+        if(passwordDto == null) {
+            throw new IllegalArgumentException("passwordDto cannot be null.");
+        }
+
+        User userFromDb = userDao.findById(passwordDto.getUserId());
+        if(userFromDb == null) {
+            throw new ServiceUserNotFoundException("User not found.");
+        }
+
+        if(!userFromDb.getPassword().equals(passwordDto.getOldPassword())) {
+            throw new ServiceInvalidUserPasswordException("Invalid password.");
+        }
+
+        userFromDb.setPassword(passwordDto.getNewPassword());
     }
 
     @Override

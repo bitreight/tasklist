@@ -12,9 +12,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 @Repository("userDao")
 @Transactional(rollbackFor = Exception.class)
-@SuppressWarnings("unchecked")
 public class UserDaoImpl implements UserDao {
 
     @PersistenceContext
@@ -40,7 +40,7 @@ public class UserDaoImpl implements UserDao {
         if(userFromDb != null) {
             userFromDb.setName(user.getName());
             userFromDb.setSurname(user.getSurname());
-            userFromDb.setPassword(user.getPassword());
+            //userFromDb.setPassword(user.getPassword());
         }
     }
 

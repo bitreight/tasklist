@@ -251,3 +251,26 @@ body {
     display: none;
     margin-bottom: 10px;
 }
+
+#profile-content {
+    margin-top: 80px;
+}
+
+#img-col {
+    float: left;
+}
+
+#info-col {
+    float: left;
+    margin-left: 20px;
+    width: 280px;
+}
+
+#info-col .panel {
+    margin-bottom: 29px;
+}
+
+#info-col button {
+    background-color: #338bc8;
+    border-color: #338bc8;
+}
