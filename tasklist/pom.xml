@@ -28,7 +28,6 @@
             <artifactId>jstl</artifactId>
         </dependency>
 
-        <!-- Spring 4 dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>

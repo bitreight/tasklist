@@ -3,7 +3,6 @@ package com.bitreight.tasklist.controller;
 import com.bitreight.tasklist.dto.ChangeUserPasswordDto;
 import com.bitreight.tasklist.dto.UserProfileDto;
 import com.bitreight.tasklist.security.CustomUserDetails;
-import com.bitreight.tasklist.service.ImageService;
 import com.bitreight.tasklist.service.UserService;
 import com.bitreight.tasklist.service.exception.ServiceInvalidUserPasswordException;
 import com.bitreight.tasklist.service.exception.ServiceProfileImageUploadException;

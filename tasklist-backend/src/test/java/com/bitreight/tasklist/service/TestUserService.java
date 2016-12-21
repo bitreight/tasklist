@@ -7,7 +7,6 @@ import com.bitreight.tasklist.entity.User;
 import com.bitreight.tasklist.service.converter.UserDtoConverter;
 import com.bitreight.tasklist.service.converter.impl.UserDtoConverterImpl;
 import com.bitreight.tasklist.service.exception.ServiceUserAlreadyExistsException;
-import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
 import com.bitreight.tasklist.service.impl.UserServiceImpl;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -18,15 +17,10 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 @Ignore

@@ -1,7 +1,7 @@
 package com.bitreight.tasklist.controller;
 
-import com.bitreight.tasklist.security.CustomUserDetails;
 import com.bitreight.tasklist.dto.TaskDto;
+import com.bitreight.tasklist.security.CustomUserDetails;
 import com.bitreight.tasklist.service.TaskSearchService;
 import com.bitreight.tasklist.service.exception.ServiceProjectNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceTaskNotFoundException;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 

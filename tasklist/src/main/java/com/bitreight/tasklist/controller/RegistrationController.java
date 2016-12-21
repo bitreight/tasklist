@@ -1,7 +1,7 @@
 package com.bitreight.tasklist.controller;
 
-import com.bitreight.tasklist.security.CustomUserDetails;
 import com.bitreight.tasklist.dto.UserDto;
+import com.bitreight.tasklist.security.CustomUserDetails;
 import com.bitreight.tasklist.service.UserService;
 import com.bitreight.tasklist.service.exception.ServiceUserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;

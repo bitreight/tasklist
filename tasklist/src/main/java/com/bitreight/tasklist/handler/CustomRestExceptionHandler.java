@@ -63,9 +63,6 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             fieldErrors.put(error.getField(), error.getDefaultMessage());
         }
-//        for (ObjectError error : ex.getBindingResult().getGlobalErrors()) {
-//            fieldErrors.put(error.getObjectName(), error.getDefaultMessage());
-//        }
 
         ValidationError validationError = new ValidationError(HttpStatus.BAD_REQUEST, fieldErrors);
         return handleExceptionInternal(ex, validationError, headers, validationError.getStatus(), request);

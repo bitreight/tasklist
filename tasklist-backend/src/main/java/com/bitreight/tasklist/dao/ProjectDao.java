@@ -7,6 +7,7 @@ import com.bitreight.tasklist.entity.User;
 import java.util.List;
 
 public interface ProjectDao {
+
     void save(Project project) throws DaoSaveDuplicatedProjectException;
 
     void update(Project project) throws DaoSaveDuplicatedProjectException;

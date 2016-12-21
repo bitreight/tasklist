@@ -19,10 +19,4 @@ public class LoginController {
         model.addAttribute("loginError", "Invalid username or password.");
         return "login";
     }
-
-//    @RequestMapping(value = "/login/error", method = RequestMethod.POST)
-//    public String getLoginPageWithError(Model model) {
-//        model.addAttribute("loginError", "Invalid username or password.");
-//        return "login";
-//    }
 }

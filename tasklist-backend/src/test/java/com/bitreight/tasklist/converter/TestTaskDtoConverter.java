@@ -8,7 +8,6 @@ import com.bitreight.tasklist.service.converter.impl.TaskDtoConverterImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

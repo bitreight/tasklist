@@ -11,7 +11,7 @@
         <jsp:include page="header.jsp"/>
     </div>
         <div id="error-header" class="page-header">
-            <h1>The resource you are looking for is not found!<small><a href="<c:url value="/workspace"/>">Go to main page</a></small></h1>
+            <h1>The resource you are looking for is not found!<small><a href="<c:url value="/workspace"/>">Go to the main page.</a></small></h1>
         </div>
 
         <script src="<c:url value="/resources/vendor/jquery/jquery-3.1.1.min.js"/>"></script>

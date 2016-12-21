@@ -27,26 +27,8 @@
                         </div>
                     </c:if>
                     <input id="input-login" type="text" class="form-control" name="username" placeholder="Login" autofocus="" required/>
-                    <%--<spring:bind path="username">--%>
-                        <%--<c:if test="${status.error}">--%>
-                            <%--<div class="alert alert-danger" role="alert">--%>
-                                <%--<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>--%>
-                                <%--<span class="sr-only">Error:</span>--%>
-                                <%--<form:errors path="username"/>--%>
-                            <%--</div>--%>
-                        <%--</c:if>--%>
-                    <%--</spring:bind>--%>
 
                     <input id="input-password" type="password" class="form-control" name="password" placeholder="Password" required/>
-                    <%--<spring:bind path="password">--%>
-                        <%--<c:if test="${status.error}">--%>
-                            <%--<div class="alert alert-danger" role="alert">--%>
-                                <%--<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>--%>
-                                <%--<span class="sr-only">Error:</span>--%>
-                                <%--<form:errors path="password"/>--%>
-                            <%--</div>--%>
-                        <%--</c:if>--%>
-                    <%--</spring:bind>--%>
 
                     <button id="button-login" class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
                 </form:form>
