@@ -65,5 +65,10 @@
             <artifactId>mockito-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http43</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

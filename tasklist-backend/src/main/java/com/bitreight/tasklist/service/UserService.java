@@ -1,8 +1,10 @@
 package com.bitreight.tasklist.service;
 
-import com.bitreight.tasklist.dto.ChangePasswordDto;
+import com.bitreight.tasklist.dto.ChangeUserPasswordDto;
 import com.bitreight.tasklist.dto.UserDto;
+import com.bitreight.tasklist.dto.UserProfileDto;
 import com.bitreight.tasklist.service.exception.ServiceInvalidUserPasswordException;
+import com.bitreight.tasklist.service.exception.ServiceProfileImageUploadException;
 import com.bitreight.tasklist.service.exception.ServiceUserAlreadyExistsException;
 import com.bitreight.tasklist.service.exception.ServiceUserNotFoundException;
 
@@ -10,9 +12,11 @@ public interface UserService {
 
     void register(UserDto userDto) throws ServiceUserAlreadyExistsException;
 
-    void update(UserDto userDto) throws ServiceUserNotFoundException;
+    void update(UserProfileDto userProfileDto) throws ServiceUserNotFoundException;
 
-    void changePassword(ChangePasswordDto passwordDto) throws ServiceUserNotFoundException, ServiceInvalidUserPasswordException;
+    void changePassword(ChangeUserPasswordDto passwordDto) throws ServiceUserNotFoundException, ServiceInvalidUserPasswordException;
 
-    UserDto getById(int userId) throws ServiceUserNotFoundException;
+    String setProfileImage(byte[] profileImage, int userId) throws ServiceProfileImageUploadException, ServiceUserNotFoundException;
+
+    UserProfileDto getById(int userId) throws ServiceUserNotFoundException;
 }

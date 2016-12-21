@@ -15,10 +15,10 @@ public class UserDto {
     @Size(min = 6, max = 20, message = "Password must be {min}..{max} characters long.")
     private String password;
 
-    @Size(max = 45, message = "Name could be maximum {max} characters long.")
+    @Size(max = 20, message = "Name could be maximum {max} characters long.")
     private String name;
 
-    @Size(max = 45, message = "Surname could be maximum {max} characters long.")
+    @Size(max = 20, message = "Surname could be maximum {max} characters long.")
     private String surname;
 
     public int getId() {

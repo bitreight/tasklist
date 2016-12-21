@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class TaskSearchController {
     }
 
     @InitBinder
-    public void dataBinding(WebDataBinder binder) {
+    public void localDateBinding(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, new LocalDateEditor());
     }
 }

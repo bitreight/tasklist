@@ -274,3 +274,33 @@ body {
     background-color: #338bc8;
     border-color: #338bc8;
 }
+
+#user-info-form {
+    margin-bottom: 0;
+}
+
+#user-info-form input,
+#password-form input {
+    margin-bottom: 10px;
+}
+
+.user-error, .password-error {
+    display: none;
+    margin-bottom: 10px;
+}
+
+#hideDefaultUpload {
+    display: none;
+}
+
+#password-input {
+    margin-bottom: 15px!important;
+}
+
+#error-header {
+    padding-left: 40px;
+}
+
+#error-header a {
+    margin-left: 10px;
+}

@@ -1,12 +1,11 @@
 package com.bitreight.tasklist.dto;
 
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class ChangePasswordDto {
+public class ChangeUserPasswordDto {
 
-    private int userId;
+    private int id;
 
     @NotNull
     private String oldPassword;
@@ -15,12 +14,12 @@ public class ChangePasswordDto {
     @Size(min = 6, max = 20, message = "New password must be {min}..{max} characters long.")
     private String newPassword;
 
-    public int getUserId() {
-        return userId;
+    public int getId() {
+        return id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getOldPassword() {

@@ -1,5 +1,6 @@
 package com.bitreight.tasklist.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +21,9 @@ public class User {
     private String name;
 
     private String surname;
+
+    @Column(name = "profile_image_path")
+    private String profileImagePath;
 
     public int getId() {
         return id;
@@ -59,6 +63,14 @@ public class User {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public String getProfileImagePath() {
+        return profileImagePath;
+    }
+
+    public void setProfileImagePath(String profileImagePath) {
+        this.profileImagePath = profileImagePath;
     }
 
     @Override

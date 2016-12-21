@@ -72,6 +72,7 @@ public class SecurityConfig {
                     .authorizeRequests()
                         .antMatchers("/resources/**", "/join").permitAll()
                         .antMatchers("/workspace").authenticated()
+                        .antMatchers("/profile").authenticated()
                         .and()
                     .formLogin()
                         .loginPage("/login")

@@ -1,6 +1,7 @@
 package com.bitreight.tasklist.handler;
 
 import com.bitreight.tasklist.service.exception.ServiceException;
+import com.bitreight.tasklist.service.exception.ServiceInvalidUserPasswordException;
 import com.bitreight.tasklist.service.exception.ServiceProjectAlreadyExistsException;
 import com.bitreight.tasklist.service.exception.ServiceProjectNotFoundException;
 import com.bitreight.tasklist.service.exception.ServiceTaskAlreadyExistsException;
@@ -33,6 +34,12 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
             ServiceTaskVersionIsOutdatedException.class})
     public ResponseEntity<Object> handleConflict(ServiceException e) {
         ApiError apiError = new ApiError(HttpStatus.CONFLICT, e.getLocalizedMessage());
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
+    @ExceptionHandler({ServiceInvalidUserPasswordException.class})
+    public ResponseEntity<Object> handleInvalidPassword(ServiceException e) {
+        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, e.getLocalizedMessage());
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 

@@ -33,6 +33,8 @@
         <h2-connector.version>1.4.192</h2-connector.version>
         <flyway.version>4.0.3</flyway.version>
 
+        <cloudinary.version>1.2.2</cloudinary.version>
+
         <jcl.slf4j.version>1.7.21</jcl.slf4j.version>
         <logback.version>1.1.7</logback.version>
 
@@ -182,6 +184,13 @@
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
                 <version>${validation.api.version}</version>
+            </dependency>
+
+            <!-- Cloudinary API -->
+            <dependency>
+                <groupId>com.cloudinary</groupId>
+                <artifactId>cloudinary-http43</artifactId>
+                <version>${cloudinary.version}</version>
             </dependency>
 
             <!-- Testing -->
